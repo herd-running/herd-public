@@ -1,14 +1,8 @@
 const tintColor = '#2f95dc';
 
-export default {
-  tintColor,
-  tabIconDefault: '#ccc',
-  tabIconSelected: tintColor,
-  tabBar: '#fefefe',
-  errorBackground: 'red',
-  errorText: '#fff',
-  warningBackground: '#EAEB5E',
-  warningText: '#666804',
-  noticeBackground: tintColor,
-  noticeText: '#fff',
+//otherColor is used for text, buttons, icons, etc.
+
+export default colors = {
+  backgroundColor: '#4d336d',
+  otherColor: '#f2b0e1'
 };

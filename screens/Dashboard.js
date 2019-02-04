@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { View, ScrollView } from 'react-native'
 import { SearchBar, Button, Icon } from 'react-native-elements'
+
 import styles from '../styles/Dashboard'
+import colors from '../constants/Colors'
 
 import HeaderComponent from '../components/Header'
 import RunCard from '../components/RunCard'
@@ -15,7 +17,7 @@ export default class Dashboard extends Component {
     this.state = {
       search: '',
       viewing: 'Runs',
-      runButtonColor: '#f2b0e1',
+      runButtonColor: colors.otherColor,
       groupButtonColor: '#c1c5cc'
     }
   }
@@ -30,7 +32,7 @@ export default class Dashboard extends Component {
   onTogglePressRuns = () => {
     this.setState({
       viewing: 'Runs',
-      runButtonColor: '#f2b0e1',
+      runButtonColor: colors.otherColor,
       groupButtonColor: '#c1c5cc'
     })
   }
@@ -39,7 +41,7 @@ export default class Dashboard extends Component {
     this.setState({
       viewing: 'Groups',
       runButtonColor: '#c1c5cc',
-      groupButtonColor: '#f2b0e1'
+      groupButtonColor: colors.otherColor
     })
   }
 
@@ -57,30 +59,30 @@ export default class Dashboard extends Component {
         />
         <View style={{flexDirection: 'row', justifyContent: 'center', marginTop: 10}}>
           <Button
-            title='Runs'
+            title='My Runs'
             onPress={this.onTogglePressRuns}
-            buttonStyle={{backgroundColor: this.state.runButtonColor, width: 120}}
-            titleStyle={{ color: '#4d336d' }}
+            buttonStyle={{backgroundColor: this.state.runButtonColor, width: 130}}
+            titleStyle={{ color: colors.backgroundColor }}
             icon={
               <Icon
               name='run'
               type='material-community'
               size={25}
-              color='#4d336d'
+              color={colors.backgroundColor}
             />
             }
           />
           <Button
-            title='Groups'
+            title='My Groups'
             onPress={this.onTogglePressGroups}
-            buttonStyle={{backgroundColor:this.state.groupButtonColor, width: 120}}
-            titleStyle={{ color: '#4d336d' }}
+            buttonStyle={{backgroundColor:this.state.groupButtonColor, width: 130}}
+            titleStyle={{ color: colors.backgroundColor }}
             icon={
               <Icon
               name='account-group'
               type='material-community'
               size={25}
-              color='#4d336d'
+              color={colors.backgroundColor}
               iconStyle={{marginRight: 5}}
             />
             }

@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { View } from 'react-native'
 import { Icon } from 'react-native-elements'
+import colors from '../constants/Colors'
 
 export default class Rating extends Component {
   constructor(props) {
@@ -16,7 +17,7 @@ export default class Rating extends Component {
           name='star'
           type='font-awesome'
           size={this.props.size}
-          color='#f2b0e1'
+          color={colors.otherColor}
         />
       )
     }

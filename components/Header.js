@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Header } from 'react-native-elements'
 import styles from '../styles/Header'
+import colors from '../constants/Colors'
 import { Font } from 'expo';
 
 export default class HeaderComponent extends Component {
@@ -27,9 +28,9 @@ export default class HeaderComponent extends Component {
       <Header
         containerStyle={styles.header}
         placement="left"
-        centerComponent={{ text: 'Herd', style: { color: '#f2b0e1', fontSize: 25 } }}
+        centerComponent={{ text: 'Herd', style: { color: colors.otherColor, fontSize: 25 } }}
         //fontFamily: 'quicksand-regular'
-        rightComponent={{ icon: 'settings', color: '#f2b0e1' }}
+        rightComponent={{ icon: 'settings', color: colors.otherColor  }}
       />
       // :
       // null

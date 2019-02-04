@@ -1,9 +1,10 @@
 import { StyleSheet } from 'react-native'
+import colors from '../constants/Colors'
 
 export default styles = StyleSheet.create({
   container : {
     flex: 1,
-    backgroundColor: '#4d336d',
+    backgroundColor: colors.backgroundColor,
     justifyContent: 'flex-start'
   },
   buttonContainer : {
@@ -11,14 +12,14 @@ export default styles = StyleSheet.create({
     justifyContent: 'space-around'
   },
   buttonStyle : {
-    borderColor: '#f2b0e1',
+    borderColor: colors.otherColor,
     width: 105,
     height: 50,
     marginTop: 10
   },
   titleStyle: {
     marginLeft: 5,
-    color: '#f2b0e1',
+    color: colors.otherColor,
     fontSize: 18
   }
 })

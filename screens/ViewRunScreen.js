@@ -44,22 +44,30 @@ export default class ViewRunScreen extends Component {
     ]
     return (
       <View>
+        <HeaderComponent />
         <ScrollView>
-          <HeaderComponent />
           <View style={{ marginLeft: 25, marginRight: 25 }}>
 
-            <Text style={{ fontSize: 25, marginTop: 10 }}>
+            <Text style={{ fontSize: 25, marginTop: 10, fontWeight: 'bold' }}>
               Long run with Seattle Running Co.
         </Text>
 
             <Rating rating={5} size={25} />
 
-            <Text style={{ fontSize: 20, marginTop: 10 }}>
+            <Text style={{ fontSize: 20, marginTop: 10, fontWeight: 'bold' }}>
               Discovery Park
         </Text>
 
-            <Text style={{ fontSize: 20, marginTop: 10 }}>
+            <Text style={{ fontSize: 20, marginTop: 10, fontWeight: 'bold' }}>
               Saturdays @ 7:00am
+        </Text>
+
+            <Text style={{ fontSize: 20, marginTop: 10 }}>
+              5 miles
+        </Text>
+
+            <Text style={{ fontSize: 20, marginTop: 10 }}>
+              Target pace: 8 minutes/mile
         </Text>
 
             <Text style={{ fontSize: 23, marginTop: 30 }}>

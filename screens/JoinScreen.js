@@ -1,17 +1,10 @@
 import React, { Component } from 'react';
-import {
-  View,
-  Image,
-  Text
-} from 'react-native';
+import { View, Image } from 'react-native';
 import { Button } from 'react-native-elements'
 
 import styles from '../styles/JoinScreen'
 
 export default class JoinScreen extends Component {
-  // static navigationOptions = {
-  //   header: null,
-  // };
   constructor(props) {
     super(props)
     this.state = {
@@ -21,12 +14,12 @@ export default class JoinScreen extends Component {
 
   onPressSignUp = () => {
     const { navigate } = this.props.navigation
-    navigate('Home')
+    navigate('Dashboard')
   }
 
   onPressLogIn = () => {
     const { navigate } = this.props.navigation
-    navigate('Home')
+    navigate('Dashboard')
   }
 
   render() {

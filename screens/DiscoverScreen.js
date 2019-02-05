@@ -8,9 +8,10 @@ import colors from '../constants/Colors'
 import HeaderComponent from '../components/Header'
 import RunCard from '../components/RunCard'
 import GroupCard from '../components/GroupCard'
+import RunFilters from '../components/RunFilters'
 import NavBar from '../components/NavBar'
 
-export default class Dashboard extends Component {
+export default class DiscoverScreen extends Component {
   constructor(props) {
     super(props)
 
@@ -21,9 +22,6 @@ export default class Dashboard extends Component {
       groupButtonColor: colors.disabledColor
     }
   }
-  // static navigationOptions = {
-  //   title: 'app.json',
-  // };
 
   updateSearch = search => {
     this.setState({ search });
@@ -51,7 +49,39 @@ export default class Dashboard extends Component {
     return (
       <View style={styles.container}>
         <HeaderComponent />
-        <View style={{justifyContent: 'center'}}>
+
+        <View style={{ flexDirection: 'row', justifyContent: 'center', marginBottom: 10 }}>
+          <Button
+            title='New Runs'
+            onPress={this.onTogglePressRuns}
+            buttonStyle={{ backgroundColor: this.state.runButtonColor, width: 178 }}
+            titleStyle={{ color: colors.backgroundColor }}
+            icon={
+              <Icon
+                name='run'
+                type='material-community'
+                size={25}
+                color={colors.backgroundColor}
+              />
+            }
+          />
+          <Button
+            title='New Groups'
+            onPress={this.onTogglePressGroups}
+            buttonStyle={{ backgroundColor: this.state.groupButtonColor, width: 178 }}
+            titleStyle={{ color: colors.backgroundColor }}
+            icon={
+              <Icon
+                name='account-group'
+                type='material-community'
+                size={25}
+                color={colors.backgroundColor}
+                iconStyle={{ marginRight: 5 }}
+              />
+            }
+          />
+        </View>
+
         <SearchBar
           lightTheme={true}
           placeholder="Search"
@@ -59,45 +89,19 @@ export default class Dashboard extends Component {
           value={search}
           containerStyle={{marginLeft: 10, marginRight: 10}}
         />
-        </View>
-        <View style={{flexDirection: 'row', justifyContent: 'center', marginTop: 10, marginBottom: 10}}>
-          <Button
-            title='My Runs'
-            onPress={this.onTogglePressRuns}
-            buttonStyle={{backgroundColor: this.state.runButtonColor, width: 178}}
-            titleStyle={{ color: colors.backgroundColor }}
-            icon={
-              <Icon
-              name='run'
-              type='material-community'
-              size={25}
-              color={colors.backgroundColor}
-            />
-            }
-          />
-          <Button
-            title='My Groups'
-            onPress={this.onTogglePressGroups}
-            buttonStyle={{backgroundColor:this.state.groupButtonColor, width: 178}}
-            titleStyle={{ color: colors.backgroundColor }}
-            icon={
-              <Icon
-              name='account-group'
-              type='material-community'
-              size={25}
-              color={colors.backgroundColor}
-              iconStyle={{marginRight: 5}}
-            />
-            }
-          />
-        </View>
-        <ScrollView>
-          {this.state.viewing === 'Runs' ?
-            <RunCard />
-            :
+        {this.state.viewing === 'Runs' ?
+          <View>
+            <RunFilters />
+            <ScrollView>
+              <RunCard />
+            </ScrollView>
+          </View>
+          :
+          <ScrollView>
             <GroupCard />
-          }
-        </ScrollView>
+          </ScrollView>
+        }
+        {/* NavBar is not showing up for 'Runs' view */}
         <NavBar />
       </View>
     );

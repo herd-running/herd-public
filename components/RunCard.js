@@ -32,25 +32,8 @@ export default function RunCard() {
               color='black'
             />
           </View>
-          <View style={{ flexDirection: 'row' }}>
-            <Icon
-              name='star'
-              type='font-awesome'
-              size={20}
-              color='#f2b0e1'
-            />
-            <Icon
-              name='star'
-              type='font-awesome'
-              size={20}
-              color='#f2b0e1'
-            />
-            <Icon
-              name='star'
-              type='font-awesome'
-              size={20}
-              color='#f2b0e1'
-            />
+          <View >
+            <Rating rating={5} size={20} />
           </View>
         </View>
       </Card>
@@ -66,38 +49,7 @@ export default function RunCard() {
               color='black'
             />
           </View>
-          <View style={{ flexDirection: 'row' }}>
-            <Icon
-              name='star'
-              type='font-awesome'
-              size={20}
-              color='#f2b0e1'
-            />
-            <Icon
-              name='star'
-              type='font-awesome'
-              size={20}
-              color='#f2b0e1'
-            />
-            <Icon
-              name='star'
-              type='font-awesome'
-              size={20}
-              color='#f2b0e1'
-            />
-            <Icon
-              name='star'
-              type='font-awesome'
-              size={20}
-              color='#f2b0e1'
-            />
-            <Icon
-              name='star'
-              type='font-awesome'
-              size={20}
-              color='#f2b0e1'
-            />
-          </View>
+          <Rating rating={3} size={20} />
         </View>
       </Card>
 
@@ -112,32 +64,7 @@ export default function RunCard() {
               color='black'
             />
           </View>
-          <View style={{ flexDirection: 'row' }}>
-            <Icon
-              name='star'
-              type='font-awesome'
-              size={20}
-              color='#f2b0e1'
-            />
-            <Icon
-              name='star'
-              type='font-awesome'
-              size={20}
-              color='#f2b0e1'
-            />
-            <Icon
-              name='star'
-              type='font-awesome'
-              size={20}
-              color='#f2b0e1'
-            />
-            <Icon
-              name='star'
-              type='font-awesome'
-              size={20}
-              color='#f2b0e1'
-            />
-          </View>
+          <Rating rating={4} size={20} />
         </View>
       </Card>
 
@@ -152,32 +79,7 @@ export default function RunCard() {
               color='black'
             />
           </View>
-          <View style={{ flexDirection: 'row' }}>
-            <Icon
-              name='star'
-              type='font-awesome'
-              size={20}
-              color='#f2b0e1'
-            />
-            <Icon
-              name='star'
-              type='font-awesome'
-              size={20}
-              color='#f2b0e1'
-            />
-            <Icon
-              name='star'
-              type='font-awesome'
-              size={20}
-              color='#f2b0e1'
-            />
-            <Icon
-              name='star'
-              type='font-awesome'
-              size={20}
-              color='#f2b0e1'
-            />
-          </View>
+          <Rating rating={3} size={20} />
         </View>
       </Card>
     </View>

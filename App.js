@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 import JoinScreen from './screens/JoinScreen'
-import HomeScreen from './screens/Dashboard'
+import Dashboard from './screens/Dashboard'
+import DiscoverScreen from './screens/DiscoverScreen'
+import ViewRunScreen from './screens/ViewRunScreen'
 
 import { createStackNavigator, createAppContainer } from 'react-navigation'
 
@@ -16,13 +18,13 @@ const AppNavigator = createStackNavigator({
   Join: JoinScreen,
   // LogIn: LogIn,
   // SignUp: SignUp,
-  Home: HomeScreen
-  // Dash: DashBoard,
+  Dashboard: Dashboard,
+  ViewRun: ViewRunScreen,
+  Discover: DiscoverScreen
   // Profile: Profile,
 }, 
 {
-  // initialRouteName: 'Join',
-  initialRouteName: 'Home',
+  initialRouteName: 'ViewRun',
   headerMode: 'none'
 })
 

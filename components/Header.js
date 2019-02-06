@@ -26,11 +26,13 @@ export default class HeaderComponent extends Component {
     return (
     // this.state.fontLoaded ?
       <Header
+        outerContainerStyles={{borderBottomWidth: 0}}
         containerStyle={styles.header}
         placement="left"
         centerComponent={{ text: 'Herd', style: { color: colors.otherColor, fontSize: 25 } }}
         //fontFamily: 'quicksand-regular'
         rightComponent={{ icon: 'settings', color: colors.otherColor  }}
+        barStyle="light-content"
       />
       // :
       // null

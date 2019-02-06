@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
 import { View, ScrollView, Text, TextInput } from 'react-native'
 import { Button } from 'react-native-elements'
-
+import dismissKeyboard from 'react-native-dismiss-keyboard'
 
 import HeaderComponent from '../components/Header'
-import NavBar from '../components/NavBar'
 
 import colors from '../constants/Colors'
 
@@ -21,6 +20,12 @@ export default class CreateGroupScreen extends Component {
 
   handleCreateGroup = () => {
 
+  }
+
+  onEnterPress = ({ nativeEvent }) => {
+    if (nativeEvent.key === 'Enter') {
+      dismissKeyboard()
+    }
   }
 
   render() {
@@ -49,7 +54,9 @@ export default class CreateGroupScreen extends Component {
             multiline={true}
             numberOfLines={15}
             ref={(input) => { this.secondTextInput = input; }}
-            //How do I submit this input??
+            returnKeyType='done'
+            blurOnSubmit={true}
+            onKeyPress={this.onEnterPress}
           />
 
           <Button
@@ -60,8 +67,6 @@ export default class CreateGroupScreen extends Component {
           />
 
         </ScrollView>
-        <NavBar />
-
       </View>
     )
   }

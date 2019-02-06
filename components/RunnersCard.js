@@ -2,7 +2,7 @@ import React from 'react'
 import { ScrollView } from 'react-native'
 import { Card, ListItem } from 'react-native-elements'
 
-export default function RunnersCard() {
+export default function RunnersCard({firstName, lastName, picture}) {
   const runners = [
     {
       firstName: 'Sam',

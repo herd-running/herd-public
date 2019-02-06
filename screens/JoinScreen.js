@@ -22,7 +22,7 @@ export default class JoinScreen extends Component {
     navigate('Dashboard')
   }
 
-  render() {
+  render = () => {
     return (
       <View style={styles.container}>
         <Image source={require('../assets/images/logo.jpg')} />

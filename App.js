@@ -1,5 +1,7 @@
-import React, { Component } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React from 'react'
+
+import { createStackNavigator, createAppContainer, createBottomTabNavigator } from 'react-navigation'
+import { Icon } from 'react-native-elements'
 
 import JoinScreen from './screens/JoinScreen'
 import Dashboard from './screens/Dashboard'
@@ -9,35 +11,102 @@ import ViewGroupScreen from './screens/ViewGroupScreen'
 import CreateRunScreen from './screens/CreateRunScreen'
 import CreateGroupScreen from './screens/CreateGroupScreen'
 
-import { createStackNavigator, createAppContainer } from 'react-navigation'
+import colors from './constants/Colors'
 
-// export default class App extends Component {
-//   render() {
-//     return <HomeScreen />
-//   }
-// }
-
-const AppNavigator = createStackNavigator({
+const DashboardStack = createStackNavigator({
   Join: JoinScreen,
   // LogIn: LogIn,
   // SignUp: SignUp,
-  // Profile: Profile,
   Dashboard: Dashboard,
   ViewRun: ViewRunScreen,
-  ViewGroup: ViewGroupScreen,
-  Discover: DiscoverScreen,
-  // Map: MapScreen, 
+  ViewGroup: ViewGroupScreen
+},
+  {
+    initialRouteName: 'Join',
+    headerMode: 'none'
+  })
+
+DashboardStack.navigationOptions = ({ navigation }) => {
+  let tabBarVisible = true
+  if (navigation.state.index === 0) {
+    tabBarVisible = false
+  }
+  return {
+    tabBarVisible
+  }
+}
+
+const CreateNewStack = createStackNavigator({
+  //Choose: CreateChoiceScreen
   CreateRun: CreateRunScreen,
   CreateGroup: CreateGroupScreen
-}, 
-{
-  initialRouteName: 'CreateGroup',
-  headerMode: 'none'
-})
+},
+  {
+    initialRouteName: 'CreateRun',
+    headerMode: 'none'
+  })
 
-const AppContainer = createAppContainer(AppNavigator)
+const DiscoverStack = createStackNavigator({
+  Discover: DiscoverScreen,
+  // Map: MapScreen, 
+  ViewRun: ViewRunScreen,
+  ViewGroup: ViewGroupScreen
+},
+  {
+    initialRouteName: 'Discover',
+    headerMode: 'none'
+  })
 
-export default AppContainer
+const TabNavigator = createBottomTabNavigator({
+  Runs: DashboardStack,
+  Groups: Dashboard,
+  Add: CreateNewStack,
+  Discover: DiscoverStack,
+  Map: DiscoverStack
+},
+  {
+    defaultNavigationOptions: ({ navigation }) => ({
+      tabBarIcon: () => {
+        const { routeName } = navigation.state;
+        let iconName
+        let size
+        let style
+        if (routeName === 'Runs') {
+          iconName = 'run'
+          size = 35
+        } else if (routeName === 'Groups') {
+          iconName = 'account-multiple'
+          size = 45
+          style = { paddingBottom: 5 }
+        } else if (routeName === 'Add') {
+          iconName = 'plus-circle'
+          size = 35
+        } else if (routeName === 'Discover') {
+          iconName = 'magnify'
+          size = 35
+        } else if (routeName === 'Map') {
+          iconName = 'map'
+          size = 35
+        }
+        return (<Icon
+          name={iconName}
+          type='material-community'
+          size={size}
+          color={colors.otherColor}
+          iconStyle={style}
+        />
+        )
+      },
+    }),
+    tabBarOptions: {
+      activeTintColor: colors.otherColor,
+      inactiveTintColor: colors.otherColor,
+      labelStyle: { fontSize: 14 },
+      style: { height: 55, backgroundColor: colors.backgroundColor }
+    }
+  })
+
+export default createAppContainer(TabNavigator)
 
 
 

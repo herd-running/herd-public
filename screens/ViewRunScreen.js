@@ -5,7 +5,6 @@ import { Button } from 'react-native-elements'
 import colors from '../constants/Colors'
 
 import HeaderComponent from '../components/Header'
-import NavBar from '../components/NavBar'
 import Rating from '../components/Rating'
 import CommentCard from '../components/CommentCard'
 import RunnersCard from '../components/RunnersCard'
@@ -103,7 +102,6 @@ export default class ViewRunScreen extends Component {
             }
           </View>
         </ScrollView>
-        <NavBar style={{ position: 'absolute', bottom: 0 }} />
       </View>
     )
   }

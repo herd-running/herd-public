@@ -9,7 +9,6 @@ import HeaderComponent from '../components/Header'
 import RunCard from '../components/RunCard'
 import GroupCard from '../components/GroupCard'
 import RunFilters from '../components/RunFilters'
-import NavBar from '../components/NavBar'
 
 export default class DiscoverScreen extends Component {
   constructor(props) {
@@ -50,11 +49,11 @@ export default class DiscoverScreen extends Component {
       <View style={styles.container}>
         <HeaderComponent />
 
-        <View style={{ flexDirection: 'row', justifyContent: 'center', marginBottom: 10 }}>
+        <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 10, marginBottom: 10 }}>
           <Button
             title='New Runs'
             onPress={this.onTogglePressRuns}
-            buttonStyle={{ backgroundColor: this.state.runButtonColor, width: 178 }}
+            buttonStyle={{ backgroundColor: this.state.runButtonColor, width: 145, marginRight: 15 }}
             titleStyle={{ color: colors.backgroundColor }}
             icon={
               <Icon
@@ -68,7 +67,7 @@ export default class DiscoverScreen extends Component {
           <Button
             title='New Groups'
             onPress={this.onTogglePressGroups}
-            buttonStyle={{ backgroundColor: this.state.groupButtonColor, width: 178 }}
+            buttonStyle={{ backgroundColor: this.state.groupButtonColor, width: 145 }}
             titleStyle={{ color: colors.backgroundColor }}
             icon={
               <Icon
@@ -85,14 +84,14 @@ export default class DiscoverScreen extends Component {
         <SearchBar
           lightTheme={true}
           placeholder="Search"
-          onChangeText={this.updateSearch}
+          onChangeText={search => this.setState({ search })}
           value={search}
-          containerStyle={{marginLeft: 10, marginRight: 10}}
+          containerStyle={{ marginLeft: 10, marginRight: 10 }}
         />
         {this.state.viewing === 'Runs' ?
           <View>
             <RunFilters />
-            <ScrollView>
+            <ScrollView >
               <RunCard />
             </ScrollView>
           </View>
@@ -101,8 +100,6 @@ export default class DiscoverScreen extends Component {
             <GroupCard />
           </ScrollView>
         }
-        {/* NavBar is not showing up for 'Runs' view */}
-        <NavBar />
       </View>
     );
   }

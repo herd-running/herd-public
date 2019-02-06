@@ -4,7 +4,6 @@ import { Button } from 'react-native-elements'
 import { Dropdown } from 'react-native-material-dropdown'
 
 import HeaderComponent from '../components/Header'
-import NavBar from '../components/NavBar'
 
 import { runType, day, time, pace, terrain } from '../constants/CreateRunOptions'
 import colors from '../constants/Colors'
@@ -29,12 +28,19 @@ export default class CreateRunScreen extends Component {
 
   }
 
+  onEnterPress = ({ nativeEvent }) => {
+    if (nativeEvent.key === 'Enter') {
+      dismissKeyboard()
+    }
+  }
+
   render() {
     return (
       <View>
         <HeaderComponent />
-        <ScrollView style={{ marginLeft: 15, marginRight: 15 }}>
-            <Text style={{ fontSize: 25, color: colors.backgroundColor, marginTop: 5, marginBottom: 10, fontWeight: 'bold' }}>New Run</Text>
+        {/* How can I made the scroll sticky? */}
+        <ScrollView style={{ marginLeft: 25, marginRight: 25 }}>
+            <Text style={{ fontSize: 25, color: colors.backgroundColor, marginTop: 10, marginBottom: 10, fontWeight: 'bold' }}>New Run</Text>
 
             {/* How do I reduce the animation on the dropdown? */}
             <Dropdown
@@ -96,7 +102,7 @@ export default class CreateRunScreen extends Component {
               onChangeText={(terrain) => this.setState({ terrain })}
             />
 
-
+            {/* How can I get the keyboard to not cover the input? */}
             <Text style={{ fontSize: 20, marginTop: 10, color: colors.formGray }}>Location</Text>
             <TextInput
               onChangeText={(location) => this.setState({ location })}
@@ -117,8 +123,12 @@ export default class CreateRunScreen extends Component {
             <TextInput
               onChangeText={(description) => this.setState({ description })}
               value={this.state.description}
-              style={{ height: 40, borderColor: 'gray', borderWidth: 1, fontSize: 18, paddingLeft: 5, marginBottom: 10 }}
+              style={{ height: 80, borderColor: 'gray', borderWidth: 1, fontSize: 18, paddingLeft: 5, marginBottom: 10 }}
               returnKeyType='done'
+              multiline={true}
+              numberOfLines={10}
+              blurOnSubmit={true}
+              onKeyPress={this.onEnterPress}
             />
 
           <Button
@@ -129,8 +139,6 @@ export default class CreateRunScreen extends Component {
           />
 
         </ScrollView>
-        <NavBar />
-
       </View>
     )
   }

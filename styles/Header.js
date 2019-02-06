@@ -3,6 +3,7 @@ import colors from '../constants/Colors'
 
 export default styles = StyleSheet.create({
   header : {
-    backgroundColor: colors.backgroundColor
+    backgroundColor: colors.backgroundColor,
+    borderBottomWidth: 0
   }
 })

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, ScrollView } from 'react-native'
+import { View, ScrollView, TouchableOpacity } from 'react-native'
 import { SearchBar, Button, Icon } from 'react-native-elements'
 
 import styles from '../styles/Dashboard'
@@ -8,7 +8,6 @@ import colors from '../constants/Colors'
 import HeaderComponent from '../components/Header'
 import RunCard from '../components/RunCard'
 import GroupCard from '../components/GroupCard'
-import NavBar from '../components/NavBar'
 
 export default class Dashboard extends Component {
   constructor(props) {
@@ -51,54 +50,59 @@ export default class Dashboard extends Component {
     return (
       <View style={styles.container}>
         <HeaderComponent />
-        <View style={{justifyContent: 'center'}}>
-        <SearchBar
-          lightTheme={true}
-          placeholder="Search"
-          onChangeText={this.updateSearch}
-          value={search}
-          containerStyle={{marginLeft: 10, marginRight: 10}}
-        />
-        </View>
-        <View style={{flexDirection: 'row', justifyContent: 'center', marginTop: 10, marginBottom: 10}}>
+        <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 10, marginBottom: 10 }}>
           <Button
             title='My Runs'
             onPress={this.onTogglePressRuns}
-            buttonStyle={{backgroundColor: this.state.runButtonColor, width: 178}}
+            buttonStyle={{ backgroundColor: this.state.runButtonColor, width: 145, marginRight: 15 }}
             titleStyle={{ color: colors.backgroundColor }}
             icon={
               <Icon
-              name='run'
-              type='material-community'
-              size={25}
-              color={colors.backgroundColor}
-            />
+                name='run'
+                type='material-community'
+                size={25}
+                color={colors.backgroundColor}
+              />
             }
           />
           <Button
             title='My Groups'
             onPress={this.onTogglePressGroups}
-            buttonStyle={{backgroundColor:this.state.groupButtonColor, width: 178}}
+            buttonStyle={{ backgroundColor: this.state.groupButtonColor, width: 145 }}
             titleStyle={{ color: colors.backgroundColor }}
             icon={
               <Icon
-              name='account-group'
-              type='material-community'
-              size={25}
-              color={colors.backgroundColor}
-              iconStyle={{marginRight: 5}}
-            />
+                name='account-group'
+                type='material-community'
+                size={25}
+                color={colors.backgroundColor}
+                iconStyle={{ marginRight: 5 }}
+              />
             }
           />
         </View>
+
+        <View style={{ justifyContent: 'center' }}>
+          <SearchBar
+            lightTheme={true}
+            placeholder="Search"
+            onChangeText={this.updateSearch}
+            value={search}
+            containerStyle={{ marginLeft: 10, marginRight: 10 }}
+          />
+
+        </View>
         <ScrollView>
           {this.state.viewing === 'Runs' ?
-            <RunCard />
+            <TouchableOpacity onPress={() => this.props.navigation.navigate('ViewRun')}>
+              <RunCard />
+            </TouchableOpacity>
             :
-            <GroupCard />
+            <TouchableOpacity onPress={() => this.props.navigation.navigate('ViewGroup')}>
+              <GroupCard />
+            </TouchableOpacity>
           }
         </ScrollView>
-        <NavBar />
       </View>
     );
   }

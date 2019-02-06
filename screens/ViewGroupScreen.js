@@ -3,7 +3,6 @@ import { View, ScrollView, Text, TouchableOpacity } from 'react-native'
 import { Button } from 'react-native-elements'
 
 import HeaderComponent from '../components/Header'
-import NavBar from '../components/NavBar'
 import CommentCard from '../components/CommentCard'
 import RunCard from '../components/RunCard'
 import RunnersCard from '../components/RunnersCard'
@@ -116,7 +115,6 @@ export default class ViewGroupScreen extends Component {
 
           </View>
         </ScrollView>
-        <NavBar />
       </View>
     )
   }

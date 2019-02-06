@@ -101,7 +101,6 @@ export default class ViewRunScreen extends Component {
             })
 
             }
-            <CommentCard />
           </View>
         </ScrollView>
         <NavBar style={{ position: 'absolute', bottom: 0 }} />

@@ -5,6 +5,9 @@ import JoinScreen from './screens/JoinScreen'
 import Dashboard from './screens/Dashboard'
 import DiscoverScreen from './screens/DiscoverScreen'
 import ViewRunScreen from './screens/ViewRunScreen'
+import ViewGroupScreen from './screens/ViewGroupScreen'
+import CreateRunScreen from './screens/CreateRunScreen'
+import CreateGroupScreen from './screens/CreateGroupScreen'
 
 import { createStackNavigator, createAppContainer } from 'react-navigation'
 
@@ -18,13 +21,17 @@ const AppNavigator = createStackNavigator({
   Join: JoinScreen,
   // LogIn: LogIn,
   // SignUp: SignUp,
+  // Profile: Profile,
   Dashboard: Dashboard,
   ViewRun: ViewRunScreen,
-  Discover: DiscoverScreen
-  // Profile: Profile,
+  ViewGroup: ViewGroupScreen,
+  Discover: DiscoverScreen,
+  // Map: MapScreen, 
+  CreateRun: CreateRunScreen,
+  CreateGroup: CreateGroupScreen
 }, 
 {
-  initialRouteName: 'ViewRun',
+  initialRouteName: 'CreateGroup',
   headerMode: 'none'
 })
 

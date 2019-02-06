@@ -7,8 +7,12 @@ export default function CommentCard({ title, rating, body }) {
 
   return (
     <Card title={title}>
-      <Rating rating={rating} size={15} />
-      <Text style={{marginTop : 5}}>{body}</Text>
+      {rating ?
+        <Rating rating={rating} size={15} />
+        :
+        null
+      }
+      <Text style={{ marginTop: 5 }}>{body}</Text>
     </Card>
   )
 }

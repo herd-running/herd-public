@@ -1,71 +1,123 @@
-import React from 'react';
-import { View, ScrollView, Text } from 'react-native'
+import React, { Component } from 'react';
+import { View, ScrollView, Text, TouchableOpacity } from 'react-native'
+import { Button } from 'react-native-elements'
 
 import HeaderComponent from '../components/Header'
 import NavBar from '../components/NavBar'
 import CommentCard from '../components/CommentCard'
 import RunCard from '../components/RunCard'
-import Rating from '../components/Rating'
+import RunnersCard from '../components/RunnersCard'
 
-export default function ViewGroupScreen() {
-  const comments = [
-    {
-      id: 1,
-      title: 'Great group!',
-      rating: 5,
-      body: 'I really enjoyed this group of people. We had a great time on Saturday and I felt very welcome! I will be back!'
-    },
-    {
-      id: 2,
-      title: 'Fun group',
-      rating: 3,
-      body: 'Had a great run, all skill levels are welcome.'
+import colors from '../constants/Colors'
+
+export default class ViewGroupScreen extends Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      showRuns: false,
+      showRunners: false,
+      showComments: false
     }
-  ]
+  }
 
-  return (
-    <View>
-      <HeaderComponent />
-      <ScrollView>
-        <View style={{ marginLeft: 25, marginRight: 25 }}>
+  toggleRuns = () => {
+    this.setState({
+      showRuns: !this.state.showRuns
+    })
+  }
 
-          <Text style={{ fontSize: 25, marginTop: 10 }}>
-            Seattle Running Club
+  toggleRunners = () => {
+    this.setState({
+      showRunners: !this.state.showRunners
+    })
+  }
+
+  toggleComments = () => {
+    this.setState({
+      showComments: !this.state.showComments
+    })
+  }
+
+  render() {
+    const comments = [
+      {
+        id: 1,
+        title: 'Great group!',
+        rating: 5,
+        body: 'I really enjoyed this group of people. We had a great time on Saturday and I felt very welcome! I will be back!'
+      },
+      {
+        id: 2,
+        title: 'Fun group',
+        body: 'Had a great run, all skill levels are welcome.'
+      }
+    ]
+
+    return (
+      <View>
+        <HeaderComponent />
+        <ScrollView>
+          <View style={{ marginLeft: 25, marginRight: 25 }}>
+
+            <Text style={{ fontSize: 25, marginTop: 10, fontWeight: 'bold' }}>
+              Seattle Running Club
         </Text>
 
-        <Rating rating={4} size={25} />
-
-          <Text style={{ fontSize: 20, marginTop: 10 }}>
-          We are a Puget Sound-based running group that celebrates the beauty of our region and our personal potential with training, competition, and community. While the club offers a unique focus on trail running, members also rally on the road, track, and cross country course.
+            <Text style={{ fontSize: 20, marginTop: 10 }}>
+              We are a Puget Sound-based running group that celebrates the beauty of our region and our personal potential with training, competition, and community. While the club offers a unique focus on trail running, members also rally on the road, track, and cross country course.
         </Text>
 
-        <Text style={{ fontSize: 23, marginTop: 10 }}>
-            Leaders:
+            <Text style={{ fontSize: 23, marginTop: 20 }}>
+              Leaders:
         </Text>
 
-        <Text style={{ fontSize: 20, marginTop: 10 }}>
-          Jake Hommer, Sam Violette
+            <Text style={{ fontSize: 20, marginTop: 10 }}>
+              Jake Hommer, Sam Violette
         </Text>
 
-          <Text style={{ fontSize: 23, marginTop: 10 }}>
-            Runs:
-        </Text>
+            <Button
+              onPress={this.toggleRuns}
+              title='Runs'
+              buttonStyle={{ marginTop: 20, backgroundColor: colors.otherColor }}
+            />
 
-          <RunCard />
+            {this.state.showRuns ?
+              <RunCard />
+              :
+              null
+            }
 
-          <Text style={{ fontSize: 23, marginTop: 20 }}>
-            Comments:
-         </Text>
-          {comments.map(comment => {
-            return <CommentCard key={comment.id} {...comment} />
-          })
-          }
-          <CommentCard />
-        </View>
-      </ScrollView>
-      <View style={{ position: 'absolute', bottom: 0 }} >
+            <Button
+              onPress={this.toggleRunners}
+              title='In this Group'
+              buttonStyle={{ marginTop: 20, backgroundColor: colors.otherColor }}
+            />
+
+            {this.state.showRunners ?
+              <RunnersCard />
+              :
+              null
+            }
+
+            <Button
+              onPress={this.toggleComments}
+              title='Comments'
+              buttonStyle={{ marginTop: 20, backgroundColor: colors.otherColor }}
+            />
+
+            {this.state.showComments ?
+              comments.map(comment => {
+                return <CommentCard key={comment.id} {...comment} />
+              })
+              :
+              null
+            }
+
+          </View>
+        </ScrollView>
         <NavBar />
       </View>
-    </View>
-  )
+    )
+  }
 }

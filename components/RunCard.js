@@ -1,36 +1,27 @@
 import React from 'react'
-import { View, Text } from 'react-native'
+import { View, Text, TouchableOpacity } from 'react-native'
 import { Card, Icon } from 'react-native-elements'
 import Rating from './Rating'
 
 export default function RunCard() {
   return (
     <View>
-      <Card title='Long run at Discovery Park with Seattle Running Co.'>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-          <View style={{ flexDirection: 'row' }}>
-            <Text> Saturdays @ 7:00am </Text>
-            <Icon
-              name='autorenew'
-              type='material'
-              size={18}
-              color='black'
-            />
+      <TouchableOpacity>
+
+        <Card title='Long run at Discovery Park with Seattle Running Co.'>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            <View style={{ flexDirection: 'row' }}>
+              <Text> Saturdays @ 7:00am </Text>
+            </View>
+            <Rating rating={5} size={20} />
           </View>
-          <Rating rating={5} size={20} />
-        </View>
-      </Card>
+        </Card>
+      </TouchableOpacity>
 
       <Card title='Tempo Run at Green Lake with Green Lake Running Group'>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
           <View style={{ flexDirection: 'row' }}>
             <Text> Tuesdays @ 6:00pm </Text>
-            <Icon
-              name='autorenew'
-              type='material'
-              size={18}
-              color='black'
-            />
           </View>
           <View >
             <Rating rating={5} size={20} />

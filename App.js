@@ -8,6 +8,7 @@ import Dashboard from './screens/Dashboard'
 import DiscoverScreen from './screens/DiscoverScreen'
 import ViewRunScreen from './screens/ViewRunScreen'
 import ViewGroupScreen from './screens/ViewGroupScreen'
+import CreateChoicesScreen from './screens/CreateChoicesScreen'
 import CreateRunScreen from './screens/CreateRunScreen'
 import CreateGroupScreen from './screens/CreateGroupScreen'
 
@@ -37,12 +38,12 @@ DashboardStack.navigationOptions = ({ navigation }) => {
 }
 
 const CreateNewStack = createStackNavigator({
-  //Choose: CreateChoiceScreen
+  Choose: CreateChoicesScreen,
   CreateRun: CreateRunScreen,
   CreateGroup: CreateGroupScreen
 },
   {
-    initialRouteName: 'CreateRun',
+    initialRouteName: 'Choose',
     headerMode: 'none'
   })
 
@@ -73,10 +74,10 @@ const TabNavigator = createBottomTabNavigator({
         let style
         if (routeName === 'Runs') {
           iconName = 'run'
-          size = 35
+          size = 33
         } else if (routeName === 'Groups') {
           iconName = 'account-multiple'
-          size = 45
+          size = 47
           style = { paddingBottom: 5 }
         } else if (routeName === 'Add') {
           iconName = 'plus-circle'
@@ -102,7 +103,7 @@ const TabNavigator = createBottomTabNavigator({
       activeTintColor: colors.otherColor,
       inactiveTintColor: colors.otherColor,
       labelStyle: { fontSize: 14 },
-      style: { height: 55, backgroundColor: colors.backgroundColor }
+      style: { height: 55, backgroundColor: colors.backgroundColor, paddingTop: 5 }
     }
   })
 

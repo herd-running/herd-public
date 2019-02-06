@@ -1,5 +1,5 @@
 import React from 'react'
-import { ScrollView } from 'react-native'
+import { View } from 'react-native'
 import { Card, ListItem } from 'react-native-elements'
 
 export default function RunnersCard({firstName, lastName, picture}) {
@@ -21,7 +21,7 @@ export default function RunnersCard({firstName, lastName, picture}) {
     }
   ]
   return (
-    <ScrollView style={{ maxHeight: 300 }}>
+    <View style={{ maxHeight: 300 }}>
       <Card containerStyle={{ padding: 0 }} >
         {
           runners.map((runner, i) => {
@@ -36,6 +36,6 @@ export default function RunnersCard({firstName, lastName, picture}) {
           })
         }
       </Card>
-    </ScrollView>
+    </View>
   )
 }

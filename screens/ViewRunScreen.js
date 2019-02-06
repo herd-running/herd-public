@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { View, ScrollView, Text } from 'react-native'
-import { Button } from 'react-native-elements'
+import { View, ScrollView, Text, TouchableOpacity } from 'react-native'
+import { Button, Icon } from 'react-native-elements'
 
 import colors from '../constants/Colors'
 
@@ -44,6 +44,17 @@ export default class ViewRunScreen extends Component {
     return (
       <View>
         <HeaderComponent />
+        <TouchableOpacity 
+          style={{ backgroundColor: colors.backgroundColor, alignItems: 'flex-start', paddingLeft: 10, paddingBottom: 5 }}
+          onPress={() => this.props.navigation.goBack()}
+        >
+          <Icon
+            name='arrow-left'
+            type='font-awesome'
+            color={colors.otherColor}
+            size={20}
+          />
+        </TouchableOpacity>
         <ScrollView>
           <View style={{ marginLeft: 25, marginRight: 25 }}>
 

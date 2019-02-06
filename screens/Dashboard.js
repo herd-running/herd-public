@@ -47,6 +47,33 @@ export default class Dashboard extends Component {
   render() {
     const { search } = this.state;
 
+    const runs = [
+      {
+        runType: 'Long Run',
+        location: 'Discovery Park',
+        group: 'Seattle Running Club',
+        day: 'Saturday',
+        time: '7:00am',
+        rating: 5
+      },
+      {
+        runType: 'Tempo Run',
+        location: 'Green Lake',
+        group: 'Green Lake Running Group',
+        day: 'Tuesday',
+        time: '6:00pm',
+        rating: 3
+      },
+      {
+        runType: 'Easy Run',
+        location: 'Alki',
+        group: 'West Seattle Runners',
+        day: 'Monday',
+        time: '6:00am',
+        rating: 4
+      },
+    ]
+
     return (
       <View style={styles.container}>
         <HeaderComponent />
@@ -94,9 +121,12 @@ export default class Dashboard extends Component {
         </View>
         <ScrollView>
           {this.state.viewing === 'Runs' ?
+            runs.map((run, i) => {
             <TouchableOpacity onPress={() => this.props.navigation.navigate('ViewRun')}>
-              <RunCard />
+              <RunCard key={i} {...run}/>
             </TouchableOpacity>
+
+            })
             :
             <TouchableOpacity onPress={() => this.props.navigation.navigate('ViewGroup')}>
               <GroupCard />

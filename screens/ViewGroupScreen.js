@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, ScrollView, Text, TouchableOpacity } from 'react-native'
-import { Button } from 'react-native-elements'
+import { Button, Icon } from 'react-native-elements'
 
 import HeaderComponent from '../components/Header'
 import CommentCard from '../components/CommentCard'
@@ -43,7 +43,6 @@ export default class ViewGroupScreen extends Component {
       {
         id: 1,
         title: 'Great group!',
-        rating: 5,
         body: 'I really enjoyed this group of people. We had a great time on Saturday and I felt very welcome! I will be back!'
       },
       {
@@ -56,6 +55,17 @@ export default class ViewGroupScreen extends Component {
     return (
       <View>
         <HeaderComponent />
+        <TouchableOpacity 
+          style={{ backgroundColor: colors.backgroundColor, alignItems: 'flex-start', paddingLeft: 10, paddingBottom: 5 }}
+          onPress={() => this.props.navigation.goBack()}
+        >
+          <Icon
+            name='arrow-left'
+            type='font-awesome'
+            color={colors.otherColor}
+            size={20}
+          />
+        </TouchableOpacity>
         <ScrollView>
           <View style={{ marginLeft: 25, marginRight: 25 }}>
 

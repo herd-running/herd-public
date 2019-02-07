@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import { View, ScrollView, Text, TextInput } from 'react-native'
-import { Button } from 'react-native-elements'
+import { View, ScrollView, Text, TextInput, TouchableOpacity } from 'react-native'
+import { Button, Icon } from 'react-native-elements'
 import dismissKeyboard from 'react-native-dismiss-keyboard'
 
 import HeaderComponent from '../components/Header'
@@ -32,6 +32,17 @@ export default class CreateGroupScreen extends Component {
     return (
       <View>
         <HeaderComponent />
+        <TouchableOpacity 
+          style={{ backgroundColor: colors.backgroundColor, alignItems: 'flex-start', paddingLeft: 10, paddingBottom: 5 }}
+          onPress={() => this.props.navigation.goBack()}
+        >
+          <Icon
+            name='arrow-left'
+            type='font-awesome'
+            color={colors.otherColor}
+            size={20}
+          />
+        </TouchableOpacity>
         <ScrollView style={{ marginLeft: 15, marginRight: 15 }}>
           <Text style={{ fontSize: 25, color: colors.backgroundColor, marginTop: 5, marginBottom: 10, fontWeight: 'bold' }}>New Group</Text>
 
@@ -50,7 +61,7 @@ export default class CreateGroupScreen extends Component {
           <TextInput
             onChangeText={(description) => this.setState({ description })}
             value={this.state.description}
-            style={{ height: 250, borderColor: 'gray', borderWidth: 1, fontSize: 18, paddingLeft: 5, marginBottom: 10 }}
+            style={{ height: 325, borderColor: 'gray', borderWidth: 1, fontSize: 18, paddingLeft: 5, marginBottom: 10 }}
             multiline={true}
             numberOfLines={15}
             ref={(input) => { this.secondTextInput = input; }}

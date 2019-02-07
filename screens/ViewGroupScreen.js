@@ -52,10 +52,61 @@ export default class ViewGroupScreen extends Component {
       }
     ]
 
+    const runs = [
+      {
+        runType: 'Long Run',
+        location: 'Discovery Park',
+        group: 'Seattle Running Club',
+        day: 'Saturday',
+        time: '7:00am',
+        rating: 5
+      },
+      {
+        runType: 'Tempo Run',
+        location: 'Green Lake',
+        group: 'Green Lake Running Group',
+        day: 'Tuesday',
+        time: '6:00pm',
+        rating: 3
+      },
+      {
+        runType: 'Easy Run',
+        location: 'Alki',
+        group: 'West Seattle Runners',
+        day: 'Monday',
+        time: '6:00am',
+        rating: 4
+      },
+      {
+        runType: 'Long Run',
+        location: 'Discovery Park',
+        group: 'Seattle Running Club',
+        day: 'Saturday',
+        time: '7:00am',
+        rating: 5
+      },
+      {
+        runType: 'Tempo Run',
+        location: 'Green Lake',
+        group: 'Green Lake Running Group',
+        day: 'Tuesday',
+        time: '6:00pm',
+        rating: 3
+      },
+      {
+        runType: 'Easy Run',
+        location: 'Alki',
+        group: 'West Seattle Runners',
+        day: 'Monday',
+        time: '6:00am',
+        rating: 4
+      }
+    ]
+
     return (
-      <View>
+      <View style={{paddingBottom: 120}}>
         <HeaderComponent />
-        <TouchableOpacity 
+        <TouchableOpacity
           style={{ backgroundColor: colors.backgroundColor, alignItems: 'flex-start', paddingLeft: 10, paddingBottom: 5 }}
           onPress={() => this.props.navigation.goBack()}
         >
@@ -74,7 +125,7 @@ export default class ViewGroupScreen extends Component {
         </Text>
 
             <Text style={{ fontSize: 20, marginTop: 10 }}>
-              We are a Puget Sound-based running group that celebrates the beauty of our region and our personal potential with training, competition, and community. While the club offers a unique focus on trail running, members also rally on the road, track, and cross country course.
+              We are a Puget Sound-based running group that celebrates the beauty of our region and our personal potential with training, competition, and community. While the club offers a unique focus on trail running, members also rally on the road, track, and cross country course. 
         </Text>
 
             <Text style={{ fontSize: 23, marginTop: 20 }}>
@@ -84,44 +135,49 @@ export default class ViewGroupScreen extends Component {
             <Text style={{ fontSize: 20, marginTop: 10 }}>
               Jake Hommer, Sam Violette
         </Text>
+              <Button
+                onPress={this.toggleRuns}
+                title='Runs'
+                buttonStyle={{ marginTop: 20, backgroundColor: colors.otherColor }}
+              />
 
-            <Button
-              onPress={this.toggleRuns}
-              title='Runs'
-              buttonStyle={{ marginTop: 20, backgroundColor: colors.otherColor }}
-            />
+              {this.state.showRuns ?
+                <View>
+                  {runs.map((run, i) => {
+                    return <TouchableOpacity key={i} onPress={() => this.props.navigation.navigate('ViewRun')}>
+                      <RunCard {...run} />
+                    </TouchableOpacity>
+                  })}
+                </View>
+                :
+                null
+              }
 
-            {this.state.showRuns ?
-              <RunCard />
-              :
-              null
-            }
+              <Button
+                onPress={this.toggleRunners}
+                title='In this Group'
+                buttonStyle={{ marginTop: 20, backgroundColor: colors.otherColor }}
+              />
 
-            <Button
-              onPress={this.toggleRunners}
-              title='In this Group'
-              buttonStyle={{ marginTop: 20, backgroundColor: colors.otherColor }}
-            />
+              {this.state.showRunners ?
+                  <RunnersCard />
+                :
+                null
+              }
 
-            {this.state.showRunners ?
-              <RunnersCard />
-              :
-              null
-            }
+              <Button
+                onPress={this.toggleComments}
+                title='Comments'
+                buttonStyle={{ marginTop: 20, backgroundColor: colors.otherColor }}
+              />
 
-            <Button
-              onPress={this.toggleComments}
-              title='Comments'
-              buttonStyle={{ marginTop: 20, backgroundColor: colors.otherColor }}
-            />
-
-            {this.state.showComments ?
-              comments.map(comment => {
-                return <CommentCard key={comment.id} {...comment} />
-              })
-              :
-              null
-            }
+              {this.state.showComments ?
+                comments.map(comment => {
+                  return <CommentCard key={comment.id} {...comment} />
+                })
+                :
+                null
+              }
 
           </View>
         </ScrollView>

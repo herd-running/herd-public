@@ -61,7 +61,7 @@ const DiscoverStack = createStackNavigator({
 const TabNavigator = createBottomTabNavigator({
   Runs: DashboardStack,
   Groups: Dashboard,
-  Add: CreateNewStack,
+  Create: CreateNewStack,
   Discover: DiscoverStack,
   Map: DiscoverStack
 },
@@ -79,7 +79,7 @@ const TabNavigator = createBottomTabNavigator({
           iconName = 'account-multiple'
           size = 47
           style = { paddingBottom: 5 }
-        } else if (routeName === 'Add') {
+        } else if (routeName === 'Create') {
           iconName = 'plus-circle'
           size = 35
         } else if (routeName === 'Discover') {

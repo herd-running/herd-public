@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import { View, ScrollView, Text, TextInput, KeyboardAvoidingView } from 'react-native'
-import { Button } from 'react-native-elements'
+import { View, ScrollView, Text, TextInput, TouchableOpacity } from 'react-native'
+import { Button, Icon } from 'react-native-elements'
 import { Dropdown } from 'react-native-material-dropdown'
 
 import HeaderComponent from '../components/Header'
@@ -36,10 +36,21 @@ export default class CreateRunScreen extends Component {
 
   render() {
     return (
-      <View>
+      <View style={{paddingBottom: 120}}>
         <HeaderComponent />
+        <TouchableOpacity 
+          style={{ backgroundColor: colors.backgroundColor, alignItems: 'flex-start', paddingLeft: 10, paddingBottom: 5 }}
+          onPress={() => this.props.navigation.goBack()}
+        >
+          <Icon
+            name='arrow-left'
+            type='font-awesome'
+            color={colors.otherColor}
+            size={20}
+          />
+        </TouchableOpacity>
         {/* How can I made the scroll sticky? */}
-        <ScrollView style={{ marginLeft: 25, marginRight: 25 }}>
+        <ScrollView style={{ marginLeft: 30, marginRight: 30 }}>
             <Text style={{ fontSize: 25, color: colors.backgroundColor, marginTop: 10, marginBottom: 10, fontWeight: 'bold' }}>New Run</Text>
 
             {/* How do I reduce the animation on the dropdown? */}

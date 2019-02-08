@@ -105,7 +105,7 @@ export default class ViewGroupScreen extends Component {
 
     return (
       <View style={{paddingBottom: 120}}>
-        <HeaderComponent />
+        <HeaderComponent header='Herd'/>
         <TouchableOpacity
           style={{ backgroundColor: colors.backgroundColor, alignItems: 'flex-start', paddingLeft: 10, paddingBottom: 5 }}
           onPress={() => this.props.navigation.goBack()}

@@ -11,7 +11,7 @@ export default class CreateChoicesScreen extends Component {
     super(props)
 
     this.state = {
-      isGroupLeader: false
+      isGroupLeader: true
     }
   }
 
@@ -24,7 +24,7 @@ export default class CreateChoicesScreen extends Component {
   render = () => {
     return (
       <View style={{ flex: 1, backgroundColor: colors.backgroundColor }}>
-        <HeaderComponent />
+        <HeaderComponent header='Herd'/>
         <View style={{ flex: 1, justifyContent: 'space-evenly', alignItems: 'center' }}>
 
           <View style={{ alignItems: 'center' }}>

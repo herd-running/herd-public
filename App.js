@@ -4,30 +4,32 @@ import { createStackNavigator, createAppContainer, createBottomTabNavigator } fr
 import { Icon } from 'react-native-elements'
 
 import JoinScreen from './screens/JoinScreen'
-import Dashboard from './screens/Dashboard'
+import DashboardRuns from './screens/DashboardRuns'
+import DashboardGroups from './screens/DashboardGroups'
 import DiscoverScreen from './screens/DiscoverScreen'
 import ViewRunScreen from './screens/ViewRunScreen'
 import ViewGroupScreen from './screens/ViewGroupScreen'
 import CreateChoicesScreen from './screens/CreateChoicesScreen'
 import CreateRunScreen from './screens/CreateRunScreen'
 import CreateGroupScreen from './screens/CreateGroupScreen'
+import MapScreen from './screens/MapScreen'
 
 import colors from './constants/Colors'
 
-const DashboardStack = createStackNavigator({
+const DashboardRunStack = createStackNavigator({
   Join: JoinScreen,
   // LogIn: LogIn,
   // SignUp: SignUp,
-  Dashboard: Dashboard,
+  DashboardRuns: DashboardRuns,
   ViewRun: ViewRunScreen,
-  ViewGroup: ViewGroupScreen
 },
   {
     initialRouteName: 'Join',
     headerMode: 'none'
-  })
+  }
+)
 
-DashboardStack.navigationOptions = ({ navigation }) => {
+DashboardRunStack.navigationOptions = ({ navigation }) => {
   let tabBarVisible = true
   if (navigation.state.index === 0) {
     tabBarVisible = false
@@ -36,6 +38,16 @@ DashboardStack.navigationOptions = ({ navigation }) => {
     tabBarVisible
   }
 }
+
+const DashboardGroupStack = createStackNavigator({
+  DashboardGroups: DashboardGroups,
+  ViewGroup: ViewGroupScreen
+},
+  {
+    initialRouteName: 'DashboardGroups',
+    headerMode: 'none'
+  }
+)
 
 const CreateNewStack = createStackNavigator({
   Choose: CreateChoicesScreen,
@@ -49,7 +61,6 @@ const CreateNewStack = createStackNavigator({
 
 const DiscoverStack = createStackNavigator({
   Discover: DiscoverScreen,
-  // Map: MapScreen, 
   ViewRun: ViewRunScreen,
   ViewGroup: ViewGroupScreen
 },
@@ -58,12 +69,22 @@ const DiscoverStack = createStackNavigator({
     headerMode: 'none'
   })
 
+const MapStack = createStackNavigator({
+  Map: MapScreen, 
+  ViewRun: ViewRunScreen,
+  ViewGroup: ViewGroupScreen
+},
+  {
+    initialRouteName: 'Map',
+    headerMode: 'none'
+  })
+
 const TabNavigator = createBottomTabNavigator({
-  Runs: DashboardStack,
-  Groups: Dashboard,
-  Create: CreateNewStack,
-  Discover: DiscoverStack,
-  Map: DiscoverStack
+  'Runs': DashboardRunStack,
+  'Groups': DashboardGroupStack,
+  'Create': CreateNewStack,
+  'Discover': DiscoverStack,
+  'Map': MapStack
 },
   {
     defaultNavigationOptions: ({ navigation }) => ({

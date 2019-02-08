@@ -31,7 +31,7 @@ export default class CreateGroupScreen extends Component {
   render() {
     return (
       <View>
-        <HeaderComponent />
+        <HeaderComponent header='Herd'/>
         <TouchableOpacity 
           style={{ backgroundColor: colors.backgroundColor, alignItems: 'flex-start', paddingLeft: 10, paddingBottom: 5 }}
           onPress={() => this.props.navigation.goBack()}
@@ -61,7 +61,7 @@ export default class CreateGroupScreen extends Component {
           <TextInput
             onChangeText={(description) => this.setState({ description })}
             value={this.state.description}
-            style={{ height: 325, borderColor: 'gray', borderWidth: 1, fontSize: 18, paddingLeft: 5, marginBottom: 10 }}
+            style={{ height: 370, borderColor: 'gray', borderWidth: 1, fontSize: 18, paddingLeft: 5, marginBottom: 10 }}
             multiline={true}
             numberOfLines={15}
             ref={(input) => { this.secondTextInput = input; }}

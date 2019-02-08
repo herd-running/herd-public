@@ -14,12 +14,12 @@ export default class JoinScreen extends Component {
 
   onPressSignUp = () => {
     const { navigate } = this.props.navigation
-    navigate('Dashboard')
+    navigate('DashboardRuns')
   }
 
   onPressLogIn = () => {
     const { navigate } = this.props.navigation
-    navigate('Dashboard')
+    navigate('DashboardRuns')
   }
 
   render = () => {

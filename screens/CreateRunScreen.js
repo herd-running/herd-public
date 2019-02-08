@@ -13,6 +13,7 @@ export default class CreateRunScreen extends Component {
     super(props)
 
     this.state = {
+      group: '',
       runType: '',
       day: '',
       time: '',
@@ -35,9 +36,17 @@ export default class CreateRunScreen extends Component {
   }
 
   render() {
+    const groups = [
+      {
+        value: 'Seattle Running Club'
+      },
+      {
+        value: 'Jill\'s Sunday Runday'
+      }
+    ]
     return (
       <View style={{paddingBottom: 120}}>
-        <HeaderComponent />
+        <HeaderComponent header='Herd'/>
         <TouchableOpacity 
           style={{ backgroundColor: colors.backgroundColor, alignItems: 'flex-start', paddingLeft: 10, paddingBottom: 5 }}
           onPress={() => this.props.navigation.goBack()}
@@ -52,6 +61,16 @@ export default class CreateRunScreen extends Component {
         {/* How can I made the scroll sticky? */}
         <ScrollView style={{ marginLeft: 30, marginRight: 30 }}>
             <Text style={{ fontSize: 25, color: colors.backgroundColor, marginTop: 10, marginBottom: 10, fontWeight: 'bold' }}>New Run</Text>
+
+            <Dropdown
+              label='Group'
+              data={groups}
+              fontSize={20}
+              labelFontSize={18}
+              itemCount={5}
+              animationDuration={0}
+              onChangeText={(group) => this.setState({ group })}
+            />
 
             {/* How do I reduce the animation on the dropdown? */}
             <Dropdown

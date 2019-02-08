@@ -22,10 +22,6 @@ export default class DiscoverScreen extends Component {
     }
   }
 
-  updateSearch = search => {
-    this.setState({ search });
-  };
-
   onTogglePressRuns = () => {
     this.setState({
       viewing: 'Runs',
@@ -43,8 +39,6 @@ export default class DiscoverScreen extends Component {
   }
 
   render() {
-    const { search } = this.state;
-
     const runs = [
       {
         runType: 'Long Run',
@@ -117,7 +111,7 @@ export default class DiscoverScreen extends Component {
 
     return (
       <View style={styles.container}>
-        <HeaderComponent />
+        <HeaderComponent header='Discover'/>
 
         <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 10, marginBottom: 10 }}>
           <Button
@@ -155,7 +149,7 @@ export default class DiscoverScreen extends Component {
           lightTheme={true}
           placeholder="Search"
           onChangeText={search => this.setState({ search })}
-          value={search}
+          value={this.state.search}
           containerStyle={{ marginLeft: 10, marginRight: 10 }}
         />
         {this.state.viewing === 'Runs' ?

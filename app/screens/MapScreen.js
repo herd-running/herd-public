@@ -1,9 +1,12 @@
 import React, { Component } from 'react'
-import { Stylesheet, View } from 'react-native'
+import { View } from 'react-native'
 import { SearchBar } from 'react-native-elements'
 // import Mapbox from '@mapbox/react-native-mapbox-gl';
+import { MapView } from 'expo'
 
 import HeaderComponent from '../components/Header'
+
+import styles from '../styles/MapScreen'
 
 // Mapbox.setAccessToken('sk.eyJ1IjoiY2VsaWFtYXJzaGFsbCIsImEiOiJjanJ2MXBqYWcwZ2h6NGFtaWh5cmJlZmQwIn0.nb4VLTrwXX9J6kySy2tl7g')
 
@@ -13,6 +16,12 @@ export default class MapScreen extends Component {
 
     this.state = {
       search: '',
+      region: {
+        latitude: 37.78825,
+        longitude: -122.4324,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+      }
     }
   }
 
@@ -20,10 +29,13 @@ export default class MapScreen extends Component {
     this.setState({ search });
   };
 
+  onRegionChange = (region) => {
+    this.setState({ region });
+  }
   render() {
 
     return (
-      <View style={styles.container}>
+      <View>
         <HeaderComponent header='Map' />
 
         <View style={{ justifyContent: 'center' }}>
@@ -32,10 +44,18 @@ export default class MapScreen extends Component {
             placeholder="Search"
             onChangeText={(search) => { this.setState({ search }) }}
             value={this.state.search}
-            containerStyle={{ marginLeft: 10, marginRight: 10 }}
           />
+        </View>
 
-          {/* <View style={{flex: 1}}>
+        <View style={styles.container}>
+        <MapView
+          style={styles.map}
+          region={this.state.region}
+          onRegionChange={this.onRegionChange}
+          />
+          </View>
+      
+        {/* <View style={{flex: 1}}>
             <Mapbox.MapView
               styleURL={Mapbox.StyleURL.Street}
               zoomLevel={15}
@@ -44,7 +64,6 @@ export default class MapScreen extends Component {
             </Mapbox.MapView>
           </View> */}
 
-        </View>
       </View>
     )
   }

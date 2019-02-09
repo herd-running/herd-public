@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import { View, ScrollView, Text, TouchableOpacity } from 'react-native'
-import { Button, Icon } from 'react-native-elements'
+import { View, ScrollView, Text, TouchableOpacity, TextInput } from 'react-native'
+import { Button, Icon, Overlay } from 'react-native-elements'
+import { Dropdown } from 'react-native-material-dropdown'
+
 
 import colors from '../constants/Colors'
 
@@ -17,20 +19,56 @@ export default class ViewRunScreen extends Component {
       attending: false,
       showMoreInfo: false,
       showRunners: false,
-      showComments: false
+      showComments: false,
+      showAddComment: false,
+      overlayIsVisible: false,
+      overlayMessage: null,
+      commentTitle: null,
+      comment: null,
+      commentRating: null
     }
   }
 
   handleLeaveRun = () => {
+    this.setState({
+      overlayMessage: 'You Left this Run',
+      overlayIsVisible: true
+    })
 
+    setTimeout(() => {
+      this.setState({
+        overlayMessage: null,
+        overlayIsVisible: false
+      })
+      this.props.navigation.goBack()
+    }, 1000)
   }
 
   handleJoinRun = () => {
+    this.setState({
+      overlayMessage: 'You Joined a Run!',
+      overlayIsVisible: true
+    })
 
+    setTimeout(() => {
+      this.setState({
+        overlayMessage: null,
+        overlayIsVisible: false
+      })
+      this.props.navigation.goBack()
+    }, 1000)
+  }
+
+  handleShowAddCommentForm = () => {
+    this.setState({
+      showAddComment: true
+    })
   }
 
   handleAddComment = () => {
-
+    this.setState({
+      showAddComment: false
+    })
   }
 
   toggleRunners = () => {
@@ -68,7 +106,7 @@ export default class ViewRunScreen extends Component {
     ]
     return (
       <View style={{ paddingBottom: 150 }}>
-        <HeaderComponent header='Herd'/>
+        <HeaderComponent header='Herd' />
         <TouchableOpacity
           style={{ backgroundColor: colors.backgroundColor, alignItems: 'flex-start', paddingLeft: 10, paddingBottom: 5 }}
           onPress={() => this.props.navigation.goBack()}
@@ -105,38 +143,38 @@ export default class ViewRunScreen extends Component {
 
             {this.state.showMoreInfo ?
               <View>
-                <View style={{flexDirection: 'row'}}>
+                <View style={{ flexDirection: 'row' }}>
                   <Text style={{ fontSize: 20, marginTop: 10, fontWeight: 'bold' }}>
                     Distance:
                   </Text>
-                  <Text style={{ fontSize: 20, marginTop: 10, marginLeft: 5}}>
+                  <Text style={{ fontSize: 20, marginTop: 10, marginLeft: 5 }}>
                     5 miles
                   </Text>
                 </View>
 
-                <View style={{flexDirection: 'row'}}>
+                <View style={{ flexDirection: 'row' }}>
                   <Text style={{ fontSize: 20, marginTop: 10, fontWeight: 'bold' }}>
                     Target Pace:
                   </Text>
-                  <Text style={{ fontSize: 20, marginTop: 10, marginLeft: 5}}>
+                  <Text style={{ fontSize: 20, marginTop: 10, marginLeft: 5 }}>
                     8 minutes/mile
                   </Text>
                 </View>
 
-                <View style={{flexDirection: 'row'}}>
+                <View style={{ flexDirection: 'row' }}>
                   <Text style={{ fontSize: 20, marginTop: 10, fontWeight: 'bold' }}>
                     Terrain:
                   </Text>
-                  <Text style={{ fontSize: 20, marginTop: 10, marginLeft: 5}}>
+                  <Text style={{ fontSize: 20, marginTop: 10, marginLeft: 5 }}>
                     Trail
                   </Text>
                 </View>
 
-                  <Text style={{ fontSize: 20, marginTop: 10, fontWeight: 'bold' }}>
-                    Description:
+                <Text style={{ fontSize: 20, marginTop: 10, fontWeight: 'bold' }}>
+                  Description:
                   </Text>
-                  <Text style={{ fontSize: 20, marginTop: 5}}>
-                    Join us for a fun run around beautiful Discovery Park.
+                <Text style={{ fontSize: 20, marginTop: 5 }}>
+                  Join us for a fun run around beautiful Discovery Park.
                   </Text>
 
               </View>
@@ -163,16 +201,62 @@ export default class ViewRunScreen extends Component {
             />
 
             {this.state.showComments ?
-              <View style={{alignItems: 'center'}}>
+              <View style={{ alignItems: 'center' }}>
                 {comments.map(comment => {
                   return <CommentCard key={comment.id} {...comment} />
                 })}
 
-                <Button
-                  onPress={this.handleAddComment}
-                  title='Add Comment'
-                  buttonStyle={{ marginTop: 20, backgroundColor: colors.otherColor, width: 200 }}
-                />
+                {this.state.showAddComment ?
+
+                  <View>
+
+                    <Text style={{ fontSize: 20, marginTop: 10, color: colors.formGray }}>Title</Text>
+                    <TextInput
+                      onChangeText={(commentTitle) => this.setState({ commentTitle })}
+                      value={this.state.distance}
+                      style={{ height: 40, borderColor: 'gray', borderWidth: 1, fontSize: 18, paddingLeft: 5, minWidth: '100%' }}
+                      returnKeyType='done'
+                    />
+
+                    <Text style={{ fontSize: 20, marginTop: 10, color: colors.formGray }}>Comment</Text>
+                    <TextInput
+                      onChangeText={(comment) => this.setState({ comment })}
+                      value={this.state.description}
+                      style={{ height: 80, borderColor: 'gray', borderWidth: 1, fontSize: 18, paddingLeft: 5, marginBottom: 10, minWidth: '100%' }}
+                      returnKeyType='done'
+                      multiline={true}
+                      numberOfLines={5}
+                      blurOnSubmit={true}
+                    />
+
+                    <View style={{ width: 100 }}>
+                      <Dropdown
+                        label='Rating'
+                        data={[{ value: 1 }, { value: 2 }, { value: 3 }, { value: 4 }, { value: 5 }]}
+                        fontSize={20}
+                        labelFontSize={18}
+                        itemCount={5}
+                        onChangeText={(commentRating) => this.setState({ commentRating })}
+                      />
+                    </View>
+
+                    <View style={{alignItems: 'center'}}>
+                      <Button
+                        onPress={this.handleAddComment}
+                        title='Submit Comment'
+                        buttonStyle={{ marginTop: 20, backgroundColor: colors.otherColor, width: 200 }}
+                      />
+                    </View>
+                  </View>
+
+                  :
+                  <Button
+                    onPress={this.handleShowAddCommentForm}
+                    title='Add Comment'
+                    buttonStyle={{ marginTop: 20, backgroundColor: colors.otherColor, width: 200 }}
+                  />
+                }
+
               </View>
               :
               null
@@ -197,6 +281,17 @@ export default class ViewRunScreen extends Component {
             </View>
           </View>
         </ScrollView>
+        <Overlay
+          isVisible={this.state.overlayIsVisible}
+          windowBackgroundColor={colors.backgroundColor}
+          overlayBackgroundColor={colors.otherColor}
+          width="auto"
+          height="auto"
+        >
+          <View style={{ minWidth: '80%', minHeight: '25%', alignItems: 'center', justifyContent: 'center' }}>
+            <Text style={{ color: colors.backgroundColor, fontSize: 24 }}>{this.state.overlayMessage}</Text>
+          </View>
+        </Overlay>
       </View>
     )
   }

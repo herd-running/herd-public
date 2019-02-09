@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { View, ScrollView, Text, TouchableOpacity } from 'react-native'
-import { Button, Icon } from 'react-native-elements'
+import { View, ScrollView, Text, TouchableOpacity, TextInput } from 'react-native'
+import { Button, Icon, Overlay } from 'react-native-elements'
 
 import HeaderComponent from '../components/Header'
 import CommentCard from '../components/CommentCard'
@@ -17,7 +17,13 @@ export default class ViewGroupScreen extends Component {
       member: false,
       showRuns: false,
       showRunners: false,
-      showComments: false
+      showComments: false,
+      overlayIsVisible: false,
+      overlayMessage: null,
+      showAddComment: false,
+      commentTitle: null,
+      comment: null,
+      commentRating: null
     }
   }
 
@@ -37,6 +43,48 @@ export default class ViewGroupScreen extends Component {
     this.setState({
       showComments: !this.state.showComments
     })
+  }
+
+  handleShowAddCommentForm = () => {
+    this.setState({
+      showAddComment: true
+    })
+  }
+
+  handleAddComment = () => {
+    this.setState({
+      showAddComment: false
+    })
+  }
+
+  handleJoinGroup = () => {
+    this.setState({
+      overlayMessage: 'You Joined a Group!',
+      overlayIsVisible: true
+    })
+
+    setTimeout(() => {
+      this.setState({
+        overlayMessage: null,
+        overlayIsVisible: false
+      })
+      this.props.navigation.goBack()
+    }, 1000)
+  }
+
+  handleLeaveGroup = () => {
+    this.setState({
+      overlayMessage: 'You Left this Run',
+      overlayIsVisible: true
+    })
+
+    setTimeout(() => {
+      this.setState({
+        overlayMessage: null,
+        overlayIsVisible: false
+      })
+      this.props.navigation.goBack()
+    }, 1000)
   }
 
   render() {
@@ -156,7 +204,7 @@ export default class ViewGroupScreen extends Component {
 
             <Button
               onPress={this.toggleRunners}
-              title='In this Group'
+              title='Members'
               buttonStyle={{ marginTop: 20, backgroundColor: colors.otherColor }}
             />
 
@@ -177,11 +225,42 @@ export default class ViewGroupScreen extends Component {
                 {comments.map(comment => {
                   return <CommentCard key={comment.id} {...comment} />
                 })}
-                <Button
-                  onPress={this.handleAddComment}
-                  title='Add Comment'
-                  buttonStyle={{ marginTop: 20, backgroundColor: colors.otherColor, width: 200 }}
-                />
+                {this.state.showAddComment ?
+                  <View>
+                    <Text style={{ fontSize: 20, marginTop: 10, color: colors.formGray }}>Title</Text>
+                    <TextInput
+                      onChangeText={(commentTitle) => this.setState({ commentTitle })}
+                      value={this.state.distance}
+                      style={{ height: 40, borderColor: 'gray', borderWidth: 1, fontSize: 18, paddingLeft: 5, minWidth: '100%' }}
+                      returnKeyType='done'
+                    />
+
+                    <Text style={{ fontSize: 20, marginTop: 10, color: colors.formGray }}>Comment</Text>
+                    <TextInput
+                      onChangeText={(comment) => this.setState({ comment })}
+                      value={this.state.description}
+                      style={{ height: 80, borderColor: 'gray', borderWidth: 1, fontSize: 18, paddingLeft: 5, marginBottom: 10, minWidth: '100%' }}
+                      returnKeyType='done'
+                      multiline={true}
+                      numberOfLines={5}
+                      blurOnSubmit={true}
+                    />
+
+                    <View style={{ alignItems: 'center' }}>
+                      <Button
+                        onPress={this.handleAddComment}
+                        title='Submit Comment'
+                        buttonStyle={{ marginTop: 20, backgroundColor: colors.otherColor, width: 200 }}
+                      />
+                    </View>
+                  </View>
+                  :
+                  <Button
+                    onPress={this.handleShowAddCommentForm}
+                    title='Add Comment'
+                    buttonStyle={{ marginTop: 20, backgroundColor: colors.otherColor, width: 200 }}
+                  />
+                }
               </View>
               :
               null
@@ -190,14 +269,14 @@ export default class ViewGroupScreen extends Component {
               {this.state.member ?
                 <Button
                   title='Leave Group'
-                  onPress={this.handleLeaveRun}
+                  onPress={this.handleLeaveGroup}
                   buttonStyle={{ backgroundColor: colors.otherColor, width: 200 }}
                   titleStyle={{ color: colors.backgroundColor }}
                 />
                 :
                 <Button
                   title='Join this Group!'
-                  onPress={this.handleJoinRun}
+                  onPress={this.handleJoinGroup}
                   buttonStyle={{ backgroundColor: colors.otherColor, width: 200 }}
                   titleStyle={{ color: colors.backgroundColor }}
                 />
@@ -205,6 +284,17 @@ export default class ViewGroupScreen extends Component {
             </View>
           </View>
         </ScrollView>
+        <Overlay
+          isVisible={this.state.overlayIsVisible}
+          windowBackgroundColor={colors.backgroundColor}
+          overlayBackgroundColor={colors.otherColor}
+          width="auto"
+          height="auto"
+        >
+          <View style={{ minWidth: '80%', minHeight: '25%', alignItems: 'center', justifyContent: 'center' }}>
+            <Text style={{ color: colors.backgroundColor, fontSize: 24 }}>{this.state.overlayMessage}</Text>
+          </View>
+        </Overlay>
       </View>
     )
   }

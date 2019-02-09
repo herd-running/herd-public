@@ -14,6 +14,8 @@ export function getGroups() {
           payload: response.data
         })
       })
+      .catch(() => console.warn('could not get groups'))
+
   )
 }
 

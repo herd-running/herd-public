@@ -14,7 +14,7 @@ import RunCard from '../components/RunCard'
 import GroupCard from '../components/GroupCard'
 import RunFilters from '../components/RunFilters'
 
-export class DiscoverScreen extends Component {
+class DiscoverScreen extends Component {
   constructor(props) {
     super(props)
 
@@ -27,7 +27,7 @@ export class DiscoverScreen extends Component {
   }
 
   componentDidMount() {
-    this.props.getGroups()
+    // this.getGroups()
   }
 
   onTogglePressRuns = () => {
@@ -46,7 +46,7 @@ export class DiscoverScreen extends Component {
     })
   }
 
-  render() {
+  render() {    
     const runs = [
       {
         runType: 'Long Run',
@@ -172,8 +172,8 @@ export class DiscoverScreen extends Component {
           </ScrollView>
           :
           <ScrollView>
-            {groups.map((group) => {
-              return <TouchableOpacity key={group.id} onPress={() => this.props.navigation.navigate('ViewGroup')}>
+            {groups.map((group, i) => {
+              return <TouchableOpacity key={i} onPress={() => this.props.navigation.navigate('ViewGroup')}>
                 <GroupCard {...group} />
               </TouchableOpacity>
             })}

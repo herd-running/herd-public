@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { View, Text } from 'react-native'
 import { Card } from 'react-native-elements'
 
@@ -15,5 +15,4 @@ export default function RunCard({runType, location, group, day, time, rating}) {
       </View>
     </Card>
   )
-
 }

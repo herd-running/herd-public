@@ -1,9 +1,9 @@
 import React from 'react'
-import { View } from 'react-native'
+import { View, Text } from 'react-native'
 import { Icon } from 'react-native-elements'
 import colors from '../constants/Colors'
 
-export default function Rating(rating, size) {
+export default function Rating({rating, size}) {
   let stars = []
   for (let i = 1; i <= rating; i++) {
     stars.push(
@@ -18,6 +18,7 @@ export default function Rating(rating, size) {
   }
   return (
     <View style={{ flexDirection: 'row' }}>
+      {/* <Text>Hello</Text> */}
       {stars}
     </View>
   )

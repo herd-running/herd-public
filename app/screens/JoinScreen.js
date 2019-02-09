@@ -25,7 +25,7 @@ export default class JoinScreen extends Component {
   render = () => {
     return (
       <View style={styles.container}>
-        <Image source={require('../assets/images/logo.jpg')} />
+        <Image source={require('../../assets/images/logo.jpg')} />
 
         <Button
           buttonStyle={styles.buttonStyle}

@@ -14,6 +14,7 @@ export default class ViewGroupScreen extends Component {
     super(props)
 
     this.state = {
+      member: false,
       showRuns: false,
       showRunners: false,
       showComments: false
@@ -104,8 +105,8 @@ export default class ViewGroupScreen extends Component {
     ]
 
     return (
-      <View style={{paddingBottom: 120}}>
-        <HeaderComponent header='Herd'/>
+      <View style={{ paddingBottom: 120 }}>
+        <HeaderComponent header='Herd' />
         <TouchableOpacity
           style={{ backgroundColor: colors.backgroundColor, alignItems: 'flex-start', paddingLeft: 10, paddingBottom: 5 }}
           onPress={() => this.props.navigation.goBack()}
@@ -125,60 +126,83 @@ export default class ViewGroupScreen extends Component {
         </Text>
 
             <Text style={{ fontSize: 20, marginTop: 10 }}>
-              We are a Puget Sound-based running group that celebrates the beauty of our region and our personal potential with training, competition, and community. While the club offers a unique focus on trail running, members also rally on the road, track, and cross country course. 
+              We are a Puget Sound-based running group that celebrates the beauty of our region and our personal potential with training, competition, and community. While the club offers a unique focus on trail running, members also rally on the road, track, and cross country course.
         </Text>
 
             <Text style={{ fontSize: 23, marginTop: 20 }}>
-              Leaders:
+              Leader:
         </Text>
 
             <Text style={{ fontSize: 20, marginTop: 10 }}>
-              Jake Hommer, Sam Violette
+              Jake Hommer
         </Text>
-              <Button
-                onPress={this.toggleRuns}
-                title='Runs'
-                buttonStyle={{ marginTop: 20, backgroundColor: colors.otherColor }}
-              />
+            <Button
+              onPress={this.toggleRuns}
+              title='Runs'
+              buttonStyle={{ marginTop: 20, backgroundColor: colors.otherColor }}
+            />
 
-              {this.state.showRuns ?
-                <View>
-                  {runs.map((run, i) => {
-                    return <TouchableOpacity key={i} onPress={() => this.props.navigation.navigate('ViewRun')}>
-                      <RunCard {...run} />
-                    </TouchableOpacity>
-                  })}
-                </View>
-                :
-                null
-              }
+            {this.state.showRuns ?
+              <View>
+                {runs.map((run, i) => {
+                  return <TouchableOpacity key={i} onPress={() => this.props.navigation.navigate('ViewRun')}>
+                    <RunCard {...run} />
+                  </TouchableOpacity>
+                })}
+              </View>
+              :
+              null
+            }
 
-              <Button
-                onPress={this.toggleRunners}
-                title='In this Group'
-                buttonStyle={{ marginTop: 20, backgroundColor: colors.otherColor }}
-              />
+            <Button
+              onPress={this.toggleRunners}
+              title='In this Group'
+              buttonStyle={{ marginTop: 20, backgroundColor: colors.otherColor }}
+            />
 
-              {this.state.showRunners ?
-                  <RunnersCard />
-                :
-                null
-              }
+            {this.state.showRunners ?
+              <RunnersCard />
+              :
+              null
+            }
 
-              <Button
-                onPress={this.toggleComments}
-                title='Comments'
-                buttonStyle={{ marginTop: 20, backgroundColor: colors.otherColor }}
-              />
+            <Button
+              onPress={this.toggleComments}
+              title='Comments'
+              buttonStyle={{ marginTop: 20, backgroundColor: colors.otherColor }}
+            />
 
-              {this.state.showComments ?
-                comments.map(comment => {
+            {this.state.showComments ?
+              <View style={{ alignItems: 'center' }}>
+                {comments.map(comment => {
                   return <CommentCard key={comment.id} {...comment} />
-                })
+                })}
+                <Button
+                  onPress={this.handleAddComment}
+                  title='Add Comment'
+                  buttonStyle={{ marginTop: 20, backgroundColor: colors.otherColor, width: 200 }}
+                />
+              </View>
+              :
+              null
+            }
+            <View style={{ flex: 1, marginTop: 15, alignItems: 'center' }}>
+              {this.state.member ?
+                <Button
+                  title='Leave Group'
+                  onPress={this.handleLeaveRun}
+                  buttonStyle={{ backgroundColor: colors.otherColor, width: 200 }}
+                  titleStyle={{ color: colors.backgroundColor }}
+                />
                 :
-                null
+                <Button
+                  title='Join this Group!'
+                  onPress={this.handleJoinRun}
+                  buttonStyle={{ backgroundColor: colors.otherColor, width: 200 }}
+                  titleStyle={{ color: colors.backgroundColor }}
+                />
               }
-
+            </View>
           </View>
         </ScrollView>
       </View>

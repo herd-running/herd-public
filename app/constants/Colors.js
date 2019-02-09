@@ -1,4 +1,3 @@
-const tintColor = '#2f95dc';
 
 //otherColor is used for text, buttons, icons, etc.
 export default colors = {

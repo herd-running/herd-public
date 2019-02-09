@@ -6,13 +6,9 @@ import Rating from './Rating'
 export default function CommentCard({ title, rating, body }) {
 
   return (
-    <Card title={title}>
-      {rating ?
-        <Rating rating={rating} size={15} />
-        :
-        null
-      }
-      <Text style={{ marginTop: 5 }}>{body}</Text>
+    <Card title={title} containerStyle={{minWidth: '100%'}}>
+      <Rating rating={rating} size={15} />
+      <Text style={{marginTop: 5}}>{body}</Text>
     </Card>
   )
 }

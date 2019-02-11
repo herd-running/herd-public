@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { View, ScrollView, TouchableOpacity } from 'react-native'
-import { SearchBar } from 'react-native-elements'
+import { SearchBar, Button } from 'react-native-elements'
 
 import styles from '../styles/Dashboard'
 
 import HeaderComponent from '../components/Header'
 import GroupCard from '../components/GroupCard'
+import AddGroup from '../components/AddGroup'
 
 export default class DashboardGroups extends Component {
   constructor(props) {
@@ -42,16 +43,25 @@ export default class DashboardGroups extends Component {
 
     return (
       <View style={styles.container}>
-        <HeaderComponent header='My Groups' />
+        <HeaderComponent header='My Groups' /*component={<AddGroup/>*/ />
 
         <View style={{ justifyContent: 'center' }}>
           <SearchBar
             lightTheme={true}
             placeholder="Search"
-            onChangeText={(search) => this.setState({search})}
+            onChangeText={(search) => this.setState({ search })}
             value={this.state.search}
             containerStyle={{ marginLeft: 10, marginRight: 10 }}
           />
+
+          <View style={{alignItems: 'center', marginTop: 10, marginBottom: 5}}>
+            <Button
+              title='Add New Group'
+              onPress={() => this.props.navigation.navigate('CreateGroup')}
+              buttonStyle={{ backgroundColor: colors.otherColor, width: 200 }}
+              titleStyle={{ color: colors.backgroundColor }}
+            />
+          </View>
 
         </View>
         <ScrollView>

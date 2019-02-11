@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { View, ScrollView, Text, TextInput, TouchableOpacity } from 'react-native'
-import { Button, Icon } from 'react-native-elements'
+import { Button, Icon, Overlay } from 'react-native-elements'
 import dismissKeyboard from 'react-native-dismiss-keyboard'
 
 import HeaderComponent from '../components/Header'
@@ -14,12 +14,25 @@ export default class CreateGroupScreen extends Component {
 
     this.state = {
       name: '',
-      description: ''
+      description: '',
+      overlayIsVisible: false,
+      overlayMessage: ''
     }
   }
 
   handleCreateGroup = () => {
+    this.setState({
+      overlayMessage: 'Group Created!',
+      overlayIsVisible: true
+    })
 
+    setTimeout(() => {
+      this.setState({
+        overlayMessage: null,
+        overlayIsVisible: false
+      })
+      this.props.navigation.goBack()
+    }, 1000)
   }
 
   onEnterPress = ({ nativeEvent }) => {
@@ -31,8 +44,8 @@ export default class CreateGroupScreen extends Component {
   render() {
     return (
       <View>
-        <HeaderComponent header='Herd'/>
-        <TouchableOpacity 
+        <HeaderComponent header='Create' />
+        <TouchableOpacity
           style={{ backgroundColor: colors.backgroundColor, alignItems: 'flex-start', paddingLeft: 10, paddingBottom: 5 }}
           onPress={() => this.props.navigation.goBack()}
         >
@@ -78,6 +91,19 @@ export default class CreateGroupScreen extends Component {
           />
 
         </ScrollView>
+
+          <Overlay
+            isVisible={this.state.overlayIsVisible}
+            windowBackgroundColor={colors.backgroundColor}
+            overlayBackgroundColor={colors.otherColor}
+            width="auto"
+            height="auto"
+          >
+            <View style={{ minWidth: '80%', minHeight: '25%', alignItems: 'center', justifyContent: 'center' }}>
+              <Text style={{ color: colors.backgroundColor, fontSize: 24 }}>{this.state.overlayMessage}</Text>
+            </View>
+          </Overlay>
+
       </View>
     )
   }

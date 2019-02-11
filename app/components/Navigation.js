@@ -9,8 +9,9 @@ import DashboardGroups from '../screens/DashboardGroups'
 import DiscoverScreen from '../screens/DiscoverScreen'
 import ViewRunScreen from '../screens/ViewRunScreen'
 import ViewGroupScreen from '../screens/ViewGroupScreen'
-import CreateChoicesScreen from '../screens/CreateChoicesScreen'
 import CreateRunScreen from '../screens/CreateRunScreen'
+import CreateQuickRunScreen from '../screens/CreateQuickRunScreen'
+import AddGroup from './AddGroup'
 import CreateGroupScreen from '../screens/CreateGroupScreen'
 import MapScreen from '../screens/MapScreen'
 
@@ -41,7 +42,10 @@ DashboardRunStack.navigationOptions = ({ navigation }) => {
 
 const DashboardGroupStack = createStackNavigator({
   DashboardGroups: DashboardGroups,
-  ViewGroup: ViewGroupScreen
+  AddGroupButton: AddGroup,
+  ViewGroup: ViewGroupScreen,
+  CreateGroup: CreateGroupScreen,
+  CreateRun: CreateRunScreen
 },
   {
     initialRouteName: 'DashboardGroups',
@@ -50,12 +54,10 @@ const DashboardGroupStack = createStackNavigator({
 )
 
 const CreateNewStack = createStackNavigator({
-  Choose: CreateChoicesScreen,
-  CreateRun: CreateRunScreen,
-  CreateGroup: CreateGroupScreen
+  CreateQuickRun: CreateQuickRunScreen,
 },
   {
-    initialRouteName: 'Choose',
+    initialRouteName: 'CreateQuickRun',
     headerMode: 'none'
   })
 

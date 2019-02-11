@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { View, ScrollView, Text, TextInput, TouchableOpacity } from 'react-native'
-import { Button, Icon } from 'react-native-elements'
+import { Button, Icon, Overlay } from 'react-native-elements'
 import { Dropdown } from 'react-native-material-dropdown'
 
 import HeaderComponent from '../components/Header'
@@ -13,7 +13,6 @@ export default class CreateRunScreen extends Component {
     super(props)
 
     this.state = {
-      group: '',
       runType: '',
       day: '',
       time: '',
@@ -21,12 +20,25 @@ export default class CreateRunScreen extends Component {
       terrain: '',
       location: '',
       distance: '',
-      description: ''
+      description: '',
+      overlayIsVisible: false,
+      overlayMessage: ''
     }
   }
 
   handleCreateRun = () => {
+    this.setState({
+      overlayMessage: 'Run Created!',
+      overlayIsVisible: true
+    })
 
+    setTimeout(() => {
+      this.setState({
+        overlayMessage: null,
+        overlayIsVisible: false
+      })
+      this.props.navigation.goBack()
+    }, 1000)
   }
 
   onEnterPress = ({ nativeEvent }) => {
@@ -36,17 +48,9 @@ export default class CreateRunScreen extends Component {
   }
 
   render() {
-    const groups = [
-      {
-        value: 'Seattle Running Club'
-      },
-      {
-        value: 'Jill\'s Sunday Runday'
-      }
-    ]
     return (
       <View style={{paddingBottom: 120}}>
-        <HeaderComponent header='Herd'/>
+        <HeaderComponent header='Create'/>
         <TouchableOpacity 
           style={{ backgroundColor: colors.backgroundColor, alignItems: 'flex-start', paddingLeft: 10, paddingBottom: 5 }}
           onPress={() => this.props.navigation.goBack()}
@@ -58,19 +62,8 @@ export default class CreateRunScreen extends Component {
             size={20}
           />
         </TouchableOpacity>
-        {/* How can I made the scroll sticky? */}
         <ScrollView style={{ marginLeft: 30, marginRight: 30 }}>
-            <Text style={{ fontSize: 25, color: colors.backgroundColor, marginTop: 10, marginBottom: 10, fontWeight: 'bold' }}>New Run</Text>
-
-            <Dropdown
-              label='Group'
-              data={groups}
-              fontSize={20}
-              labelFontSize={18}
-              itemCount={5}
-              animationDuration={0}
-              onChangeText={(group) => this.setState({ group })}
-            />
+            <Text style={{ fontSize: 25, color: colors.backgroundColor, marginTop: 10, marginBottom: 10, fontWeight: 'bold' }}>New Group Run</Text>
 
             {/* How do I reduce the animation on the dropdown? */}
             <Dropdown
@@ -169,6 +162,19 @@ export default class CreateRunScreen extends Component {
           />
 
         </ScrollView>
+
+        <Overlay
+            isVisible={this.state.overlayIsVisible}
+            windowBackgroundColor={colors.backgroundColor}
+            overlayBackgroundColor={colors.otherColor}
+            width="auto"
+            height="auto"
+          >
+            <View style={{ minWidth: '80%', minHeight: '25%', alignItems: 'center', justifyContent: 'center' }}>
+              <Text style={{ color: colors.backgroundColor, fontSize: 24 }}>{this.state.overlayMessage}</Text>
+            </View>
+          </Overlay>
+
       </View>
     )
   }

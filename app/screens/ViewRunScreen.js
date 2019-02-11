@@ -17,6 +17,7 @@ export default class ViewRunScreen extends Component {
 
     this.state = {
       attending: false,
+      owner: false,
       showMoreInfo: false,
       showRunners: false,
       showComments: false,
@@ -131,9 +132,17 @@ export default class ViewRunScreen extends Component {
               Discovery Park
             </Text>
 
-            <Text style={{ fontSize: 20, marginTop: 10, fontWeight: 'bold' }}>
-              Saturdays @ 7:00am
-            </Text>
+            <View style={{flexDirection: 'row', marginTop: 10}}>
+              <Text style={{ fontSize: 20, fontWeight: 'bold' }}>
+                Saturdays @ 7:00am
+              </Text>
+              <Icon 
+                name='sync'
+                type='material-community'
+                size={25}
+                iconStyle={{marginLeft: 5}}
+              />
+            </View>
 
             <Button
               onPress={this.toggleMoreInfo}
@@ -240,7 +249,7 @@ export default class ViewRunScreen extends Component {
                       />
                     </View>
 
-                    <View style={{alignItems: 'center'}}>
+                    <View style={{ alignItems: 'center' }}>
                       <Button
                         onPress={this.handleAddComment}
                         title='Submit Comment'
@@ -277,6 +286,17 @@ export default class ViewRunScreen extends Component {
                   buttonStyle={{ backgroundColor: colors.otherColor, width: 200 }}
                   titleStyle={{ color: colors.backgroundColor }}
                 />
+              }
+              {this.state.owner ?
+                <Button
+                  title='Delete Run'
+                  type='outline'
+                  onPress={this.handleDeleteGroup}
+                  buttonStyle={{ borderColor: 'red', minWidth: '100%', marginTop: 100 }}
+                  titleStyle={{ color: 'red' }}
+                />
+                :
+                null
               }
             </View>
           </View>

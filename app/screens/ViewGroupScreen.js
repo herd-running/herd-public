@@ -15,6 +15,7 @@ export default class ViewGroupScreen extends Component {
 
     this.state = {
       member: false,
+      leader: true,
       showRuns: false,
       showRunners: false,
       showComments: false,
@@ -85,6 +86,14 @@ export default class ViewGroupScreen extends Component {
       })
       this.props.navigation.goBack()
     }, 1000)
+  }
+
+  handleAddGroupRun = () => {
+    this.props.navigation.navigate('CreateRun')
+  }
+
+  handleDeleteGroup = () => {
+
   }
 
   render() {
@@ -266,20 +275,41 @@ export default class ViewGroupScreen extends Component {
               null
             }
             <View style={{ flex: 1, marginTop: 15, alignItems: 'center' }}>
-              {this.state.member ?
-                <Button
-                  title='Leave Group'
-                  onPress={this.handleLeaveGroup}
-                  buttonStyle={{ backgroundColor: colors.otherColor, width: 200 }}
-                  titleStyle={{ color: colors.backgroundColor }}
-                />
+              {this.state.leader ?
+                <View style={{alignItems: 'center'}}>
+                  <Button
+                    title='Add a Run!'
+                    onPress={this.handleAddGroupRun}
+                    buttonStyle={{ backgroundColor: colors.otherColor, width: 200 }}
+                    titleStyle={{ color: colors.backgroundColor }}
+                  />
+                  <Button
+                    title='Delete Group'
+                    type='outline'
+                    onPress={this.handleDeleteGroup}
+                    buttonStyle={{ borderColor: 'red', minWidth: '100%', marginTop: 45 }}
+                    titleStyle={{ color: 'red' }}
+                  />
+                </View>
                 :
-                <Button
-                  title='Join this Group!'
-                  onPress={this.handleJoinGroup}
-                  buttonStyle={{ backgroundColor: colors.otherColor, width: 200 }}
-                  titleStyle={{ color: colors.backgroundColor }}
-                />
+                <View>
+                  {
+                    this.state.member ?
+                      <Button
+                        title='Leave Group'
+                        onPress={this.handleLeaveGroup}
+                        buttonStyle={{ backgroundColor: colors.otherColor, width: 200 }}
+                        titleStyle={{ color: colors.backgroundColor }}
+                      />
+                      :
+                      <Button
+                        title='Join this Group!'
+                        onPress={this.handleJoinGroup}
+                        buttonStyle={{ backgroundColor: colors.otherColor, width: 200 }}
+                        titleStyle={{ color: colors.backgroundColor }}
+                      />
+                  }
+                </View>
               }
             </View>
           </View>

@@ -1,27 +1,25 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { Header } from 'react-native-elements'
+
+import AddGroup from './AddGroup'
+
 import styles from '../styles/Header'
 import colors from '../constants/Colors'
 
-export default class HeaderComponent extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      fontLoaded: false
-    }
-  }
+export default function HeaderComponent({header, component = null}) {
 
-  render() {
-    return (
-      <Header
-        outerContainerStyles={{borderBottomWidth: 0}}
-        containerStyle={styles.header}
-        placement="left"
-        centerComponent={{ text: this.props.header, style: { color: colors.otherColor, fontSize: 25 } }}
-        // rightComponent={{ icon: 'settings', color: colors.otherColor  }}
-        barStyle="light-content"
-      />
-    )
-  }
+  return (
+    <Header
+      outerContainerStyles={{ borderBottomWidth: 0 }}
+      containerStyle={styles.header}
+      placement="left"
+      centerComponent={{ text: header, style: { color: colors.otherColor, fontSize: 25 } }}
+      rightComponent={component}
+      barStyle="light-content"
+    />
+  )
 }
+
+// { icon: 'settings', color: colors.otherColor }
+
 

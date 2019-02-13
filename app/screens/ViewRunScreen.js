@@ -3,6 +3,12 @@ import { View, ScrollView, Text, TouchableOpacity, TextInput } from 'react-nativ
 import { Button, Icon, Overlay } from 'react-native-elements'
 import { Dropdown } from 'react-native-material-dropdown'
 
+import moment from 'moment'
+
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { getOneRun } from '../actions/runs'
+import { getRunMembers } from '../actions/users'
 
 import colors from '../constants/Colors'
 
@@ -11,7 +17,7 @@ import Rating from '../components/Rating'
 import CommentCard from '../components/CommentCard'
 import RunnersCard from '../components/RunnersCard'
 
-export default class ViewRunScreen extends Component {
+class ViewRunScreen extends Component {
   constructor(props) {
     super(props)
 
@@ -28,6 +34,11 @@ export default class ViewRunScreen extends Component {
       comment: null,
       commentRating: null
     }
+  }
+  componentDidMount = () => {
+    const runId = this.props.navigation.getParam('runId', 1)
+    this.props.getOneRun(runId)
+    this.props.getRunMembers(runId)
   }
 
   handleLeaveRun = () => {
@@ -91,6 +102,8 @@ export default class ViewRunScreen extends Component {
   }
 
   render() {
+    const formattedDate = moment(this.props.run.date).format("dddd MMM Do")
+
     const comments = [
       {
         id: 1,
@@ -122,27 +135,29 @@ export default class ViewRunScreen extends Component {
         <ScrollView>
           <View style={{ marginLeft: 25, marginRight: 25 }}>
 
-            <Text style={{ fontSize: 25, marginTop: 10, fontWeight: 'bold' }}>
-              Long run with Seattle Running Co.
-            </Text>
+            <Text style={{ fontSize: 25, marginTop: 10, fontWeight: 'bold' }}>{`${this.props.run.run_type} with ${this.props.run.name}`}</Text>
 
-            <Rating rating={5} size={25} />
-
-            <Text style={{ fontSize: 20, marginTop: 10, fontWeight: 'bold' }}>
-              Discovery Park
-            </Text>
-
-            <View style={{flexDirection: 'row', marginTop: 10}}>
-              <Text style={{ fontSize: 20, fontWeight: 'bold' }}>
-                Saturdays @ 7:00am
-              </Text>
-              <Icon 
-                name='sync'
-                type='material-community'
-                size={25}
-                iconStyle={{marginLeft: 5}}
-              />
+            <View style={{ marginTop: 5 }}>
+              <Rating rating={5} size={25} />
             </View>
+
+            <Text style={{ fontSize: 20, marginTop: 10, fontWeight: 'bold' }}>{this.props.run.location}</Text>
+
+            {this.props.run.day ?
+              <View style={{ flexDirection: 'row', marginTop: 10, marginLeft: -5 }}>
+                <Text style={{ fontSize: 20, fontWeight: 'bold' }}> {`${this.props.run.day}s @ ${this.props.run.time}`}</Text>
+                <Icon
+                  name='sync'
+                  type='material-community'
+                  size={25}
+                  iconStyle={{ marginLeft: 5 }}
+                />
+              </View>
+              :
+              <View style={{ flexDirection: 'row', marginTop: 10, marginLeft: -5 }}>
+                <Text style={{ fontSize: 20, fontWeight: 'bold' }}>{`${formattedDate} @ ${this.props.run.time}`}</Text>
+              </View>
+            }
 
             <Button
               onPress={this.toggleMoreInfo}
@@ -153,39 +168,22 @@ export default class ViewRunScreen extends Component {
             {this.state.showMoreInfo ?
               <View>
                 <View style={{ flexDirection: 'row' }}>
-                  <Text style={{ fontSize: 20, marginTop: 10, fontWeight: 'bold' }}>
-                    Distance:
-                  </Text>
-                  <Text style={{ fontSize: 20, marginTop: 10, marginLeft: 5 }}>
-                    5 miles
-                  </Text>
+                  <Text style={{ fontSize: 20, marginTop: 10, fontWeight: 'bold' }}>Distance:</Text>
+                  <Text style={{ fontSize: 20, marginTop: 10, marginLeft: 5 }}>{this.props.run.distance || 'No info'}</Text>
                 </View>
 
                 <View style={{ flexDirection: 'row' }}>
-                  <Text style={{ fontSize: 20, marginTop: 10, fontWeight: 'bold' }}>
-                    Target Pace:
-                  </Text>
-                  <Text style={{ fontSize: 20, marginTop: 10, marginLeft: 5 }}>
-                    8 minutes/mile
-                  </Text>
+                  <Text style={{ fontSize: 20, marginTop: 10, fontWeight: 'bold' }}>Target Pace:</Text>
+                  <Text style={{ fontSize: 20, marginTop: 10, marginLeft: 5 }}>{this.props.run.pace}</Text>
                 </View>
 
                 <View style={{ flexDirection: 'row' }}>
-                  <Text style={{ fontSize: 20, marginTop: 10, fontWeight: 'bold' }}>
-                    Terrain:
-                  </Text>
-                  <Text style={{ fontSize: 20, marginTop: 10, marginLeft: 5 }}>
-                    Trail
-                  </Text>
+                  <Text style={{ fontSize: 20, marginTop: 10, fontWeight: 'bold' }}>Terrain:</Text>
+                  <Text style={{ fontSize: 20, marginTop: 10, marginLeft: 5 }}>{this.props.run.terrain}</Text>
                 </View>
 
-                <Text style={{ fontSize: 20, marginTop: 10, fontWeight: 'bold' }}>
-                  Description:
-                  </Text>
-                <Text style={{ fontSize: 20, marginTop: 5 }}>
-                  Join us for a fun run around beautiful Discovery Park.
-                  </Text>
-
+                <Text style={{ fontSize: 20, marginTop: 10, fontWeight: 'bold' }}>Description:</Text>
+                <Text style={{ fontSize: 20, marginTop: 5 }}>{this.props.run.description}</Text>
               </View>
               :
               null
@@ -198,7 +196,7 @@ export default class ViewRunScreen extends Component {
             />
 
             {this.state.showRunners ?
-              <RunnersCard />
+              <RunnersCard runners={this.props.runMembers}/>
               :
               null
             }
@@ -316,3 +314,19 @@ export default class ViewRunScreen extends Component {
     )
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    run: state.run,
+    runMembers: state.runMembers
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators({
+    getOneRun,
+    getRunMembers
+  }, dispatch)
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ViewRunScreen)

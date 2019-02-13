@@ -2,12 +2,16 @@ import React, { Component } from 'react';
 import { View, ScrollView, TouchableOpacity } from 'react-native'
 import { SearchBar } from 'react-native-elements'
 
+import { connect} from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { getUsersRuns } from '../actions/runs'
+
 import styles from '../styles/Dashboard'
 
 import HeaderComponent from '../components/Header'
 import RunCard from '../components/RunCard'
 
-export default class DashboardRuns extends Component {
+class DashboardRuns extends Component {
   constructor(props) {
     super(props)
 
@@ -16,63 +20,16 @@ export default class DashboardRuns extends Component {
     }
   }
 
+  /////////change  2 to take user ID
+  componentDidMount = () => {
+    this.props.getUsersRuns(2)
+  }
+
   updateSearch = search => {
     this.setState({ search });
   };
 
   render() {
-
-    const runs = [
-      {
-        runType: 'Long Run',
-        location: 'Discovery Park',
-        group: 'Seattle Running Club',
-        day: 'Saturday',
-        time: '7:00am',
-        rating: 5
-      },
-      {
-        runType: 'Tempo Run',
-        location: 'Green Lake',
-        group: 'Green Lake Running Group',
-        day: 'Tuesday',
-        time: '6:00pm',
-        rating: 3
-      },
-      {
-        runType: 'Easy Run',
-        location: 'Alki',
-        group: 'West Seattle Runners',
-        day: 'Monday',
-        time: '6:00am',
-        rating: 4
-      },
-      {
-        runType: 'Long Run',
-        location: 'Discovery Park',
-        group: 'Seattle Running Club',
-        day: 'Saturday',
-        time: '7:00am',
-        rating: 5
-      },
-      {
-        runType: 'Tempo Run',
-        location: 'Green Lake',
-        group: 'Green Lake Running Group',
-        day: 'Tuesday',
-        time: '6:00pm',
-        rating: 3
-      },
-      {
-        runType: 'Easy Run',
-        location: 'Alki',
-        group: 'West Seattle Runners',
-        day: 'Monday',
-        time: '6:00am',
-        rating: 4
-      }
-    ]
-
     return (
       <View style={styles.container}>
         <HeaderComponent header='My Runs'/>
@@ -88,8 +45,8 @@ export default class DashboardRuns extends Component {
 
         </View>
         <ScrollView>
-          {runs.map((run, i) => {
-            return <TouchableOpacity key={i} onPress={() => this.props.navigation.navigate('ViewRun')}>
+          {this.props.usersRuns.map((run) => {
+            return <TouchableOpacity key={run.run_id} onPress={() => this.props.navigation.navigate('ViewRun', { runId: run.run_id })}>
               <RunCard {...run} />
             </TouchableOpacity>
             })
@@ -99,3 +56,18 @@ export default class DashboardRuns extends Component {
     );
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    usersRuns: state.usersRuns
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators({
+    getUsersRuns
+  }, dispatch)
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(DashboardRuns)
+

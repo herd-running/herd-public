@@ -2,6 +2,12 @@ import React, { Component } from 'react';
 import { View, ScrollView, Text, TouchableOpacity, TextInput } from 'react-native'
 import { Button, Icon, Overlay } from 'react-native-elements'
 
+import { connect} from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { getOneGroup } from '../actions/groups'
+import { getGroupLeader, getGroupMembers } from '../actions/users'
+import { getGroupRuns } from '../actions/runs'
+
 import HeaderComponent from '../components/Header'
 import CommentCard from '../components/CommentCard'
 import RunCard from '../components/RunCard'
@@ -9,7 +15,7 @@ import RunnersCard from '../components/RunnersCard'
 
 import colors from '../constants/Colors'
 
-export default class ViewGroupScreen extends Component {
+class ViewGroupScreen extends Component {
   constructor(props) {
     super(props)
 
@@ -27,6 +33,15 @@ export default class ViewGroupScreen extends Component {
       commentRating: null
     }
   }
+
+  componentDidMount = () => {
+    const groupId = this.props.navigation.getParam('groupId', 0)
+    this.props.getOneGroup(groupId)
+    this.props.getGroupLeader(groupId)
+    this.props.getGroupMembers(groupId)
+    this.props.getGroupRuns(groupId)
+  }
+
 
   toggleRuns = () => {
     this.setState({
@@ -96,7 +111,7 @@ export default class ViewGroupScreen extends Component {
 
   }
 
-  render() {
+  render = () => {
     const comments = [
       {
         id: 1,
@@ -107,57 +122,6 @@ export default class ViewGroupScreen extends Component {
         id: 2,
         title: 'Fun group',
         body: 'Had a great run, all skill levels are welcome.'
-      }
-    ]
-
-    const runs = [
-      {
-        runType: 'Long Run',
-        location: 'Discovery Park',
-        group: 'Seattle Running Club',
-        day: 'Saturday',
-        time: '7:00am',
-        rating: 5
-      },
-      {
-        runType: 'Tempo Run',
-        location: 'Green Lake',
-        group: 'Green Lake Running Group',
-        day: 'Tuesday',
-        time: '6:00pm',
-        rating: 3
-      },
-      {
-        runType: 'Easy Run',
-        location: 'Alki',
-        group: 'West Seattle Runners',
-        day: 'Monday',
-        time: '6:00am',
-        rating: 4
-      },
-      {
-        runType: 'Long Run',
-        location: 'Discovery Park',
-        group: 'Seattle Running Club',
-        day: 'Saturday',
-        time: '7:00am',
-        rating: 5
-      },
-      {
-        runType: 'Tempo Run',
-        location: 'Green Lake',
-        group: 'Green Lake Running Group',
-        day: 'Tuesday',
-        time: '6:00pm',
-        rating: 3
-      },
-      {
-        runType: 'Easy Run',
-        location: 'Alki',
-        group: 'West Seattle Runners',
-        day: 'Monday',
-        time: '6:00am',
-        rating: 4
       }
     ]
 
@@ -178,21 +142,13 @@ export default class ViewGroupScreen extends Component {
         <ScrollView>
           <View style={{ marginLeft: 25, marginRight: 25 }}>
 
-            <Text style={{ fontSize: 25, marginTop: 10, fontWeight: 'bold' }}>
-              Seattle Running Club
-        </Text>
+            <Text style={{ fontSize: 25, marginTop: 10, fontWeight: 'bold' }}>{this.props.group.name}</Text>
 
-            <Text style={{ fontSize: 20, marginTop: 10 }}>
-              We are a Puget Sound-based running group that celebrates the beauty of our region and our personal potential with training, competition, and community. While the club offers a unique focus on trail running, members also rally on the road, track, and cross country course.
-        </Text>
+            <Text style={{ fontSize: 20, marginTop: 10 }}>{this.props.group.description}</Text>
 
-            <Text style={{ fontSize: 23, marginTop: 20 }}>
-              Leader:
-        </Text>
+            <Text style={{ fontSize: 23, marginTop: 20 }}>Leader:</Text>
 
-            <Text style={{ fontSize: 20, marginTop: 10 }}>
-              Jake Hommer
-        </Text>
+            <Text style={{ fontSize: 20, marginTop: 10 }}>{`${this.props.groupLeader.first_name} ${this.props.groupLeader.last_name}`}</Text>
             <Button
               onPress={this.toggleRuns}
               title='Runs'
@@ -201,8 +157,8 @@ export default class ViewGroupScreen extends Component {
 
             {this.state.showRuns ?
               <View>
-                {runs.map((run, i) => {
-                  return <TouchableOpacity key={i} onPress={() => this.props.navigation.navigate('ViewRun')}>
+                {this.props.groupRuns.map((run) => {
+                  return <TouchableOpacity key={run.id} onPress={() => this.props.navigation.navigate('ViewRun', { runId: run.id })}>
                     <RunCard {...run} />
                   </TouchableOpacity>
                 })}
@@ -218,7 +174,7 @@ export default class ViewGroupScreen extends Component {
             />
 
             {this.state.showRunners ?
-              <RunnersCard />
+               <RunnersCard runners={this.props.groupMembers}/>
               :
               null
             }
@@ -287,7 +243,7 @@ export default class ViewGroupScreen extends Component {
                     title='Delete Group'
                     type='outline'
                     onPress={this.handleDeleteGroup}
-                    buttonStyle={{ borderColor: 'red', minWidth: '100%', marginTop: 45 }}
+                    buttonStyle={{ borderColor: 'red', minWidth: '100%', marginTop: 70 }}
                     titleStyle={{ color: 'red' }}
                   />
                 </View>
@@ -329,3 +285,23 @@ export default class ViewGroupScreen extends Component {
     )
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    group: state.group,
+    groupLeader: state.groupLeader,
+    groupMembers: state.groupMembers,
+    groupRuns: state.groupRuns
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators({
+    getOneGroup,
+    getGroupLeader,
+    getGroupMembers,
+    getGroupRuns
+  }, dispatch)
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ViewGroupScreen)

@@ -16,10 +16,10 @@
     "axios": "^0.18.0",
     "expo": "^32.0.0",
     "moment": "^2.24.0",
-    "react": "16.5.0",
+    "react": "16.6.3",
     "react-dom": "^16.8.1",
     "react-moment": "^0.8.4",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz",
+    "react-native": "^0.57.1",
     "react-native-datepicker": "^1.7.2",
     "react-native-dismiss-keyboard": "^1.0.0",
     "react-native-elements": "^1.0.0",
@@ -33,7 +33,8 @@
   },
   "devDependencies": {
     "babel-preset-expo": "^5.0.0",
-    "jest-expo": "^32.0.0"
+    "jest-expo": "^32.0.0",
+    "metro": "^0.51.1"
   },
   "private": true
 }

@@ -1,9 +1,21 @@
 import {createStore, combineReducers, applyMiddleware} from 'redux'
 import thunk from 'redux-thunk'
 import logger from 'redux-logger'
-import { groups, group } from './reducers/groups'
+import { usersGroups, newGroups, group } from './reducers/groups'
+import { groupLeader, groupMembers, runMembers } from './reducers/users'
+import { usersRuns, newRuns, groupRuns, run } from './reducers/runs'
 
-const reducers = combineReducers({ groups, group })
+const reducers = combineReducers({ 
+  usersGroups, 
+  newGroups, 
+  group, 
+  groupLeader, 
+  groupMembers, 
+  runMembers, 
+  usersRuns, 
+  newRuns, 
+  groupRuns, 
+  run })
 
 const store = createStore(reducers, applyMiddleware(logger, thunk))
 

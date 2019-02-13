@@ -3,14 +3,14 @@ import axios from 'axios'
 
 const BASE_URL = 'http://localhost:3000'
 
-export const GET_USERS_GROUPS = 'GET_GROUPS'
+export const GET_GROUP_LEADER = 'GET_GROUP_LEADER'
 
-export function getUsersGroups(userId) {
+export function getGroupLeader(groupId) {
   return dispatch => (
-    axios.get(`${BASE_URL}/users/${userId}/groups?member=true`)
+    axios.get(`${BASE_URL}/groups/${groupId}/users?leader=true`)
       .then(response => {
         dispatch({      
-          type: GET_USERS_GROUPS,
+          type: GET_GROUP_LEADER,
           payload: response.data
         })
       })
@@ -18,14 +18,14 @@ export function getUsersGroups(userId) {
   )
 }
 
-export const GET_NEW_GROUPS = 'GET_NEW_GROUPS'
+export const GET_GROUP_MEMBERS = 'GET_GROUP_MEMBERS'
 
-export function getNewGroups(userId) {
+export function getGroupMembers(groupId) {
   return dispatch => (
-    axios.get(`${BASE_URL}/users/${userId}/groups?member=false`)
+    axios.get(`${BASE_URL}/groups/${groupId}/users`)
       .then(response => {
         dispatch({      
-          type: GET_NEW_GROUPS,
+          type: GET_GROUP_MEMBERS,
           payload: response.data
         })
       })
@@ -33,17 +33,18 @@ export function getNewGroups(userId) {
   )
 }
 
-export const GET_ONE_GROUP = 'GET_ONE_GROUP'
+export const GET_RUN_MEMBERS = 'GET_RUN_MEMBERS'
 
-export function getOneGroup(groupId) {
+export function getRunMembers(runId) {
   return dispatch => (
-    axios.get(`${BASE_URL}/groups/${groupId}`)
-      .then((response) => {
-        dispatch({
-          type: GET_ONE_GROUP,
+    axios.get(`${BASE_URL}/runs/${runId}/users`)
+      .then(response => {
+        dispatch({      
+          type: GET_RUN_MEMBERS,
           payload: response.data
         })
       })
       .catch((error) => console.warn(error.response))
   )
 }
+

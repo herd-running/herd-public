@@ -45,7 +45,8 @@ const DashboardGroupStack = createStackNavigator({
   AddGroupButton: AddGroup,
   ViewGroup: ViewGroupScreen,
   CreateGroup: CreateGroupScreen,
-  CreateRun: CreateRunScreen
+  CreateRun: CreateRunScreen,
+  ViewRun: ViewRunScreen
 },
   {
     initialRouteName: 'DashboardGroups',

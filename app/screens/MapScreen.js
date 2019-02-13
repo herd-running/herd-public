@@ -157,7 +157,7 @@ export default class MapScreen extends Component {
                 title={marker.group}
                 description={marker.runType}
                 pinColor='#6d3b84'
-                onCalloutPress={() => this.props.navigation.navigate('ViewRun')}
+                onCalloutPress={() => this.props.navigation.navigate('ViewRun', { runId: run.id })}
               />
             ))}
           </MapView>

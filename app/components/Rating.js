@@ -18,7 +18,6 @@ export default function Rating({rating, size}) {
   }
   return (
     <View style={{ flexDirection: 'row' }}>
-      {/* <Text>Hello</Text> */}
       {stars}
     </View>
   )

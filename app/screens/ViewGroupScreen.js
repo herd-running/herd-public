@@ -20,8 +20,8 @@ class ViewGroupScreen extends Component {
     super(props)
 
     this.state = {
-      member: false,
-      leader: true,
+      isMember: null,
+      isLeader: null,
       showRuns: false,
       showRunners: false,
       showComments: false,
@@ -41,7 +41,16 @@ class ViewGroupScreen extends Component {
     this.props.getGroupMembers(groupId)
     this.props.getGroupRuns(groupId)
   }
+  ///// replace 2 with user ID
+  componentWillReceiveProps = (props) => {
+    this.setState({
+      isLeader: props.groupLeader.user_id === 2
+    })
 
+    this.setState({
+      isMember: this.props.groupMembers.find(member => member.user_id === 2)
+    })
+  }
 
   toggleRuns = () => {
     this.setState({
@@ -231,7 +240,7 @@ class ViewGroupScreen extends Component {
               null
             }
             <View style={{ flex: 1, marginTop: 15, alignItems: 'center' }}>
-              {this.state.leader ?
+              {this.state.isLeader ?
                 <View style={{alignItems: 'center'}}>
                   <Button
                     title='Add a Run!'
@@ -250,7 +259,7 @@ class ViewGroupScreen extends Component {
                 :
                 <View>
                   {
-                    this.state.member ?
+                    this.state.isMember ?
                       <Button
                         title='Leave Group'
                         onPress={this.handleLeaveGroup}

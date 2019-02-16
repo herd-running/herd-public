@@ -4,10 +4,12 @@ export default styles = StyleSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,
     top: 145,
-    height: 600,
-    width: 375,
+    bottom: 0,
+    height: 667,
+    width: '100%',
     justifyContent: 'flex-end',
     alignItems: 'center',
+    flex: 1
   },
   map: {
     ...StyleSheet.absoluteFillObject

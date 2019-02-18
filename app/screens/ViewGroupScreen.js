@@ -4,7 +4,7 @@ import { Button, Icon, Overlay } from 'react-native-elements'
 
 import { connect} from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { getOneGroup, joinGroup, leaveGroup } from '../actions/groups'
+import { getOneGroup, joinGroup, leaveGroup, deleteGroup } from '../actions/groups'
 import { getGroupLeader, getGroupMembers } from '../actions/users'
 import { getGroupRuns } from '../actions/runs'
 
@@ -114,8 +114,21 @@ class ViewGroupScreen extends Component {
   handleAddGroupRun = () => {
     this.props.navigation.navigate('CreateRun')
   }
+///////replace 2 with userId
+  handleDeleteGroup = (groupId) => {
+    this.props.deleteGroup(groupId, 2)
+    this.setState({
+      overlayMessage: 'Group Deleted',
+      overlayIsVisible: true
+    })
 
-  handleDeleteGroup = () => {
+    setTimeout(() => {
+      this.setState({
+        overlayMessage: null,
+        overlayIsVisible: false
+      })
+      this.props.navigation.goBack()
+    }, 1000)
 
   }
 
@@ -244,14 +257,14 @@ class ViewGroupScreen extends Component {
                 <View style={{alignItems: 'center'}}>
                   <Button
                     title='Add a Run!'
-                    onPress={this.handleAddGroupRun}
+                    onPress={() => this.props.navigation.navigate('CreateRun', {groupId})}
                     buttonStyle={{ backgroundColor: colors.otherColor, width: 200 }}
                     titleStyle={{ color: colors.backgroundColor }}
                   />
                   <Button
                     title='Delete Group'
                     type='outline'
-                    onPress={this.handleDeleteGroup}
+                    onPress={() => this.handleDeleteGroup(groupId)}
                     buttonStyle={{ borderColor: 'red', minWidth: '100%', marginTop: 70 }}
                     titleStyle={{ color: 'red' }}
                   />
@@ -312,7 +325,8 @@ const mapDispatchToProps = (dispatch) => {
     getGroupMembers,
     getGroupRuns,
     joinGroup,
-    leaveGroup
+    leaveGroup,
+    deleteGroup
   }, dispatch)
 }
 

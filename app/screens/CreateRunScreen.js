@@ -2,20 +2,27 @@ import React, { Component } from 'react'
 import { View, ScrollView, Text, TextInput, TouchableOpacity } from 'react-native'
 import { Button, Icon, Overlay } from 'react-native-elements'
 import { Dropdown } from 'react-native-material-dropdown'
+import DatePicker from 'react-native-datepicker'
+import moment from 'moment'
 
 import HeaderComponent from '../components/Header'
 
-import { runType, day, time, pace, terrain } from '../constants/CreateRunOptions'
+import { runType, day, hour, minutes, pace, terrain } from '../constants/CreateRunOptions'
 import colors from '../constants/Colors'
 
 export default class CreateRunScreen extends Component {
   constructor(props) {
     super(props)
 
+    const date = new Date
+    const today = moment(date).format('MM-DD-YYYY')
+
     this.state = {
       runType: '',
       day: '',
-      time: '',
+      date: today,
+      hour: '',
+      minutes: '',
       pace: '',
       terrain: '',
       location: '',
@@ -37,7 +44,7 @@ export default class CreateRunScreen extends Component {
         overlayMessage: null,
         overlayIsVisible: false
       })
-      this.props.navigation.goBack()
+      this.props.navigation.navigate('DashboardRuns')
     }, 1000)
   }
 
@@ -48,34 +55,41 @@ export default class CreateRunScreen extends Component {
   }
 
   render() {
+    const groupId = this.props.navigation.getParam('groupId', null)
     return (
-      <View style={{paddingBottom: 120}}>
-        <HeaderComponent header='Create'/>
-        <TouchableOpacity 
-          style={{ backgroundColor: colors.backgroundColor, alignItems: 'flex-start', paddingLeft: 10, paddingBottom: 5 }}
-          onPress={() => this.props.navigation.goBack()}
-        >
-          <Icon
-            name='arrow-left'
-            type='font-awesome'
-            color={colors.otherColor}
-            size={20}
-          />
-        </TouchableOpacity>
-        <ScrollView style={{ marginLeft: 30, marginRight: 30 }}>
-            <Text style={{ fontSize: 25, color: colors.backgroundColor, marginTop: 10, marginBottom: 10, fontWeight: 'bold' }}>New Group Run</Text>
-
-            {/* How do I reduce the animation on the dropdown? */}
-            <Dropdown
-              label='Run Type'
-              data={runType}
-              fontSize={20}
-              labelFontSize={18}
-              itemCount={7}
-              animationDuration={0}
-              onChangeText={(runType) => this.setState({ runType })}
+      <View style={{ paddingBottom: 120 }}>
+        <HeaderComponent header='Create' />
+        {groupId ?
+          <TouchableOpacity
+            style={{ backgroundColor: colors.backgroundColor, alignItems: 'flex-start', paddingLeft: 10, paddingBottom: 5 }}
+            onPress={() => this.props.navigation.goBack()}
+          >
+            <Icon
+              name='arrow-left'
+              type='font-awesome'
+              color={colors.otherColor}
+              size={20}
             />
+          </TouchableOpacity>
+          :
+          null
+        }
+        <ScrollView style={{ marginLeft: 30, marginRight: 30 }}>
+          <Text style={{ fontSize: 25, color: colors.backgroundColor, marginTop: 10, marginBottom: 10, fontWeight: 'bold' }}>
+            { groupId ? 'New Group Run' : 'New Quick Run' }
+          </Text>
 
+          {/* How do I reduce the animation on the dropdown? */}
+          <Dropdown
+            label='Run Type'
+            data={runType}
+            fontSize={20}
+            labelFontSize={18}
+            itemCount={7}
+            animationDuration={0}
+            onChangeText={(runType) => this.setState({ runType })}
+          />
+          {groupId ?
             <Dropdown
               label='Day of the Week'
               data={day}
@@ -84,75 +98,116 @@ export default class CreateRunScreen extends Component {
               itemCount={7}
               onChangeText={(day) => this.setState({ day })}
             />
-            <View style={{ flex: 1, flexDirection: 'row' }}>
-              <View style={{ width: 120 }}>
-                <Dropdown
-                  label='Time'
-                  data={time}
-                  fontSize={20}
-                  labelFontSize={18}
-                  itemCount={7}
-                  onChangeText={(time) => this.setState({ time })}
-                />
-              </View>
-              <View style={{ width: 100 }}>
-                <Dropdown
-                  label='am/pm'
-                  data={[{ value: 'am' }, { value: 'pm' }]}
-                  fontSize={20}
-                  labelFontSize={18}
-                  itemCount={2}
-                  onChangeText={(am_pm) => this.setState({ am_pm })}
-                />
-              </View>
+            :
+            <View>
+              <Text style={{ fontSize: 20, marginTop: 10, color: colors.formGray }}>Date</Text>
+              <DatePicker
+                style={{ width: 180 }}
+                date={this.state.date}
+                mode='date'
+                placeholder='select date'
+                format='MM-DD-YYYY'
+                minDate='2016-02-11'
+                maxDate='2021-12-31'
+                confirmBtnText='Select'
+                cancelBtnText='Cancel'
+                showIcon={false}
+                customStyles={{
+                  dateText: {
+                    fontSize: 20
+                  }
+                }}
+                onDateChange={(date) => { this.setState({ date: date }) }}
+              />
             </View>
+          }
+          <View style={{ flex: 1, flexDirection: 'row' }}>
+            <View style={{ width: 60 }}>
+              <Dropdown
+                label='Hour'
+                data={hour}
+                fontSize={20}
+                labelFontSize={18}
+                itemCount={7}
+                onChangeText={(hour) => this.setState({ hour })}
+              />
+            </View>
+            <Text style={{ marginTop: 40, marginRight: 5 }}>:</Text>
+            <View style={{ width: 60 }}>
+              <Dropdown
+                label='Min'
+                data={minutes}
+                fontSize={20}
+                labelFontSize={18}
+                itemCount={4}
+                onChangeText={(minutes) => this.setState({ minutes })}
+              />
+            </View>
+            <View style={{ width: 100 }}>
+              <Dropdown
+                label='am/pm'
+                data={[{ value: 'am' }, { value: 'pm' }]}
+                fontSize={20}
+                labelFontSize={18}
+                itemCount={2}
+                onChangeText={(am_pm) => this.setState({ am_pm })}
+              />
+            </View>
+          </View>
 
-            <Dropdown
-              label='Pace'
-              data={pace}
-              fontSize={20}
-              labelFontSize={18}
-              itemCount={7}
-              onChangeText={(pace) => this.setState({ pace })}
-            />
+          <Dropdown
+            label='Pace'
+            data={pace}
+            fontSize={20}
+            labelFontSize={18}
+            itemCount={7}
+            onChangeText={(pace) => this.setState({ pace })}
+          />
 
-            <Dropdown
-              label='Terrain'
-              data={terrain}
-              fontSize={20}
-              labelFontSize={18}
-              itemCount={7}
-              onChangeText={(terrain) => this.setState({ terrain })}
-            />
+          <Dropdown
+            label='Terrain'
+            data={terrain}
+            fontSize={20}
+            labelFontSize={18}
+            itemCount={7}
+            onChangeText={(terrain) => this.setState({ terrain })}
+          />
 
-            {/* How can I get the keyboard to not cover the input? */}
-            <Text style={{ fontSize: 20, marginTop: 10, color: colors.formGray }}>Location</Text>
-            <TextInput
-              onChangeText={(location) => this.setState({ location })}
-              value={this.state.location}
-              style={{ height: 40, borderColor: 'gray', borderWidth: 1, fontSize: 18, paddingLeft: 5 }}
-              returnKeyType='done'
-            />
+          <Button
+            title='Set Starting Point'
+            onPress={() => this.props.navigation.navigate('AddressSearch')}
+            buttonStyle={{ backgroundColor: colors.backgroundColor, marginTop: 10, marginBottom: 10 }}
+            titleStyle={{ color: colors.otherColor }}
+          />
 
-            <Text style={{ fontSize: 20, marginTop: 10, color: colors.formGray }}>Distance (optional)</Text>
-            <TextInput
-              onChangeText={(distance) => this.setState({ distance })}
-              value={this.state.distance}
-              style={{ height: 40, borderColor: 'gray', borderWidth: 1, fontSize: 18, paddingLeft: 5 }}
-              returnKeyType='done'
-            />
+          {/* How can I get the keyboard to not cover the input? */}
+          <Text style={{ fontSize: 20, marginTop: 10, color: colors.formGray }}>Location</Text>
+          <TextInput
+            onChangeText={(location) => this.setState({ location })}
+            value={this.state.location}
+            style={{ height: 40, borderColor: 'gray', borderWidth: 1, fontSize: 18, paddingLeft: 5 }}
+            returnKeyType='done'
+          />
 
-            <Text style={{ fontSize: 20, marginTop: 10, color: colors.formGray }}>Description (optional)</Text>
-            <TextInput
-              onChangeText={(description) => this.setState({ description })}
-              value={this.state.description}
-              style={{ height: 80, borderColor: 'gray', borderWidth: 1, fontSize: 18, paddingLeft: 5, marginBottom: 10 }}
-              returnKeyType='done'
-              multiline={true}
-              numberOfLines={10}
-              blurOnSubmit={true}
-              onKeyPress={this.onEnterPress}
-            />
+          <Text style={{ fontSize: 20, marginTop: 10, color: colors.formGray }}>Distance (optional)</Text>
+          <TextInput
+            onChangeText={(distance) => this.setState({ distance })}
+            value={this.state.distance}
+            style={{ height: 40, borderColor: 'gray', borderWidth: 1, fontSize: 18, paddingLeft: 5 }}
+            returnKeyType='done'
+          />
+
+          <Text style={{ fontSize: 20, marginTop: 10, color: colors.formGray }}>Description (optional)</Text>
+          <TextInput
+            onChangeText={(description) => this.setState({ description })}
+            value={this.state.description}
+            style={{ height: 80, borderColor: 'gray', borderWidth: 1, fontSize: 18, paddingLeft: 5, marginBottom: 10 }}
+            returnKeyType='done'
+            multiline={true}
+            numberOfLines={10}
+            blurOnSubmit={true}
+            onKeyPress={this.onEnterPress}
+          />
 
           <Button
             title='Create Run!'
@@ -164,16 +219,16 @@ export default class CreateRunScreen extends Component {
         </ScrollView>
 
         <Overlay
-            isVisible={this.state.overlayIsVisible}
-            windowBackgroundColor={colors.backgroundColor}
-            overlayBackgroundColor={colors.otherColor}
-            width="auto"
-            height="auto"
-          >
-            <View style={{ minWidth: '80%', minHeight: '25%', alignItems: 'center', justifyContent: 'center' }}>
-              <Text style={{ color: colors.backgroundColor, fontSize: 24 }}>{this.state.overlayMessage}</Text>
-            </View>
-          </Overlay>
+          isVisible={this.state.overlayIsVisible}
+          windowBackgroundColor={colors.backgroundColor}
+          overlayBackgroundColor={colors.otherColor}
+          width="auto"
+          height="auto"
+        >
+          <View style={{ minWidth: '80%', minHeight: '25%', alignItems: 'center', justifyContent: 'center' }}>
+            <Text style={{ color: colors.backgroundColor, fontSize: 24 }}>{this.state.overlayMessage}</Text>
+          </View>
+        </Overlay>
 
       </View>
     )

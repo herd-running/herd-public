@@ -11,6 +11,7 @@ import ViewRunScreen from '../screens/ViewRunScreen'
 import ViewGroupScreen from '../screens/ViewGroupScreen'
 import CreateRunScreen from '../screens/CreateRunScreen'
 import CreateQuickRunScreen from '../screens/CreateQuickRunScreen'
+import AddressSearchMapScreen from '../screens/AddressSearchMapScreen'
 import AddGroup from './AddGroup'
 import CreateGroupScreen from '../screens/CreateGroupScreen'
 import MapScreen from '../screens/MapScreen'
@@ -46,6 +47,7 @@ const DashboardGroupStack = createStackNavigator({
   ViewGroup: ViewGroupScreen,
   CreateGroup: CreateGroupScreen,
   CreateRun: CreateRunScreen,
+  AddressSearch: AddressSearchMapScreen,
   ViewRun: ViewRunScreen
 },
   {
@@ -55,10 +57,11 @@ const DashboardGroupStack = createStackNavigator({
 )
 
 const CreateNewStack = createStackNavigator({
-  CreateQuickRun: CreateQuickRunScreen,
+  CreateRun: CreateRunScreen,
+  AddressSearch: AddressSearchMapScreen
 },
   {
-    initialRouteName: 'CreateQuickRun',
+    initialRouteName: 'CreateRun',
     headerMode: 'none'
   })
 

@@ -44,55 +44,43 @@ export const day = [
   }
 ]
 
-export const time = [
+export const hour = [
   {
-    value: '12:00',
+    value: '12',
   },{
-    value: '12:30',
-  }, {
-    value: '1:00',
+    value: '1',
   },{
-    value: '1:30',
-  }, {
-    value: '2:00',
+    value: '2',
   },{
-    value: '2:30',
-  }, {
-    value: '3:00',
+    value: '3',
   },{
-    value: '3:30',
-  }, {
-    value: '4:00',
+    value: '4',
   },{
-    value: '4:30',
-  }, {
-    value: '5:00',
+    value: '5',
   },{
-    value: '5:30',
-  }, {
-    value: '6:00',
+    value: '6',
   },{
-    value: '6:30',
-  }, {
-    value: '7:00',
+    value: '7',
   },{
-    value: '7:30',
-  }, {
-    value: '8:00',
+    value: '8',
   },{
-    value: '8:30',
-  }, {
-    value: '9:00',
+    value: '9',
   },{
-    value: '9:30',
-  }, {
-    value: '10:00',
+    value: '10',
   },{
-    value: '10:30',
-  }, {
-    value: '11:00',
+    value: '11',
+  }
+]
+
+export const minutes = [
+  {
+    value: '00',
   },{
-    value: '11:30',
+    value: '15',
+  },{
+    value: '30',
+  },{
+    value: '45',
   }
 ]
 

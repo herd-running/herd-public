@@ -7,7 +7,7 @@ import moment from 'moment'
 
 import HeaderComponent from '../components/Header'
 
-import { runType, time, pace, terrain } from '../constants/CreateRunOptions'
+import { runType, hour, minutes, pace, terrain } from '../constants/CreateRunOptions'
 import colors from '../constants/Colors'
 
 export default class CreateRunScreen extends Component {
@@ -20,7 +20,8 @@ export default class CreateRunScreen extends Component {
     this.state = {
       runType: '',
       date: today,
-      time: '',
+      hour: '',
+      minutes: '',
       pace: '',
       terrain: '',
       location: '',
@@ -53,7 +54,7 @@ export default class CreateRunScreen extends Component {
   }
 
   render() {
-
+    const groupId = this.props.navigation.getParam('groupId', null)
     return (
       <View style={{ paddingBottom: 120 }}>
         <HeaderComponent header='Create' />
@@ -92,14 +93,25 @@ export default class CreateRunScreen extends Component {
           />
 
           <View style={{ flex: 1, flexDirection: 'row' }}>
-            <View style={{ width: 120 }}>
+            <View style={{ width: 60 }}>
               <Dropdown
-                label='Time'
-                data={time}
+                label='Hour'
+                data={hour}
                 fontSize={20}
                 labelFontSize={18}
                 itemCount={7}
-                onChangeText={(time) => this.setState({ time })}
+                onChangeText={(hour) => this.setState({ hour })}
+              />
+            </View>
+            <Text style={{ marginTop: 40, marginRight: 5 }}>:</Text>
+            <View style={{ width: 60 }}>
+              <Dropdown
+                label='Min'
+                data={minutes}
+                fontSize={20}
+                labelFontSize={18}
+                itemCount={4}
+                onChangeText={(minutes) => this.setState({ minutes })}
               />
             </View>
             <View style={{ width: 100 }}>
@@ -132,14 +144,22 @@ export default class CreateRunScreen extends Component {
             onChangeText={(terrain) => this.setState({ terrain })}
           />
 
+          <Button
+            title='Set Starting Point'
+            onPress={() => this.props.navigation.navigate('AddressSearch')}
+            buttonStyle={{ backgroundColor: colors.backgroundColor, marginTop: 10, marginBottom: 10 }}
+            titleStyle={{ color: colors.otherColor }}
+          />
+
           {/* How can I get the keyboard to not cover the input? */}
-          <Text style={{ fontSize: 20, marginTop: 10, color: colors.formGray }}>Location</Text>
+          {/* <Text style={{ fontSize: 20, marginTop: 10, color: colors.formGray }}>Start Location Name</Text>
           <TextInput
             onChangeText={(location) => this.setState({ location })}
+            placeholder='i.e. Green Lake or Fleet Feet'
             value={this.state.location}
             style={{ height: 40, borderColor: 'gray', borderWidth: 1, fontSize: 18, paddingLeft: 5 }}
             returnKeyType='done'
-          />
+          /> */}
 
           <Text style={{ fontSize: 20, marginTop: 10, color: colors.formGray }}>Distance (optional)</Text>
           <TextInput
@@ -171,16 +191,16 @@ export default class CreateRunScreen extends Component {
         </ScrollView>
 
         <Overlay
-            isVisible={this.state.overlayIsVisible}
-            windowBackgroundColor={colors.backgroundColor}
-            overlayBackgroundColor={colors.otherColor}
-            width="auto"
-            height="auto"
-          >
-            <View style={{ minWidth: '80%', minHeight: '25%', alignItems: 'center', justifyContent: 'center' }}>
-              <Text style={{ color: colors.backgroundColor, fontSize: 24 }}>{this.state.overlayMessage}</Text>
-            </View>
-          </Overlay>
+          isVisible={this.state.overlayIsVisible}
+          windowBackgroundColor={colors.backgroundColor}
+          overlayBackgroundColor={colors.otherColor}
+          width="auto"
+          height="auto"
+        >
+          <View style={{ minWidth: '80%', minHeight: '25%', alignItems: 'center', justifyContent: 'center' }}>
+            <Text style={{ color: colors.backgroundColor, fontSize: 24 }}>{this.state.overlayMessage}</Text>
+          </View>
+        </Overlay>
 
       </View>
     )

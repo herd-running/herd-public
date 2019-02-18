@@ -4,12 +4,18 @@ import { SearchBar } from 'react-native-elements'
 import { MapView, Location, Permissions } from 'expo'
 const { Marker } = MapView
 
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { getUsersRuns, getNewRuns } from '../actions/runs'
+
+import moment from 'moment'
+
 import HeaderComponent from '../components/Header'
 
 import styles from '../styles/MapScreen'
 import colors from '../constants/Colors'
 
-export default class MapScreen extends Component {
+class MapScreen extends Component {
   constructor(props) {
     super(props)
 
@@ -23,9 +29,11 @@ export default class MapScreen extends Component {
       }
     }
   }
-
+  ///////replace 2 with user ID
   componentWillMount() {
     this.getLocationAsync();
+    this.props.getUsersRuns(2)
+    this.props.getNewRuns(2)
   }
 
   getLocationAsync = async () => {
@@ -56,81 +64,6 @@ export default class MapScreen extends Component {
   }
 
   render() {
-    const markers = [
-      {
-        group: 'Seattle Running Club',
-        runType: 'Long Run',
-        latlng: {
-          latitude: 47.6609,
-          longitude: -122.4153
-        }
-      },
-      {
-        group: 'Green Lake Running Group',
-        runType: 'Tempo Run',
-        latlng: {
-          latitude: 47.6787,
-          longitude: -122.3296
-        }
-      },
-      {
-        group: 'Green Lake Running Group',
-        runType: 'Base Run',
-        latlng: {
-          latitude: 47.6797,
-          longitude: -122.3286
-        }
-      },
-      {
-        group: 'Green Lake Running Group',
-        runType: 'Walk/Run',
-        latlng: {
-          latitude: 47.6797,
-          longitude: -122.3286
-        }
-      },
-      {
-        group: 'West Seattle Runners',
-        runType: 'Easy Run',
-        latlng: {
-          latitude: 47.5935,
-          longitude: -122.3908
-        }
-      },
-      {
-        group: 'Seattle Running Club',
-        runType: 'Interval Run',
-        latlng: {
-          latitude: 47.6285,
-          longitude: -122.2940
-        }
-      },
-      {
-        group: 'Seattle Running Club',
-        runType: 'Walk/Run',
-        latlng: {
-          latitude: 47.6152,
-          longitude: -122.3553
-        }
-      },
-      {
-        group: 'Jill\'s Sunday Runday',
-        runType: 'Long Run',
-        latlng: {
-          latitude: 47.6574,
-          longitude: -122.4116
-        }
-      },
-      {
-        group: 'Seattle Running Club',
-        runType: 'Fartlek Run',
-        latlng: {
-          latitude: 47.6463,
-          longitude: -122.3348
-        }
-      }
-    ]
-
     return (
       <View>
         <HeaderComponent header='Map' />
@@ -150,14 +83,40 @@ export default class MapScreen extends Component {
             region={this.state.region}
             onRegionChangeCompleted={this.onRegionChange}
           >
-            {markers.map((marker, i) => (
+            {this.props.newRuns.map((run) => (
               <Marker
-                key={i}
-                coordinate={marker.latlng}
-                title={marker.group}
-                description={marker.runType}
+                key={run.id}
+                coordinate={{
+                  latitude: run.latitude,
+                  longitude: run.longitude
+                }}
+                title={run.run_type}
+                description={
+                  run.day ?
+                  `${run.day}s @ ${run.time}`
+                  :
+                  `${moment(run.date).format("dddd MMM Do")} @ ${run.time}`
+                }
                 pinColor='#6d3b84'
                 onCalloutPress={() => this.props.navigation.navigate('ViewRun', { runId: run.id })}
+              />
+            ))}
+            {this.props.usersRuns.map((run) => (
+              <Marker
+                key={run.run_id}
+                coordinate={{
+                  latitude: run.latitude,
+                  longitude: run.longitude
+                }}
+                title={run.run_type}
+                description={
+                  run.day ?
+                  `${run.day}s @ ${run.time}`
+                  :
+                  `${moment(run.date).format("dddd MMM Do")} @ ${run.time}`
+                }
+                pinColor={colors.otherColor}
+                onCalloutPress={() => this.props.navigation.navigate('ViewRun', { runId: run.run_id })}
               />
             ))}
           </MapView>
@@ -167,3 +126,18 @@ export default class MapScreen extends Component {
   }
 }
 
+const mapStateToProps = (state) => {
+  return {
+    usersRuns: state.usersRuns,
+    newRuns: state.newRuns
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators({
+    getUsersRuns,
+    getNewRuns
+  }, dispatch)
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(MapScreen)

@@ -7,7 +7,7 @@ import moment from 'moment'
 
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { getOneRun } from '../actions/runs'
+import { getOneRun, joinRun, leaveRun } from '../actions/runs'
 import { getRunMembers } from '../actions/users'
 
 import colors from '../constants/Colors'
@@ -35,13 +35,22 @@ class ViewRunScreen extends Component {
       commentRating: null
     }
   }
+
   componentDidMount = () => {
     const runId = this.props.navigation.getParam('runId', 1)
     this.props.getOneRun(runId)
     this.props.getRunMembers(runId)
   }
-
-  handleLeaveRun = () => {
+  ///////replace 2 with userId
+  componentWillReceiveProps = (props) => {
+    this.setState({
+      owner: props.run.creator_id === 2,
+      attending: props.runMembers.find(member => member.user_id === 2)
+    })
+  }
+//////replace 2 with user ID
+  handleLeaveRun = (runId) => {
+    this.props.leaveRun(runId, 2)
     this.setState({
       overlayMessage: 'You Left this Run',
       overlayIsVisible: true
@@ -55,8 +64,9 @@ class ViewRunScreen extends Component {
       this.props.navigation.goBack()
     }, 1000)
   }
-
-  handleJoinRun = () => {
+///// replace 2 with user ID
+  handleJoinRun = (runId) => {
+    this.props.joinRun(runId, 2)
     this.setState({
       overlayMessage: 'You Joined a Run!',
       overlayIsVisible: true
@@ -69,6 +79,10 @@ class ViewRunScreen extends Component {
       })
       this.props.navigation.goBack()
     }, 1000)
+  }
+
+  handleDeleteRun = (runId) => {
+
   }
 
   handleShowAddCommentForm = () => {
@@ -102,6 +116,7 @@ class ViewRunScreen extends Component {
   }
 
   render() {
+    const runId = this.props.navigation.getParam('runId', 1)
     const formattedDate = moment(this.props.run.date).format("dddd MMM Do")
 
     const comments = [
@@ -135,7 +150,13 @@ class ViewRunScreen extends Component {
         <ScrollView>
           <View style={{ marginLeft: 25, marginRight: 25 }}>
 
-            <Text style={{ fontSize: 25, marginTop: 10, fontWeight: 'bold' }}>{`${this.props.run.run_type} with ${this.props.run.name}`}</Text>
+            <Text style={{ fontSize: 25, marginTop: 10, fontWeight: 'bold' }}>
+              {`${this.props.run.run_type}`}
+              {this.props.run.name ?
+                ` with ${this.props.run.name}`
+                :
+                null}
+            </Text>
 
             <View style={{ marginTop: 5 }}>
               <Rating rating={5} size={25} />
@@ -144,7 +165,7 @@ class ViewRunScreen extends Component {
             <Text style={{ fontSize: 20, marginTop: 10, fontWeight: 'bold' }}>{this.props.run.location}</Text>
 
             {this.props.run.day ?
-              <View style={{ flexDirection: 'row', marginTop: 10, marginLeft: -5 }}>
+              <View style={{ flexDirection: 'row', marginTop: 10 }}>
                 <Text style={{ fontSize: 20, fontWeight: 'bold' }}> {`${this.props.run.day}s @ ${this.props.run.time}`}</Text>
                 <Icon
                   name='sync'
@@ -154,7 +175,7 @@ class ViewRunScreen extends Component {
                 />
               </View>
               :
-              <View style={{ flexDirection: 'row', marginTop: 10, marginLeft: -5 }}>
+              <View style={{ flexDirection: 'row', marginTop: 10 }}>
                 <Text style={{ fontSize: 20, fontWeight: 'bold' }}>{`${formattedDate} @ ${this.props.run.time}`}</Text>
               </View>
             }
@@ -196,7 +217,7 @@ class ViewRunScreen extends Component {
             />
 
             {this.state.showRunners ?
-              <RunnersCard runners={this.props.runMembers}/>
+              <RunnersCard runners={this.props.runMembers} />
               :
               null
             }
@@ -270,31 +291,30 @@ class ViewRunScreen extends Component {
             }
 
             <View style={{ flex: 1, marginTop: 15, alignItems: 'center' }}>
-              {this.state.attending ?
-                <Button
-                  title='Leave Run'
-                  onPress={this.handleLeaveRun}
-                  buttonStyle={{ backgroundColor: colors.otherColor, width: 200 }}
-                  titleStyle={{ color: colors.backgroundColor }}
-                />
-                :
-                <Button
-                  title='Join this Run!'
-                  onPress={this.handleJoinRun}
-                  buttonStyle={{ backgroundColor: colors.otherColor, width: 200 }}
-                  titleStyle={{ color: colors.backgroundColor }}
-                />
-              }
               {this.state.owner ?
                 <Button
                   title='Delete Run'
                   type='outline'
-                  onPress={this.handleDeleteGroup}
+                  onPress={() => this.handleDeleteRun(runId)}
                   buttonStyle={{ borderColor: 'red', minWidth: '100%', marginTop: 100 }}
                   titleStyle={{ color: 'red' }}
                 />
                 :
-                null
+                this.state.attending ?
+                  <Button
+                    title='Leave Run'
+                    type='outline'
+                    onPress={() => this.handleLeaveRun(runId)}
+                    buttonStyle={{ borderColor: 'red', width: 200, marginTop: 100 }}
+                    titleStyle={{ color: 'red' }}
+                  />
+                  :
+                  <Button
+                    title='Join this Run!'
+                    onPress={() => this.handleJoinRun(runId)}
+                    buttonStyle={{ backgroundColor: colors.otherColor, width: 200 }}
+                    titleStyle={{ color: colors.backgroundColor }}
+                  />
               }
             </View>
           </View>
@@ -325,7 +345,9 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return bindActionCreators({
     getOneRun,
-    getRunMembers
+    getRunMembers,
+    joinRun, 
+    leaveRun
   }, dispatch)
 }
 

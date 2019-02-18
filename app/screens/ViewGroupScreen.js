@@ -4,7 +4,7 @@ import { Button, Icon, Overlay } from 'react-native-elements'
 
 import { connect} from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { getOneGroup } from '../actions/groups'
+import { getOneGroup, joinGroup, leaveGroup } from '../actions/groups'
 import { getGroupLeader, getGroupMembers } from '../actions/users'
 import { getGroupRuns } from '../actions/runs'
 
@@ -44,11 +44,8 @@ class ViewGroupScreen extends Component {
   ///// replace 2 with user ID
   componentWillReceiveProps = (props) => {
     this.setState({
-      isLeader: props.groupLeader.user_id === 2
-    })
-
-    this.setState({
-      isMember: this.props.groupMembers.find(member => member.user_id === 2)
+      isLeader: props.groupLeader.user_id === 2,
+      isMember: props.groupMembers.find(member => member.user_id === 2)
     })
   }
 
@@ -81,8 +78,9 @@ class ViewGroupScreen extends Component {
       showAddComment: false
     })
   }
-
-  handleJoinGroup = () => {
+///////replace 2 with userId
+  handleJoinGroup = (groupId) => {
+    this.props.joinGroup(groupId, 2)
     this.setState({
       overlayMessage: 'You Joined a Group!',
       overlayIsVisible: true
@@ -96,10 +94,11 @@ class ViewGroupScreen extends Component {
       this.props.navigation.goBack()
     }, 1000)
   }
-
-  handleLeaveGroup = () => {
+///////replace 2 with userId
+  handleLeaveGroup = (groupId) => {
+    this.props.leaveGroup(groupId, 2)
     this.setState({
-      overlayMessage: 'You Left this Run',
+      overlayMessage: 'You Left this Group',
       overlayIsVisible: true
     })
 
@@ -121,6 +120,7 @@ class ViewGroupScreen extends Component {
   }
 
   render = () => {
+    const groupId = this.props.navigation.getParam('groupId', 0) 
     const comments = [
       {
         id: 1,
@@ -262,14 +262,15 @@ class ViewGroupScreen extends Component {
                     this.state.isMember ?
                       <Button
                         title='Leave Group'
-                        onPress={this.handleLeaveGroup}
-                        buttonStyle={{ backgroundColor: colors.otherColor, width: 200 }}
-                        titleStyle={{ color: colors.backgroundColor }}
+                        type='outline'
+                        onPress={() => this.handleLeaveGroup(groupId)}
+                        buttonStyle={{ borderColor: 'red', width: 200, marginTop: 70 }}
+                        titleStyle={{ color: 'red' }}
                       />
                       :
                       <Button
                         title='Join this Group!'
-                        onPress={this.handleJoinGroup}
+                        onPress={() => this.handleJoinGroup(groupId)}
                         buttonStyle={{ backgroundColor: colors.otherColor, width: 200 }}
                         titleStyle={{ color: colors.backgroundColor }}
                       />
@@ -309,7 +310,9 @@ const mapDispatchToProps = (dispatch) => {
     getOneGroup,
     getGroupLeader,
     getGroupMembers,
-    getGroupRuns
+    getGroupRuns,
+    joinGroup,
+    leaveGroup
   }, dispatch)
 }
 

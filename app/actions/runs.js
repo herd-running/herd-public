@@ -62,3 +62,29 @@ export function getOneRun(runId) {
       .catch((error) => console.warn(error.response))
   )
 }
+
+export function joinRun(runId, userId) {
+  return (dispatch) => {
+    axios.post(`${BASE_URL}/runs/${runId}/users/${userId}`)
+      .then(() => {
+        dispatch(getUsersRuns(userId))
+      })
+      .then(() => {
+        dispatch(getNewRuns(userId))
+      })
+      .catch((error) => console.warn(error.response))
+  }
+}
+
+export function leaveRun(runId, userId) {
+  return (dispatch) => {
+    axios.delete(`${BASE_URL}/runs/${runId}/users/${userId}`)
+      .then(() => {
+        dispatch(getUsersRuns(userId))
+      })
+      .then(() => {
+        dispatch(getNewRuns(userId))
+      })
+      .catch((error) => console.warn(error.response))
+  }
+}

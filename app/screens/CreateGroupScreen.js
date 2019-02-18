@@ -3,12 +3,15 @@ import { View, ScrollView, Text, TextInput, TouchableOpacity } from 'react-nativ
 import { Button, Icon, Overlay } from 'react-native-elements'
 import dismissKeyboard from 'react-native-dismiss-keyboard'
 
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { createGroup } from '../actions/groups'
+
 import HeaderComponent from '../components/Header'
 
 import colors from '../constants/Colors'
 
-
-export default class CreateGroupScreen extends Component {
+class CreateGroupScreen extends Component {
   constructor(props) {
     super(props)
 
@@ -108,3 +111,11 @@ export default class CreateGroupScreen extends Component {
     )
   }
 }
+
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators({
+    createGroup
+  }, dispatch)
+}
+
+export default connect(null, mapDispatchToProps)(CreateGroupScreen)

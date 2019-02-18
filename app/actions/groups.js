@@ -9,7 +9,7 @@ export function getUsersGroups(userId) {
   return dispatch => (
     axios.get(`${BASE_URL}/users/${userId}/groups?member=true`)
       .then(response => {
-        dispatch({      
+        dispatch({
           type: GET_USERS_GROUPS,
           payload: response.data
         })
@@ -24,7 +24,7 @@ export function getNewGroups(userId) {
   return dispatch => (
     axios.get(`${BASE_URL}/users/${userId}/groups?member=false`)
       .then(response => {
-        dispatch({      
+        dispatch({
           type: GET_NEW_GROUPS,
           payload: response.data
         })
@@ -46,4 +46,36 @@ export function getOneGroup(groupId) {
       })
       .catch((error) => console.warn(error.response))
   )
+}
+
+export function joinGroup(groupId, userId) {
+  return (dispatch) => {
+    axios.post(`${BASE_URL}/groups/${groupId}/users/${userId}`)
+      .then(() => {
+        dispatch(getUsersGroups(userId))
+      })
+      .then(() => {
+        dispatch(getNewGroups(userId))
+      })
+      .catch((error) => console.warn(error.response))
+  }
+}
+
+export function leaveGroup(groupId, userId) {
+  return (dispatch) => {
+    axios.delete(`${BASE_URL}/groups/${groupId}/users/${userId}`)
+      .then(() => {
+        dispatch(getUsersGroups(userId))
+      })
+      .then(() => {
+        dispatch(getNewGroups(userId))
+      })
+      .catch((error) => console.warn(error.response))
+  }
+}
+
+export function createGroup(group) {
+  return (dispatch) => {
+    axios.post(`${BASE_URL}/groups`)
+  }
 }

@@ -1,4 +1,4 @@
-import { GET_NEW_RUNS, GET_USERS_RUNS, GET_GROUPS_RUNS, GET_ONE_RUN } from '../actions/runs'
+import { GET_NEW_RUNS, GET_USERS_RUNS, GET_GROUPS_RUNS, GET_ONE_RUN, SET_NEW_RUN_COORDS } from '../actions/runs'
 
 export function newRuns(state = [], action) {
   switch (action.type) {
@@ -34,6 +34,16 @@ export function run(state = {}, action) {
   switch (action.type) {
 
   case GET_ONE_RUN:
+    return action.payload
+
+  default: return state
+  }
+}
+
+export function newRunCoords(state = {}, action) {
+  switch (action.type) {
+
+  case SET_NEW_RUN_COORDS:
     return action.payload
 
   default: return state

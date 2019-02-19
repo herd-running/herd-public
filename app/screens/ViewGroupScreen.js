@@ -265,7 +265,7 @@ class ViewGroupScreen extends Component {
                     title='Delete Group'
                     type='outline'
                     onPress={() => this.handleDeleteGroup(groupId)}
-                    buttonStyle={{ borderColor: 'red', minWidth: '100%', marginTop: 70 }}
+                    buttonStyle={{ borderColor: 'red', width: 200, marginTop: 70 }}
                     titleStyle={{ color: 'red' }}
                   />
                 </View>

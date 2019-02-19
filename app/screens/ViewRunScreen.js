@@ -7,7 +7,7 @@ import moment from 'moment'
 
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { getOneRun, joinRun, leaveRun } from '../actions/runs'
+import { getOneRun, joinRun, leaveRun, deleteRun } from '../actions/runs'
 import { getRunMembers } from '../actions/users'
 
 import colors from '../constants/Colors'
@@ -80,9 +80,23 @@ class ViewRunScreen extends Component {
       this.props.navigation.goBack()
     }, 1000)
   }
-
+/////// replace 2 with userID
   handleDeleteRun = (runId) => {
+    /// trying to re-render group runs after a delete
+    this.props.deleteRun(runId, 2, this.props.run.group_id = null)
 
+    this.setState({
+      overlayMessage: 'Run Deleted',
+      overlayIsVisible: true
+    })
+
+    setTimeout(() => {
+      this.setState({
+        overlayMessage: null,
+        overlayIsVisible: false
+      })
+      this.props.navigation.goBack()
+    }, 1000)
   }
 
   handleShowAddCommentForm = () => {
@@ -296,7 +310,7 @@ class ViewRunScreen extends Component {
                   title='Delete Run'
                   type='outline'
                   onPress={() => this.handleDeleteRun(runId)}
-                  buttonStyle={{ borderColor: 'red', minWidth: '100%', marginTop: 100 }}
+                  buttonStyle={{ borderColor: 'red', width: 200, marginTop: 100 }}
                   titleStyle={{ color: 'red' }}
                 />
                 :
@@ -347,7 +361,8 @@ const mapDispatchToProps = (dispatch) => {
     getOneRun,
     getRunMembers,
     joinRun, 
-    leaveRun
+    leaveRun,
+    deleteRun
   }, dispatch)
 }
 

@@ -8,30 +8,30 @@ export const GET_USERS_RUNS = 'GET_USERS_RUNS'
 export function getUsersRuns(userId) {
   return dispatch => (
     axios.get(`${BASE_URL}/users/${userId}/runs?running=true`)
-    .then(response => {
-      dispatch({      
-        type: GET_USERS_RUNS,
-        payload: response.data
-      })
-    })
-    .catch((error) => console.warn(error.response))
-    )
-  }
-  
-  export const GET_NEW_RUNS = 'GET_NEW_RUNS'
-  
-  export function getNewRuns(userId) {
-    return dispatch => (
-      axios.get(`${BASE_URL}/users/${userId}/runs?running=false`)
-        .then(response => {
-          dispatch({      
-            type: GET_NEW_RUNS,
-            payload: response.data
-          })
+      .then(response => {
+        dispatch({
+          type: GET_USERS_RUNS,
+          payload: response.data
         })
-        .catch((error) => console.warn(error.response))
-    )
-  }
+      })
+      .catch((error) => console.warn(error.response))
+  )
+}
+
+export const GET_NEW_RUNS = 'GET_NEW_RUNS'
+
+export function getNewRuns(userId) {
+  return dispatch => (
+    axios.get(`${BASE_URL}/users/${userId}/runs?running=false`)
+      .then(response => {
+        dispatch({
+          type: GET_NEW_RUNS,
+          payload: response.data
+        })
+      })
+      .catch((error) => console.warn(error.response))
+  )
+}
 
 export const GET_GROUPS_RUNS = 'GET_GROUPS_RUNS'
 
@@ -39,7 +39,7 @@ export function getGroupRuns(groupId) {
   return dispatch => (
     axios.get(`${BASE_URL}/groups/${groupId}/runs`)
       .then(response => {
-        dispatch({      
+        dispatch({
           type: GET_GROUPS_RUNS,
           payload: response.data
         })
@@ -84,6 +84,42 @@ export function leaveRun(runId, userId) {
       })
       .then(() => {
         dispatch(getNewRuns(userId))
+      })
+      .catch((error) => console.warn(error.response))
+  }
+}
+
+const SET_NEW_RUN_COORDS = 'SET_NEW_RUN_COORDS'
+
+export function setNewRunCoords(location) {
+  return {
+    type: SET_NEW_RUN_COORDS,
+    payload: location
+  }
+}
+
+export function createNewRun(userId, newRun) {
+  return (dispatch) => {
+    axios.post(`${BASE_URL}/runs`, newRun)
+      .then(() => {
+        dispatch(getUsersRuns(userId))
+      })
+      .catch((error) => console.warn(error.response))
+  }
+}
+
+export function deleteRun(runId, userId, groupId) {
+  console.warn(groupId)
+  ////logged null
+  return (dispatch) => {
+    axios.delete(`${BASE_URL}/runs/${runId}`)
+      .then(() => {
+        dispatch(getUsersRuns(userId))
+          .then(() => {
+            if (groupId) {
+              dispatch(getGroupRuns(groupId))
+            }
+          })
       })
       .catch((error) => console.warn(error.response))
   }

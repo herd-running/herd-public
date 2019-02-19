@@ -7,7 +7,7 @@ const { Marker } = MapView
 
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { } from '../actions/runs'
+import { setNewRunCoords } from '../actions/runs'
 
 import HeaderComponent from '../components/Header'
 
@@ -70,6 +70,17 @@ class AddressSearchMapScreen extends Component {
     this.setState({ region })
   }
 
+  handleSaveCoords = () => {
+    const location = {
+      latitude: this.state.marker.latitude, 
+      longitude: this.state.marker.longitude, 
+      location: this.state.location
+    }
+    this.props.setNewRunCoords(location)
+    this.props.navigation.navigate('CreateRun')
+    // this.props.navigation.navigate('CreateRun', { latitude: this.state.marker.latitude, longitude: this.state.marker.longitude, location: this.state.location})
+  }
+
   render() {
     return (
       <View>
@@ -92,6 +103,8 @@ class AddressSearchMapScreen extends Component {
           returnKeyType={'search'}
           listViewDisplayed={true}
           fetchDetails={true}
+          // not working
+          onFocus={() => this.setState({showList: 'block'})}
           onPress={(data, details = null) => {
             this.setState({
               region: {
@@ -162,7 +175,7 @@ class AddressSearchMapScreen extends Component {
           <View style={{ position: 'absolute', right: 10, bottom: 20 }}>
             <Button
               title='Save'
-              onPress={() => this.props.navigation.navigate('CreateRun')}
+              onPress={this.handleSaveCoords}
               buttonStyle={{ backgroundColor: colors.backgroundColor }}
               titleStyle={{ color: colors.otherColor }}
             />
@@ -173,14 +186,10 @@ class AddressSearchMapScreen extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  return {
-  }
-}
-
 const mapDispatchToProps = (dispatch) => {
   return bindActionCreators({
+    setNewRunCoords
   }, dispatch)
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddressSearchMapScreen)
+export default connect(null, mapDispatchToProps)(AddressSearchMapScreen)

@@ -1,14 +1,14 @@
-import React, { Component } from 'react'
-import { View, ScrollView, Text, TextInput } from 'react-native'
-import { Button, Overlay } from 'react-native-elements'
-import { Dropdown } from 'react-native-material-dropdown'
-import DatePicker from 'react-native-datepicker'
-import moment from 'moment'
+// import React, { Component } from 'react'
+// import { View, ScrollView, Text, TextInput } from 'react-native'
+// import { Button, Overlay } from 'react-native-elements'
+// import { Dropdown } from 'react-native-material-dropdown'
+// import DatePicker from 'react-native-datepicker'
+// import moment from 'moment'
 
-import HeaderComponent from '../components/Header'
+// import HeaderComponent from '../components/Header'
 
-import { runType, hour, minutes, pace, terrain } from '../constants/CreateRunOptions'
-import colors from '../constants/Colors'
+// import { runType, hour, minutes, pace, terrain } from '../constants/CreateRunOptions'
+// import colors from '../constants/Colors'
 
 export default class CreateRunScreen extends Component {
   constructor(props) {

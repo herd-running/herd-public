@@ -5,12 +5,16 @@ import { Dropdown } from 'react-native-material-dropdown'
 import DatePicker from 'react-native-datepicker'
 import moment from 'moment'
 
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { createNewRun } from '../actions/runs'
+
 import HeaderComponent from '../components/Header'
 
 import { runType, day, hour, minutes, pace, terrain } from '../constants/CreateRunOptions'
 import colors from '../constants/Colors'
 
-export default class CreateRunScreen extends Component {
+class CreateRunScreen extends Component {
   constructor(props) {
     super(props)
 
@@ -18,14 +22,15 @@ export default class CreateRunScreen extends Component {
     const today = moment(date).format('MM-DD-YYYY')
 
     this.state = {
-      runType: '',
       day: '',
       date: today,
       hour: '',
       minutes: '',
-      pace: '',
-      terrain: '',
+      am_pm: '',
       location: '',
+      runType: '',
+      terrain: '',
+      pace: '',
       distance: '',
       description: '',
       overlayIsVisible: false,
@@ -33,7 +38,34 @@ export default class CreateRunScreen extends Component {
     }
   }
 
+  componentWillReceiveProps = (props) => {
+    this.setState({
+      location: props.newRunCoords.location
+    })
+  }
+////////replace 2 with user ID
   handleCreateRun = () => {
+    const groupId = this.props.navigation.getParam('groupId', null)
+    const newRun = {
+      group_id: groupId,
+      creator_id: 2,
+      day: this.state.day,
+      date: this.state.date,
+      time: `${this.state.hour}:${this.state.minutes}${this.state.am_pm}`,
+      // location: this.state.location,
+      // latitude: this.props.newRunCoords.latitude,
+      // longitude: this.props.newRunCoords.longitude,
+      location: "Test",
+      latitude: 47,
+      longitude: -122,
+      run_type: this.state.runType,
+      terrain: this.state.terrain,
+      pace: this.state.pace,
+      distance: this.state.distance,
+      description: this.state.description
+    }
+    this.props.createNewRun(2, newRun)
+
     this.setState({
       overlayMessage: 'Run Created!',
       overlayIsVisible: true
@@ -44,7 +76,7 @@ export default class CreateRunScreen extends Component {
         overlayMessage: null,
         overlayIsVisible: false
       })
-      this.props.navigation.navigate('DashboardRuns')
+      this.props.navigation.goBack()
     }, 1000)
   }
 
@@ -55,6 +87,10 @@ export default class CreateRunScreen extends Component {
   }
 
   render() {
+    const latitude = this.props.navigation.getParam('latitude', null)
+    const longitude = this.props.navigation.getParam('longitude', null)
+    let location = this.props.navigation.getParam('location', null)
+
     const groupId = this.props.navigation.getParam('groupId', null)
     return (
       <View style={{ paddingBottom: 120 }}>
@@ -76,7 +112,7 @@ export default class CreateRunScreen extends Component {
         }
         <ScrollView style={{ marginLeft: 30, marginRight: 30 }}>
           <Text style={{ fontSize: 25, color: colors.backgroundColor, marginTop: 10, marginBottom: 10, fontWeight: 'bold' }}>
-            { groupId ? 'New Group Run' : 'New Quick Run' }
+            {groupId ? 'New Group Run' : 'New Quick Run'}
           </Text>
 
           {/* How do I reduce the animation on the dropdown? */}
@@ -181,14 +217,19 @@ export default class CreateRunScreen extends Component {
           />
 
           {/* How can I get the keyboard to not cover the input? */}
-          <Text style={{ fontSize: 20, marginTop: 10, color: colors.formGray }}>Location</Text>
-          <TextInput
-            onChangeText={(location) => this.setState({ location })}
-            value={this.state.location}
-            style={{ height: 40, borderColor: 'gray', borderWidth: 1, fontSize: 18, paddingLeft: 5 }}
-            returnKeyType='done'
-          />
-
+          {this.state.location ?
+            <View>
+              <Text style={{ fontSize: 20, marginTop: 10, color: colors.formGray }}>Location</Text>
+              <TextInput
+                onChangeText={(location) => this.setState({ location })}
+                value={this.state.location}
+                style={{ height: 40, borderColor: 'gray', borderWidth: 1, fontSize: 18, paddingLeft: 5 }}
+                returnKeyType='done'
+              />
+            </View>
+            :
+            null
+          }
           <Text style={{ fontSize: 20, marginTop: 10, color: colors.formGray }}>Distance (optional)</Text>
           <TextInput
             onChangeText={(distance) => this.setState({ distance })}
@@ -233,5 +274,18 @@ export default class CreateRunScreen extends Component {
       </View>
     )
   }
-
 }
+
+const mapStateToProps = (state) => {
+  return {
+    newRunCoords: state.newRunCoords
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators({
+    createNewRun
+  }, dispatch)
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(CreateRunScreen)

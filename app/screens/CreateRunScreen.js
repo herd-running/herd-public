@@ -3,80 +3,65 @@ import { View, ScrollView, Text, TextInput, TouchableOpacity } from 'react-nativ
 import { Button, Icon, Overlay } from 'react-native-elements'
 import { Dropdown } from 'react-native-material-dropdown'
 import DatePicker from 'react-native-datepicker'
-import moment from 'moment'
 
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { createNewRun } from '../actions/runs'
+import { setFormValue, clearForm } from '../actions/createRunForm'
 
 import HeaderComponent from '../components/Header'
 
-import { runType, day, hour, minutes, pace, terrain } from '../constants/CreateRunOptions'
+import { runType, day, pace, terrain } from '../constants/CreateRunOptions'
 import colors from '../constants/Colors'
 
 class CreateRunScreen extends Component {
   constructor(props) {
     super(props)
 
-    const date = new Date
-    const today = moment(date).format('MM-DD-YYYY')
-
     this.state = {
-      day: '',
-      date: today,
-      hour: '',
-      minutes: '',
-      am_pm: '',
-      location: '',
-      runType: '',
-      terrain: '',
-      pace: '',
-      distance: '',
-      description: '',
       overlayIsVisible: false,
-      overlayMessage: ''
+      overlayMessage: '',
+      showError: true
     }
   }
 
-  componentWillReceiveProps = (props) => {
-    this.setState({
-      location: props.newRunCoords.location
-    })
-  }
-////////replace 2 with user ID
+  ////////replace 2 with user ID
   handleCreateRun = () => {
     const groupId = this.props.navigation.getParam('groupId', null)
-    const newRun = {
-      group_id: groupId,
-      creator_id: 2,
-      day: this.state.day,
-      date: this.state.date,
-      time: `${this.state.hour}:${this.state.minutes}${this.state.am_pm}`,
-      // location: this.state.location,
-      // latitude: this.props.newRunCoords.latitude,
-      // longitude: this.props.newRunCoords.longitude,
-      location: "Test",
-      latitude: 47,
-      longitude: -122,
-      run_type: this.state.runType,
-      terrain: this.state.terrain,
-      pace: this.state.pace,
-      distance: this.state.distance,
-      description: this.state.description
+    if (!this.state.runType || !this.state.hour || !this.state.pace || !this.state.terrain ) {
+    this.setState({
+      showError: true
+    })
+    console.warn(this.state.showError)
+    return
     }
-    this.props.createNewRun(2, newRun)
 
+    const newRun = {
+      ...this.props.formValues,
+      creator_id: 2,
+      group_id: groupId
+    }
+    this.props.createNewRun(2, newRun, groupId)
+    
+    this.setState({
+      showError: false
+    })
+    
     this.setState({
       overlayMessage: 'Run Created!',
       overlayIsVisible: true
     })
-
+    
     setTimeout(() => {
       this.setState({
         overlayMessage: null,
         overlayIsVisible: false
       })
-      this.props.navigation.goBack()
+
+      this.props.clearForm()
+      
+      if (groupId) this.props.navigation.goBack()
+      else { this.props.navigation.navigate('DashboardRuns') }
     }, 1000)
   }
 
@@ -86,11 +71,8 @@ class CreateRunScreen extends Component {
     }
   }
 
-  render() {
-    const latitude = this.props.navigation.getParam('latitude', null)
-    const longitude = this.props.navigation.getParam('longitude', null)
-    let location = this.props.navigation.getParam('location', null)
 
+  render() {
     const groupId = this.props.navigation.getParam('groupId', null)
     return (
       <View style={{ paddingBottom: 120 }}>
@@ -119,29 +101,31 @@ class CreateRunScreen extends Component {
           <Dropdown
             label='Run Type'
             data={runType}
+            value={this.props.formValues.run_type}
             fontSize={20}
             labelFontSize={18}
             itemCount={7}
             animationDuration={0}
-            onChangeText={(runType) => this.setState({ runType })}
+            onChangeText={(run_type) => this.props.setFormValue('run_type', run_type)}
           />
           {groupId ?
             <Dropdown
               label='Day of the Week'
               data={day}
+              value={this.props.formValues.day}
               fontSize={20}
               labelFontSize={18}
               itemCount={7}
-              onChangeText={(day) => this.setState({ day })}
+              onChangeText={(day) => this.props.setFormValue('day', day)}
             />
             :
             <View>
               <Text style={{ fontSize: 20, marginTop: 10, color: colors.formGray }}>Date</Text>
               <DatePicker
-                style={{ width: 180 }}
-                date={this.state.date}
+                style={{ width: 220 }}
+                date={this.props.formValues.date}
                 mode='date'
-                placeholder='select date'
+                placeholder='Select Date'
                 format='MM-DD-YYYY'
                 minDate='2016-02-11'
                 maxDate='2021-12-31'
@@ -153,60 +137,48 @@ class CreateRunScreen extends Component {
                     fontSize: 20
                   }
                 }}
-                onDateChange={(date) => { this.setState({ date: date }) }}
+                onDateChange={(date) => this.props.setFormValue('date', date)}
               />
             </View>
           }
-          <View style={{ flex: 1, flexDirection: 'row' }}>
-            <View style={{ width: 60 }}>
-              <Dropdown
-                label='Hour'
-                data={hour}
-                fontSize={20}
-                labelFontSize={18}
-                itemCount={7}
-                onChangeText={(hour) => this.setState({ hour })}
-              />
-            </View>
-            <Text style={{ marginTop: 40, marginRight: 5 }}>:</Text>
-            <View style={{ width: 60 }}>
-              <Dropdown
-                label='Min'
-                data={minutes}
-                fontSize={20}
-                labelFontSize={18}
-                itemCount={4}
-                onChangeText={(minutes) => this.setState({ minutes })}
-              />
-            </View>
-            <View style={{ width: 100 }}>
-              <Dropdown
-                label='am/pm'
-                data={[{ value: 'am' }, { value: 'pm' }]}
-                fontSize={20}
-                labelFontSize={18}
-                itemCount={2}
-                onChangeText={(am_pm) => this.setState({ am_pm })}
-              />
-            </View>
+          <View>
+            <Text style={{ fontSize: 20, marginTop: 10, color: colors.formGray }}>Time</Text>
+            <DatePicker
+              style={{ width: 220 }}
+              date={this.props.formValues.time}
+              mode='time'
+              placeholder='Select Time'
+              format='h:mma'
+              confirmBtnText='Select'
+              cancelBtnText='Cancel'
+              showIcon={false}
+              customStyles={{
+                dateText: {
+                  fontSize: 20
+                }
+              }}
+              onDateChange={(time) => this.props.setFormValue('time', time)}
+            />
           </View>
 
           <Dropdown
             label='Pace'
             data={pace}
+            value={this.props.formValues.pace}
             fontSize={20}
             labelFontSize={18}
             itemCount={7}
-            onChangeText={(pace) => this.setState({ pace })}
+            onChangeText={(pace) => this.props.setFormValue('pace', pace )}
           />
 
           <Dropdown
             label='Terrain'
             data={terrain}
+            value={this.props.formValues.terrain}
             fontSize={20}
             labelFontSize={18}
             itemCount={7}
-            onChangeText={(terrain) => this.setState({ terrain })}
+            onChangeText={(terrain) => this.props.setFormValue('terrain', terrain )}
           />
 
           <Button
@@ -217,12 +189,13 @@ class CreateRunScreen extends Component {
           />
 
           {/* How can I get the keyboard to not cover the input? */}
-          {this.state.location ?
+          {this.props.formValues.latitude ?
             <View>
               <Text style={{ fontSize: 20, marginTop: 10, color: colors.formGray }}>Location</Text>
               <TextInput
-                onChangeText={(location) => this.setState({ location })}
-                value={this.state.location}
+                onChangeText={(location) => this.props.setFormValue('location', location)}
+                value={this.props.formValues.location}
+                placeholder='Location name (i.e. Green Lake)'
                 style={{ height: 40, borderColor: 'gray', borderWidth: 1, fontSize: 18, paddingLeft: 5 }}
                 returnKeyType='done'
               />
@@ -232,16 +205,17 @@ class CreateRunScreen extends Component {
           }
           <Text style={{ fontSize: 20, marginTop: 10, color: colors.formGray }}>Distance (optional)</Text>
           <TextInput
-            onChangeText={(distance) => this.setState({ distance })}
-            value={this.state.distance}
+            onChangeText={(distance) => this.props.setFormValue('distance', distance)}
+            value={this.props.formValues.distance}
             style={{ height: 40, borderColor: 'gray', borderWidth: 1, fontSize: 18, paddingLeft: 5 }}
             returnKeyType='done'
+            blurOnSubmit={true}
           />
 
           <Text style={{ fontSize: 20, marginTop: 10, color: colors.formGray }}>Description (optional)</Text>
           <TextInput
-            onChangeText={(description) => this.setState({ description })}
-            value={this.state.description}
+            onChangeText={(description) => this.props.setFormValue('description', description )}
+            value={this.props.formValues.description}
             style={{ height: 80, borderColor: 'gray', borderWidth: 1, fontSize: 18, paddingLeft: 5, marginBottom: 10 }}
             returnKeyType='done'
             multiline={true}
@@ -256,6 +230,11 @@ class CreateRunScreen extends Component {
             buttonStyle={{ backgroundColor: colors.backgroundColor, marginBottom: 10 }}
             titleStyle={{ color: colors.otherColor }}
           />
+          {this.state.showError ?
+            <Text style={{ color: 'red' }}>Please enter all required fields</Text>
+            :
+            null
+          }
 
         </ScrollView>
 
@@ -278,12 +257,14 @@ class CreateRunScreen extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    newRunCoords: state.newRunCoords
+    formValues: state.formValues
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return bindActionCreators({
+    setFormValue,
+    clearForm,
     createNewRun
   }, dispatch)
 }

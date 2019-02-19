@@ -1,5 +1,5 @@
 export const runType = [
-  {
+ {
     value: 'Base Run',
   }, {
     value: 'Progression Run',
@@ -41,46 +41,6 @@ export const day = [
     value: 'Friday',
   }, {
     value: 'Saturday',
-  }
-]
-
-export const hour = [
-  {
-    value: '12',
-  },{
-    value: '1',
-  },{
-    value: '2',
-  },{
-    value: '3',
-  },{
-    value: '4',
-  },{
-    value: '5',
-  },{
-    value: '6',
-  },{
-    value: '7',
-  },{
-    value: '8',
-  },{
-    value: '9',
-  },{
-    value: '10',
-  },{
-    value: '11',
-  }
-]
-
-export const minutes = [
-  {
-    value: '00',
-  },{
-    value: '15',
-  },{
-    value: '30',
-  },{
-    value: '45',
   }
 ]
 

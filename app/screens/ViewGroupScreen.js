@@ -257,7 +257,7 @@ class ViewGroupScreen extends Component {
                 <View style={{alignItems: 'center'}}>
                   <Button
                     title='Add a Run!'
-                    onPress={() => this.props.navigation.navigate('CreateRun', {groupId})}
+                    onPress={() => this.props.navigation.navigate('CreateGroupRun', {groupId})}
                     buttonStyle={{ backgroundColor: colors.otherColor, width: 200 }}
                     titleStyle={{ color: colors.backgroundColor }}
                   />

@@ -82,8 +82,7 @@ class ViewRunScreen extends Component {
   }
 /////// replace 2 with userID
   handleDeleteRun = (runId) => {
-    /// trying to re-render group runs after a delete
-    this.props.deleteRun(runId, 2, this.props.run.group_id = null)
+    this.props.deleteRun(runId, 2, this.props.run.group_id)
 
     this.setState({
       overlayMessage: 'Run Deleted',
@@ -130,6 +129,7 @@ class ViewRunScreen extends Component {
   }
 
   render() {
+    
     const runId = this.props.navigation.getParam('runId', 1)
     const formattedDate = moment(this.props.run.date).format("dddd MMM Do")
 
@@ -204,7 +204,7 @@ class ViewRunScreen extends Component {
               <View>
                 <View style={{ flexDirection: 'row' }}>
                   <Text style={{ fontSize: 20, marginTop: 10, fontWeight: 'bold' }}>Distance:</Text>
-                  <Text style={{ fontSize: 20, marginTop: 10, marginLeft: 5 }}>{this.props.run.distance || 'No info'}</Text>
+                  <Text style={{ fontSize: 20, marginTop: 10, marginLeft: 5 }}>{this.props.run.distance || 'Not specified'}</Text>
                 </View>
 
                 <View style={{ flexDirection: 'row' }}>

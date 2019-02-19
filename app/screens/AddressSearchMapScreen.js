@@ -7,7 +7,7 @@ const { Marker } = MapView
 
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { setNewRunCoords } from '../actions/runs'
+import { setFormValue } from '../actions/createRunForm'
 
 import HeaderComponent from '../components/Header'
 
@@ -33,7 +33,7 @@ class AddressSearchMapScreen extends Component {
       showList: 'block'
     }
   }
-  ///////replace 2 with user ID
+
   componentWillMount() {
     this.getLocationAsync();
   }
@@ -53,32 +53,38 @@ class AddressSearchMapScreen extends Component {
         longitude: location.coords.longitude,
         latitudeDelta: 0.18,
         longitudeDelta: 0.1
-      },
-      marker: {
-        latitude: location.coords.latitude,
-        longitude: location.coords.longitude
-      },
-      location: null
+      }
     })
   }
 
-  updateSearch = search => {
-    this.setState({ search })
-  };
+  handlePickLocation = (data, details) => {
+    this.props.setFormValue('location', data.description)
+    this.props.setFormValue('latitude', details.geometry.location.lat)
+    this.props.setFormValue('longitude', details.geometry.location.lng)
 
-  onRegionChange = (region) => {
-    this.setState({ region })
+    this.setState({
+      region: {
+        latitude: details.geometry.location.lat,
+        longitude: details.geometry.location.lng,
+        latitudeDelta: 0.18,
+        longitudeDelta: 0.1
+      },
+      showList: 'none'
+    })
   }
 
-  handleSaveCoords = () => {
-    const location = {
-      latitude: this.state.marker.latitude, 
-      longitude: this.state.marker.longitude, 
-      location: this.state.location
-    }
-    this.props.setNewRunCoords(location)
-    this.props.navigation.navigate('CreateRun')
-    // this.props.navigation.navigate('CreateRun', { latitude: this.state.marker.latitude, longitude: this.state.marker.longitude, location: this.state.location})
+  handleMoveMarker = (event) => {
+    this.props.setFormValue('latitude', event.nativeEvent.coordinate.latitude)
+    this.props.setFormValue('longitude', event.nativeEvent.coordinate.longitude)
+
+    this.setState({
+      marker: event.nativeEvent.coordinate
+      // marker: {
+      //   ...this.state.region,
+      //   ['latitude']: event.nativeEvent.coordinate.latitude,
+      //   ['longitude']: event.nativeEvent.coordinate.longitude
+      // }
+    })
   }
 
   render() {
@@ -104,28 +110,14 @@ class AddressSearchMapScreen extends Component {
           listViewDisplayed={true}
           fetchDetails={true}
           // not working
-          onFocus={() => this.setState({showList: 'block'})}
-          onPress={(data, details = null) => {
-            this.setState({
-              region: {
-                latitude: details.geometry.location.lat,
-                longitude: details.geometry.location.lng,
-                latitudeDelta: 0.18,
-                longitudeDelta: 0.1
-              },
-              marker: {
-                latitude: details.geometry.location.lat,
-                longitude: details.geometry.location.lng
-              },
-              location: data.description,
-              showList: 'none'
-            })
-          }}
+          onFocus={() => this.setState({ showList: 'block' })}
+          onPress={(data, details) => this.handlePickLocation(data, details)}
 
           getDefaultValue={() => ''}
 
           query={{
             key: 'AIzaSyBVWJwBmZloFJ3UlMfE3ELeeGEFZVYwju8',
+            // key: process.env.GOOGLE_PLACES_API_KEY,
             language: 'en',
             types: ['geocode', 'places']
           }}
@@ -163,11 +155,12 @@ class AddressSearchMapScreen extends Component {
           <MapView
             style={styles.map}
             region={this.state.region}
-            onRegionChangeCompleted={this.onRegionChange}
+            onRegionChangeComplete={region => {
+              this.setState({ region })}}
           >
             <Marker draggable
               coordinate={this.state.marker}
-              onDragEnd={(e) => this.setState({ marker: e.nativeEvent.coordinate })}
+              onDragEnd={this.handleMoveMarker}
               pinColor='#6d3b84'
             />
 
@@ -175,7 +168,7 @@ class AddressSearchMapScreen extends Component {
           <View style={{ position: 'absolute', right: 10, bottom: 20 }}>
             <Button
               title='Save'
-              onPress={this.handleSaveCoords}
+              onPress={() => this.props.navigation.goBack()}
               buttonStyle={{ backgroundColor: colors.backgroundColor }}
               titleStyle={{ color: colors.otherColor }}
             />
@@ -186,10 +179,16 @@ class AddressSearchMapScreen extends Component {
   }
 }
 
+const mapStateToProps = (state) => {
+  return {
+    formValues: state.formValues
+  }
+}
+
 const mapDispatchToProps = (dispatch) => {
   return bindActionCreators({
-    setNewRunCoords
+    setFormValue
   }, dispatch)
 }
 
-export default connect(null, mapDispatchToProps)(AddressSearchMapScreen)
+export default connect(mapStateToProps, mapDispatchToProps)(AddressSearchMapScreen)

@@ -68,8 +68,6 @@ export function joinRun(runId, userId) {
     axios.post(`${BASE_URL}/runs/${runId}/users/${userId}`)
       .then(() => {
         dispatch(getUsersRuns(userId))
-      })
-      .then(() => {
         dispatch(getNewRuns(userId))
       })
       .catch((error) => console.warn(error.response))
@@ -81,45 +79,33 @@ export function leaveRun(runId, userId) {
     axios.delete(`${BASE_URL}/runs/${runId}/users/${userId}`)
       .then(() => {
         dispatch(getUsersRuns(userId))
-      })
-      .then(() => {
         dispatch(getNewRuns(userId))
       })
       .catch((error) => console.warn(error.response))
   }
 }
 
-const SET_NEW_RUN_COORDS = 'SET_NEW_RUN_COORDS'
-
-export function setNewRunCoords(location) {
-  return {
-    type: SET_NEW_RUN_COORDS,
-    payload: location
-  }
-}
-
-export function createNewRun(userId, newRun) {
+export function createNewRun(userId, newRun, groupId) {
   return (dispatch) => {
     axios.post(`${BASE_URL}/runs`, newRun)
       .then(() => {
         dispatch(getUsersRuns(userId))
+        if (groupId) {
+          dispatch(getGroupRuns(groupId))
+        }
       })
       .catch((error) => console.warn(error.response))
   }
 }
 
 export function deleteRun(runId, userId, groupId) {
-  console.warn(groupId)
-  ////logged null
   return (dispatch) => {
     axios.delete(`${BASE_URL}/runs/${runId}`)
       .then(() => {
         dispatch(getUsersRuns(userId))
-          .then(() => {
-            if (groupId) {
-              dispatch(getGroupRuns(groupId))
-            }
-          })
+        if (groupId) {
+          dispatch(getGroupRuns(groupId))
+        }
       })
       .catch((error) => console.warn(error.response))
   }

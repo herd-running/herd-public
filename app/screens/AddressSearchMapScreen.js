@@ -116,8 +116,7 @@ class AddressSearchMapScreen extends Component {
           getDefaultValue={() => ''}
 
           query={{
-            key: 'AIzaSyBVWJwBmZloFJ3UlMfE3ELeeGEFZVYwju8',
-            // key: process.env.GOOGLE_PLACES_API_KEY,
+            key: process.env.GOOGLE_PLACES_API_KEY,
             language: 'en',
             types: ['geocode', 'places']
           }}

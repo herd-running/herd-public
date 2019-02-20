@@ -11,9 +11,9 @@ const defaultState = {
   location: '',
   latitude: 0,
   longitude: 0,
-  run_type: '   ',
-  terrain: '   ',
-  pace: '   ',
+  run_type: ' ',
+  terrain: ' ',
+  pace: ' ',
   distance: '',
   description: ''
 }

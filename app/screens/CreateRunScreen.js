@@ -21,37 +21,44 @@ class CreateRunScreen extends Component {
     this.state = {
       overlayIsVisible: false,
       overlayMessage: '',
-      showError: true
+      showError: false
     }
   }
 
   ////////replace 2 with user ID
   handleCreateRun = () => {
-    const groupId = this.props.navigation.getParam('groupId', null)
-    if (!this.state.runType || !this.state.hour || !this.state.pace || !this.state.terrain ) {
-    this.setState({
-      showError: true
-    })
-    console.warn(this.state.showError)
-    return
+    if (this.props.formValues.run_type === ' ' ||
+      !this.props.formValues.time ||
+      this.props.formValues.pace === ' ' ||
+      this.props.formValues.terrain === ' ' ||
+      !this.props.formValues.latitude ||
+      !this.props.formValues.longitude ||
+      !this.props.formValues.location) {
+      this.setState({
+        showError: true
+      })
+      return;
     }
+
+    const groupId = this.props.navigation.getParam('groupId', null)
 
     const newRun = {
       ...this.props.formValues,
       creator_id: 2,
       group_id: groupId
     }
+
     this.props.createNewRun(2, newRun, groupId)
-    
+
     this.setState({
       showError: false
     })
-    
+
     this.setState({
       overlayMessage: 'Run Created!',
       overlayIsVisible: true
     })
-    
+
     setTimeout(() => {
       this.setState({
         overlayMessage: null,
@@ -59,7 +66,7 @@ class CreateRunScreen extends Component {
       })
 
       this.props.clearForm()
-      
+
       if (groupId) this.props.navigation.goBack()
       else { this.props.navigation.navigate('DashboardRuns') }
     }, 1000)
@@ -74,6 +81,7 @@ class CreateRunScreen extends Component {
 
   render() {
     const groupId = this.props.navigation.getParam('groupId', null)
+
     return (
       <View style={{ paddingBottom: 120 }}>
         <HeaderComponent header='Create' />
@@ -168,7 +176,7 @@ class CreateRunScreen extends Component {
             fontSize={20}
             labelFontSize={18}
             itemCount={7}
-            onChangeText={(pace) => this.props.setFormValue('pace', pace )}
+            onChangeText={(pace) => this.props.setFormValue('pace', pace)}
           />
 
           <Dropdown
@@ -178,7 +186,7 @@ class CreateRunScreen extends Component {
             fontSize={20}
             labelFontSize={18}
             itemCount={7}
-            onChangeText={(terrain) => this.props.setFormValue('terrain', terrain )}
+            onChangeText={(terrain) => this.props.setFormValue('terrain', terrain)}
           />
 
           <Button
@@ -214,7 +222,7 @@ class CreateRunScreen extends Component {
 
           <Text style={{ fontSize: 20, marginTop: 10, color: colors.formGray }}>Description (optional)</Text>
           <TextInput
-            onChangeText={(description) => this.props.setFormValue('description', description )}
+            onChangeText={(description) => this.props.setFormValue('description', description)}
             value={this.props.formValues.description}
             style={{ height: 80, borderColor: 'gray', borderWidth: 1, fontSize: 18, paddingLeft: 5, marginBottom: 10 }}
             returnKeyType='done'
@@ -224,17 +232,16 @@ class CreateRunScreen extends Component {
             onKeyPress={this.onEnterPress}
           />
 
+          {this.state.showError &&
+            <Text style={{ color: 'red', fontSize: 18, marginBottom: 3 }}>Please enter all required fields</Text>
+          }
+
           <Button
             title='Create Run!'
             onPress={this.handleCreateRun}
             buttonStyle={{ backgroundColor: colors.backgroundColor, marginBottom: 10 }}
             titleStyle={{ color: colors.otherColor }}
           />
-          {this.state.showError ?
-            <Text style={{ color: 'red' }}>Please enter all required fields</Text>
-            :
-            null
-          }
 
         </ScrollView>
 

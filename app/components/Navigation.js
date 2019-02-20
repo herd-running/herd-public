@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Component } from 'react'
 
 import { createStackNavigator, createAppContainer, createBottomTabNavigator } from 'react-navigation'
 import { Icon } from 'react-native-elements'
@@ -10,10 +10,14 @@ import DiscoverScreen from '../screens/DiscoverScreen'
 import ViewRunScreen from '../screens/ViewRunScreen'
 import ViewGroupScreen from '../screens/ViewGroupScreen'
 import CreateRunScreen from '../screens/CreateRunScreen'
-import CreateQuickRunScreen from '../screens/CreateQuickRunScreen'
+import AddressSearchMapScreen from '../screens/AddressSearchMapScreen'
 import AddGroup from './AddGroup'
 import CreateGroupScreen from '../screens/CreateGroupScreen'
 import MapScreen from '../screens/MapScreen'
+
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { clearForm } from '../actions/createRunForm'
 
 import colors from '../constants/Colors'
 
@@ -45,7 +49,8 @@ const DashboardGroupStack = createStackNavigator({
   AddGroupButton: AddGroup,
   ViewGroup: ViewGroupScreen,
   CreateGroup: CreateGroupScreen,
-  CreateRun: CreateRunScreen,
+  CreateGroupRun: CreateRunScreen,
+  AddressSearch: AddressSearchMapScreen,
   ViewRun: ViewRunScreen
 },
   {
@@ -55,10 +60,11 @@ const DashboardGroupStack = createStackNavigator({
 )
 
 const CreateNewStack = createStackNavigator({
-  CreateQuickRun: CreateQuickRunScreen,
+  CreateRun: CreateRunScreen,
+  AddressSearch: AddressSearchMapScreen
 },
   {
-    initialRouteName: 'CreateQuickRun',
+    initialRouteName: 'CreateRun',
     headerMode: 'none'
   })
 
@@ -131,4 +137,43 @@ const TabNavigator = createBottomTabNavigator({
     }
   })
 
-export default AppNavigator = createAppContainer(TabNavigator)
+const AppNavigator = createAppContainer(TabNavigator)
+
+function getActiveRouteName(navigationState) {
+  if (!navigationState) {
+    return null;
+  }
+  const route = navigationState.routes[navigationState.index];
+  // dive into nested navigators
+  if (route.routes) {
+    return getActiveRouteName(route);
+  }
+  return route.routeName;
+}
+
+class App extends Component {
+  render() {
+    return <AppNavigator
+      onNavigationStateChange={(prevState, currentState, action) => {
+        const currentScreen = getActiveRouteName(currentState);
+        const prevScreen = getActiveRouteName(prevState);
+        
+        if (prevScreen === 'CreateRun' && (currentScreen !== 'AddressSearch' && currentScreen !== 'CreateRun')) {
+          this.props.clearForm()
+        }
+
+        if (prevScreen === 'CreateGroupRun' && (currentScreen !== 'AddressSearch' && currentScreen !== 'CreateGroupRun')) {
+          this.props.clearForm()
+        }
+      }}
+    />
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators({
+    clearForm
+  }, dispatch)
+}
+
+export default connect(null, mapDispatchToProps)(App)

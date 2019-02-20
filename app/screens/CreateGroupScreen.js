@@ -22,8 +22,14 @@ class CreateGroupScreen extends Component {
       overlayMessage: ''
     }
   }
-
+//////replace 2 with user ID
   handleCreateGroup = () => {
+    const newGroup = {
+      name: this.state.name,
+      description: this.state.description
+    }
+    this.props.createGroup(2, newGroup)
+
     this.setState({
       overlayMessage: 'Group Created!',
       overlayIsVisible: true

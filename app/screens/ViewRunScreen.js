@@ -7,7 +7,7 @@ import moment from 'moment'
 
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { getOneRun, joinRun, leaveRun } from '../actions/runs'
+import { getOneRun, joinRun, leaveRun, deleteRun } from '../actions/runs'
 import { getRunMembers } from '../actions/users'
 
 import colors from '../constants/Colors'
@@ -80,9 +80,22 @@ class ViewRunScreen extends Component {
       this.props.navigation.goBack()
     }, 1000)
   }
-
+/////// replace 2 with userID
   handleDeleteRun = (runId) => {
+    this.props.deleteRun(runId, 2, this.props.run.group_id)
 
+    this.setState({
+      overlayMessage: 'Run Deleted',
+      overlayIsVisible: true
+    })
+
+    setTimeout(() => {
+      this.setState({
+        overlayMessage: null,
+        overlayIsVisible: false
+      })
+      this.props.navigation.goBack()
+    }, 1000)
   }
 
   handleShowAddCommentForm = () => {
@@ -116,6 +129,7 @@ class ViewRunScreen extends Component {
   }
 
   render() {
+    
     const runId = this.props.navigation.getParam('runId', 1)
     const formattedDate = moment(this.props.run.date).format("dddd MMM Do")
 
@@ -190,7 +204,7 @@ class ViewRunScreen extends Component {
               <View>
                 <View style={{ flexDirection: 'row' }}>
                   <Text style={{ fontSize: 20, marginTop: 10, fontWeight: 'bold' }}>Distance:</Text>
-                  <Text style={{ fontSize: 20, marginTop: 10, marginLeft: 5 }}>{this.props.run.distance || 'No info'}</Text>
+                  <Text style={{ fontSize: 20, marginTop: 10, marginLeft: 5 }}>{this.props.run.distance || 'Not specified'}</Text>
                 </View>
 
                 <View style={{ flexDirection: 'row' }}>
@@ -296,7 +310,7 @@ class ViewRunScreen extends Component {
                   title='Delete Run'
                   type='outline'
                   onPress={() => this.handleDeleteRun(runId)}
-                  buttonStyle={{ borderColor: 'red', minWidth: '100%', marginTop: 100 }}
+                  buttonStyle={{ borderColor: 'red', width: 200, marginTop: 100 }}
                   titleStyle={{ color: 'red' }}
                 />
                 :
@@ -347,7 +361,8 @@ const mapDispatchToProps = (dispatch) => {
     getOneRun,
     getRunMembers,
     joinRun, 
-    leaveRun
+    leaveRun,
+    deleteRun
   }, dispatch)
 }
 

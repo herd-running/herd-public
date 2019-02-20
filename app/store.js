@@ -4,6 +4,7 @@ import logger from 'redux-logger'
 import { usersGroups, newGroups, group } from './reducers/groups'
 import { groupLeader, groupMembers, runMembers } from './reducers/users'
 import { usersRuns, newRuns, groupRuns, run } from './reducers/runs'
+import { formValues } from './reducers/createRunForm'
 
 const reducers = combineReducers({ 
   usersGroups, 
@@ -15,8 +16,10 @@ const reducers = combineReducers({
   usersRuns, 
   newRuns, 
   groupRuns, 
-  run })
+  run,
+  formValues
+})
 
-const store = createStore(reducers, applyMiddleware(logger, thunk))
+const store = createStore(reducers, applyMiddleware(thunk, logger))
 
 export default store

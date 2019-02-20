@@ -1,10 +1,10 @@
-import React, { Component } from 'react'
-import { View, TouchableOpacity, Text } from 'react-native'
-import { Icon } from 'react-native-elements'
+// import React, { Component } from 'react'
+// import { View, TouchableOpacity, Text } from 'react-native'
+// import { Icon } from 'react-native-elements'
 
-import colors from '../constants/Colors';
+// import colors from '../../constants/Colors';
 
-import HeaderComponent from '../components/Header'
+// import HeaderComponent from '../../components/Header'
 
 export default class CreateChoicesScreen extends Component {
   constructor(props) {

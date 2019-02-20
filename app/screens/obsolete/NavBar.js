@@ -1,8 +1,8 @@
-import React, { Component } from 'react'
-import { View, Text, TouchableHighlight } from 'react-native'
-import { Icon } from 'react-native-elements'
-import styles from '../styles/NavBar'
-import colors from '../constants/Colors'
+// import React, { Component } from 'react'
+// import { View, Text, TouchableHighlight } from 'react-native'
+// import { Icon } from 'react-native-elements'
+// import styles from '../styles/NavBar'
+// import colors from '../constants/Colors'
 
 export default class NavBar extends Component {
   constructor(props) {

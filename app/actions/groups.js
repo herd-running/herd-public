@@ -53,8 +53,6 @@ export function joinGroup(groupId, userId) {
     axios.post(`${BASE_URL}/groups/${groupId}/users/${userId}`)
       .then(() => {
         dispatch(getUsersGroups(userId))
-      })
-      .then(() => {
         dispatch(getNewGroups(userId))
       })
       .catch((error) => console.warn(error.response))
@@ -66,16 +64,28 @@ export function leaveGroup(groupId, userId) {
     axios.delete(`${BASE_URL}/groups/${groupId}/users/${userId}`)
       .then(() => {
         dispatch(getUsersGroups(userId))
-      })
-      .then(() => {
         dispatch(getNewGroups(userId))
       })
       .catch((error) => console.warn(error.response))
   }
 }
 
-export function createGroup(group) {
+export function createGroup(userId, newGroup) {
   return (dispatch) => {
-    axios.post(`${BASE_URL}/groups`)
+    axios.post(`${BASE_URL}/users/${userId}/groups`, newGroup)
+      .then(() => {
+        dispatch(getUsersGroups(userId))
+      })
+      .catch((error) => console.warn(error.response))
+  }
+}
+
+export function deleteGroup(groupId, userId) {
+  return (dispatch) => {
+    axios.delete(`${BASE_URL}/groups/${groupId}`)
+      .then(() => {
+        dispatch(getUsersGroups(userId))
+      })
+      .catch((error) => console.warn(error.response))
   }
 }

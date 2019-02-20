@@ -22,8 +22,8 @@ class MapScreen extends Component {
     this.state = {
       search: '',
       region: {
-        latitude: 37.78825,
-        longitude: -122.4324,
+        latitude: 47.6062,
+        longitude: -122.3321,
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421,
       }

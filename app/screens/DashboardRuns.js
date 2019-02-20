@@ -30,6 +30,23 @@ class DashboardRuns extends Component {
   };
 
   render() {
+    const date = new Date
+    const today = date.getDay()
+    
+    const days = {
+      'Sunday' : 0,
+      'Monday' : 1,
+      'Tuesday' : 2,
+      'Wednesday' : 3,
+      'Thursday' : 4,
+      'Friday' : 5,
+      'Saturday' : 6
+    }
+
+    const sorted = this.props.usersRuns.sort( (a, b) => {
+      // console.warn('a', typeof days[a.day], 'b', days[b.day])
+      days[b.day] - days[a.day]})
+    // console.warn(sorted)
     return (
       <View style={styles.container}>
         <HeaderComponent header='My Runs'/>
@@ -45,7 +62,7 @@ class DashboardRuns extends Component {
 
         </View>
         <ScrollView>
-          {this.props.usersRuns.map((run) => {
+          {sorted.map((run) => {
             return <TouchableOpacity key={run.run_id} onPress={() => this.props.navigation.navigate('ViewRun', { runId: run.run_id })}>
               <RunCard {...run} />
             </TouchableOpacity>

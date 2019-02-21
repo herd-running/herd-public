@@ -4,7 +4,7 @@ import { Button } from 'react-native-elements'
 
 import styles from '../styles/JoinScreen'
 
-export default class JoinScreen extends Component {
+export default class LandingScreen extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -13,13 +13,11 @@ export default class JoinScreen extends Component {
   }
 
   onPressSignUp = () => {
-    const { navigate } = this.props.navigation
-    navigate('DashboardRuns')
+    this.props.navigation.navigate('Signup')
   }
 
   onPressLogIn = () => {
-    const { navigate } = this.props.navigation
-    navigate('DashboardRuns')
+    this.props.navigation.navigate('Login')
   }
 
   render = () => {

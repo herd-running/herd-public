@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { View, ScrollView } from 'react-native'
 import { Button } from 'react-native-elements'
 
-import colors from '../constants/Colors'
+import colors from '../utils/Colors'
 
 export default class RunFilters extends Component {
   constructor(props) {

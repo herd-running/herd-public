@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, ScrollView, TouchableOpacity } from 'react-native'
+import { View, Text, ScrollView, TouchableOpacity } from 'react-native'
 import { SearchBar, Button } from 'react-native-elements'
 
 import { connect } from 'react-redux'
@@ -10,7 +10,6 @@ import styles from '../styles/Dashboard'
 
 import HeaderComponent from '../components/Header'
 import GroupCard from '../components/GroupCard'
-import AddGroup from '../components/AddGroup'
 
 class DashboardGroups extends Component {
   constructor(props) {
@@ -21,9 +20,9 @@ class DashboardGroups extends Component {
     }
   }
 
-  /////// replace 2 wth user ID
   componentDidMount() {
-    this.props.getUsersGroups(2)
+    const userId = this.props.authentication.user
+    this.props.getUsersGroups(userId)
   }
 
   updateSearch = search => {
@@ -33,7 +32,7 @@ class DashboardGroups extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <HeaderComponent header='My Groups' /*component={<AddGroup/>*/ />
+        <HeaderComponent header='My Groups' />
 
         <View style={{ justifyContent: 'center' }}>
           <SearchBar
@@ -44,9 +43,9 @@ class DashboardGroups extends Component {
             containerStyle={{ marginLeft: 10, marginRight: 10 }}
           />
 
-          <View style={{alignItems: 'center', marginTop: 10, marginBottom: 5}}>
+          <View style={{ alignItems: 'center', marginTop: 10, marginBottom: 5 }}>
             <Button
-              title='Add New Group'
+              title='Add My Own Group'
               onPress={() => this.props.navigation.navigate('CreateGroup')}
               buttonStyle={{ backgroundColor: colors.otherColor, width: 200 }}
               titleStyle={{ color: colors.backgroundColor }}
@@ -54,13 +53,19 @@ class DashboardGroups extends Component {
           </View>
 
         </View>
-        <ScrollView>
-          {this.props.usersGroups.map((group) => {
-            return <TouchableOpacity key={group.group_id} onPress={() => this.props.navigation.navigate('ViewGroup', { groupId: group.group_id })}>
-              <GroupCard {...group} />
-            </TouchableOpacity>
-          })}
-        </ScrollView>
+        {this.props.usersGroups.length ?
+          <ScrollView>
+            {this.props.usersGroups.map((group) => {
+              return <TouchableOpacity key={group.group_id} onPress={() => this.props.navigation.navigate('ViewGroup', { groupId: group.group_id })}>
+                <GroupCard {...group} />
+              </TouchableOpacity>
+            })}
+          </ScrollView>
+          :
+          <View style={{ alignItems: 'center', marginTop: 20 }}>
+            <Text style={{ color: colors.otherColor, fontSize: 25 }}>No groups yet!</Text>
+          </View>
+        }
       </View>
     )
   }
@@ -68,6 +73,7 @@ class DashboardGroups extends Component {
 
 const mapStateToProps = (state) => {
   return {
+    authentication: state.authentication,
     usersGroups: state.usersGroups
   }
 }

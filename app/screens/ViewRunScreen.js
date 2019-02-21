@@ -10,7 +10,7 @@ import { bindActionCreators } from 'redux'
 import { getOneRun, joinRun, leaveRun, deleteRun } from '../actions/runs'
 import { getRunMembers } from '../actions/users'
 
-import colors from '../constants/Colors'
+import colors from '../utils/Colors'
 
 import HeaderComponent from '../components/Header'
 import Rating from '../components/Rating'
@@ -22,6 +22,7 @@ class ViewRunScreen extends Component {
     super(props)
 
     this.state = {
+      userId: null,
       attending: false,
       owner: false,
       showMoreInfo: false,
@@ -41,16 +42,18 @@ class ViewRunScreen extends Component {
     this.props.getOneRun(runId)
     this.props.getRunMembers(runId)
   }
-  ///////replace 2 with userId
+
   componentWillReceiveProps = (props) => {
+    const userId = props.authentication.user
     this.setState({
-      owner: props.run.creator_id === 2,
-      attending: props.runMembers.find(member => member.user_id === 2)
+      userId,
+      owner: props.run.creator_id === userId,
+      attending: props.runMembers.find(member => member.user_id === userId)
     })
   }
-//////replace 2 with user ID
+
   handleLeaveRun = (runId) => {
-    this.props.leaveRun(runId, 2)
+    this.props.leaveRun(runId, this.state.userId)
     this.setState({
       overlayMessage: 'You Left this Run',
       overlayIsVisible: true
@@ -64,9 +67,9 @@ class ViewRunScreen extends Component {
       this.props.navigation.goBack()
     }, 1000)
   }
-///// replace 2 with user ID
+
   handleJoinRun = (runId) => {
-    this.props.joinRun(runId, 2)
+    this.props.joinRun(runId, this.state.userId)
     this.setState({
       overlayMessage: 'You Joined a Run!',
       overlayIsVisible: true
@@ -80,9 +83,9 @@ class ViewRunScreen extends Component {
       this.props.navigation.goBack()
     }, 1000)
   }
-/////// replace 2 with userID
+
   handleDeleteRun = (runId) => {
-    this.props.deleteRun(runId, 2, this.props.run.group_id)
+    this.props.deleteRun(runId, this.state.userId, this.props.run.group_id)
 
     this.setState({
       overlayMessage: 'Run Deleted',
@@ -129,7 +132,7 @@ class ViewRunScreen extends Component {
   }
 
   render() {
-    
+
     const runId = this.props.navigation.getParam('runId', 1)
     const formattedDate = moment(this.props.run.date).format("dddd MMM Do")
 
@@ -200,12 +203,16 @@ class ViewRunScreen extends Component {
               buttonStyle={{ marginTop: 20, backgroundColor: colors.otherColor }}
             />
 
-            {this.state.showMoreInfo ?
+            {this.state.showMoreInfo &&
               <View>
-                <View style={{ flexDirection: 'row' }}>
-                  <Text style={{ fontSize: 20, marginTop: 10, fontWeight: 'bold' }}>Distance:</Text>
-                  <Text style={{ fontSize: 20, marginTop: 10, marginLeft: 5 }}>{this.props.run.distance || 'Not specified'}</Text>
-                </View>
+                {this.props.run.distance ?
+                  <View style={{ flexDirection: 'row' }}>
+                    <Text style={{ fontSize: 20, marginTop: 10, fontWeight: 'bold' }}>Distance:</Text>
+                    <Text style={{ fontSize: 20, marginTop: 10, marginLeft: 5 }}>{this.props.run.distance}</Text>
+                  </View>
+                  :
+                  null
+                }
 
                 <View style={{ flexDirection: 'row' }}>
                   <Text style={{ fontSize: 20, marginTop: 10, fontWeight: 'bold' }}>Target Pace:</Text>
@@ -217,11 +224,15 @@ class ViewRunScreen extends Component {
                   <Text style={{ fontSize: 20, marginTop: 10, marginLeft: 5 }}>{this.props.run.terrain}</Text>
                 </View>
 
-                <Text style={{ fontSize: 20, marginTop: 10, fontWeight: 'bold' }}>Description:</Text>
-                <Text style={{ fontSize: 20, marginTop: 5 }}>{this.props.run.description}</Text>
+                {this.props.run.description ?
+                  <View>
+                    <Text style={{ fontSize: 20, marginTop: 10, fontWeight: 'bold' }}>Description:</Text>
+                    <Text style={{ fontSize: 20, marginTop: 5 }}>{this.props.run.description}</Text>
+                  </View>
+                  :
+                  null
+                }
               </View>
-              :
-              null
             }
 
             <Button
@@ -351,6 +362,7 @@ class ViewRunScreen extends Component {
 
 const mapStateToProps = (state) => {
   return {
+    authentication: state.authentication,
     run: state.run,
     runMembers: state.runMembers
   }
@@ -360,7 +372,7 @@ const mapDispatchToProps = (dispatch) => {
   return bindActionCreators({
     getOneRun,
     getRunMembers,
-    joinRun, 
+    joinRun,
     leaveRun,
     deleteRun
   }, dispatch)

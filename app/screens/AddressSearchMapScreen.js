@@ -5,6 +5,8 @@ import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplet
 import { MapView, Location, Permissions } from 'expo'
 const { Marker } = MapView
 
+import { GOOGLE_PLACES_API_KEY } from '../../hidden'
+
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { setFormValue } from '../actions/createRunForm'
@@ -12,7 +14,7 @@ import { setFormValue } from '../actions/createRunForm'
 import HeaderComponent from '../components/Header'
 
 import styles from '../styles/AddressSearch'
-import colors from '../constants/Colors'
+import colors from '../utils/Colors'
 
 class AddressSearchMapScreen extends Component {
   constructor(props) {
@@ -69,6 +71,10 @@ class AddressSearchMapScreen extends Component {
         latitudeDelta: 0.18,
         longitudeDelta: 0.1
       },
+      marker: {
+        latitude: details.geometry.location.lat,
+        longitude: details.geometry.location.lng
+      },
       showList: 'none'
     })
   }
@@ -79,11 +85,6 @@ class AddressSearchMapScreen extends Component {
 
     this.setState({
       marker: event.nativeEvent.coordinate
-      // marker: {
-      //   ...this.state.region,
-      //   ['latitude']: event.nativeEvent.coordinate.latitude,
-      //   ['longitude']: event.nativeEvent.coordinate.longitude
-      // }
     })
   }
 
@@ -116,7 +117,7 @@ class AddressSearchMapScreen extends Component {
           getDefaultValue={() => ''}
 
           query={{
-            key: process.env.GOOGLE_PLACES_API_KEY,
+            key: GOOGLE_PLACES_API_KEY,
             language: 'en',
             types: ['geocode', 'places']
           }}

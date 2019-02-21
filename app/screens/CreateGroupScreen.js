@@ -9,7 +9,7 @@ import { createGroup } from '../actions/groups'
 
 import HeaderComponent from '../components/Header'
 
-import colors from '../constants/Colors'
+import colors from '../utils/Colors'
 
 class CreateGroupScreen extends Component {
   constructor(props) {
@@ -22,13 +22,15 @@ class CreateGroupScreen extends Component {
       overlayMessage: ''
     }
   }
-//////replace 2 with user ID
+  
   handleCreateGroup = () => {
+    const userId = this.props.authentication.user
+
     const newGroup = {
       name: this.state.name,
       description: this.state.description
     }
-    this.props.createGroup(2, newGroup)
+    this.props.createGroup(userId, newGroup)
 
     this.setState({
       overlayMessage: 'Group Created!',
@@ -118,10 +120,16 @@ class CreateGroupScreen extends Component {
   }
 }
 
+const mapStateToProps = (state) => {
+  return {
+    authentication: state.authentication
+  }
+}
+
 const mapDispatchToProps = (dispatch) => {
   return bindActionCreators({
     createGroup
   }, dispatch)
 }
 
-export default connect(null, mapDispatchToProps)(CreateGroupScreen)
+export default connect(mapStateToProps, mapDispatchToProps)(CreateGroupScreen)

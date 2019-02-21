@@ -1,7 +1,7 @@
 import React from 'react'
-import { View, Text } from 'react-native'
+import { View } from 'react-native'
 import { Icon } from 'react-native-elements'
-import colors from '../constants/Colors'
+import colors from '../utils/Colors'
 
 export default function Rating({rating, size}) {
   let stars = []

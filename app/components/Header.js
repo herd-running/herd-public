@@ -1,10 +1,8 @@
 import React from 'react'
 import { Header } from 'react-native-elements'
 
-import AddGroup from './AddGroup'
-
 import styles from '../styles/Header'
-import colors from '../constants/Colors'
+import colors from '../utils/Colors'
 
 export default function HeaderComponent({header, component = null}) {
 

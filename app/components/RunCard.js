@@ -6,7 +6,7 @@ import moment from 'moment'
 
 import Rating from './Rating'
 
-export default function RunCard({date, run_type, location, day, time}) {
+export default function RunCard({date, run_type, location, day, time, rating}) {
   const formattedDate = moment(date).format("dddd MMM Do")
   return (
     <Card title={`${run_type} at ${location}`}>
@@ -26,7 +26,11 @@ export default function RunCard({date, run_type, location, day, time}) {
             <Text>{`${formattedDate} @ ${time}`}</Text>
           </View>
         }
-        <Rating rating={5} size={20} />
+        { rating ?
+        <Rating rating={rating} size={20} />
+        :
+        <Text style={{fontStyle: 'italic'}}>No ratings</Text>
+        }
       </View>
     </Card>
   )

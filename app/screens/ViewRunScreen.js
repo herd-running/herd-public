@@ -175,15 +175,34 @@ class ViewRunScreen extends Component {
                 null}
             </Text>
 
-            <View style={{ marginTop: 5 }}>
-              <Rating rating={5} size={25} />
+            <View style={{ marginTop: 5, marginBottom: 5 }}>
+              <Rating rating={this.props.run.rating} size={25} />
             </View>
 
-            <Text style={{ fontSize: 20, marginTop: 10, fontWeight: 'bold' }}>{this.props.run.location}</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
+              <Icon
+                name='map-marker'
+                type='font-awesome'
+                size={32}
+                iconStyle={{ marginRight: 10, marginTop: 10, color: colors.otherColor }}
+              />
+              <Text style={{ fontSize: 20, marginTop: 10, fontWeight: 'bold' }}>{this.props.run.location}</Text>
+              <TouchableOpacity
+                onPress={() => this.props.navigation.navigate('ViewRunMap', {latitude: this.props.run.latitude, longitude: this.props.run.longitude, runId: this.props.run.id})}
+              >
+                <Text style={{ textDecorationLine: 'underline', paddingLeft: 6, paddingBottom: 3 }}>(Map)</Text>
+              </TouchableOpacity>
+            </View>
 
             {this.props.run.day ?
               <View style={{ flexDirection: 'row', marginTop: 10 }}>
-                <Text style={{ fontSize: 20, fontWeight: 'bold' }}> {`${this.props.run.day}s @ ${this.props.run.time}`}</Text>
+                <Icon
+                  name='clock'
+                  type='material-community'
+                  size={26}
+                  iconStyle={{ marginRight: 7, marginLeft: -4, color: colors.otherColor }}
+                />
+                <Text style={{ fontSize: 20, fontWeight: 'bold' }}>{`${this.props.run.day}s @ ${this.props.run.time}`}</Text>
                 <Icon
                   name='sync'
                   type='material-community'
@@ -193,6 +212,12 @@ class ViewRunScreen extends Component {
               </View>
               :
               <View style={{ flexDirection: 'row', marginTop: 10 }}>
+                <Icon
+                  name='clock'
+                  type='material-community'
+                  size={26}
+                  iconStyle={{ marginRight: 8, marginLeft: -4, color: colors.otherColor }}
+                />
                 <Text style={{ fontSize: 20, fontWeight: 'bold' }}>{`${formattedDate} @ ${this.props.run.time}`}</Text>
               </View>
             }

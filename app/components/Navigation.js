@@ -10,6 +10,7 @@ import DashboardRuns from '../screens/DashboardRuns'
 import DashboardGroups from '../screens/DashboardGroups'
 import DiscoverScreen from '../screens/DiscoverScreen'
 import ViewRunScreen from '../screens/ViewRunScreen'
+import ViewRunMapScreen from '../screens/ViewRunMapScreen'
 import ViewGroupScreen from '../screens/ViewGroupScreen'
 import CreateRunScreen from '../screens/CreateRunScreen'
 import AddressSearchMapScreen from '../screens/AddressSearchMapScreen'
@@ -49,6 +50,7 @@ AuthenticationStack.navigationOptions = ({ navigation }) => {
 const DashboardRunStack = createStackNavigator({
   DashboardRuns: DashboardRuns,
   ViewRun: ViewRunScreen,
+  ViewRunMap: ViewRunMapScreen,
 },
   {
     initialRouteName: 'DashboardRuns',
@@ -63,7 +65,8 @@ const DashboardGroupStack = createStackNavigator({
   CreateGroup: CreateGroupScreen,
   CreateGroupRun: CreateRunScreen,
   AddressSearch: AddressSearchMapScreen,
-  ViewRun: ViewRunScreen
+  ViewRun: ViewRunScreen,
+  ViewRunMap: ViewRunMapScreen
 },
   {
     initialRouteName: 'DashboardGroups',
@@ -83,6 +86,7 @@ const CreateNewStack = createStackNavigator({
 const DiscoverStack = createStackNavigator({
   Discover: DiscoverScreen,
   ViewRun: ViewRunScreen,
+  ViewRunMap: ViewRunMapScreen,
   ViewGroup: ViewGroupScreen
 },
   {
@@ -124,7 +128,7 @@ const TabNavigator = createBottomTabNavigator({
           style = { paddingBottom: 5 }
         } else if (routeName === 'Create') {
           iconName = 'plus-circle'
-          size = 35
+          size = 33
         } else if (routeName === 'Discover') {
           iconName = 'magnify'
           size = 35
@@ -157,7 +161,6 @@ function getActiveRouteName(navigationState) {
     return null;
   }
   const route = navigationState.routes[navigationState.index];
-  // dive into nested navigators
   if (route.routes) {
     return getActiveRouteName(route);
   }
@@ -167,7 +170,7 @@ function getActiveRouteName(navigationState) {
 class App extends Component {
   render() {
     return <AppNavigator
-      onNavigationStateChange={(prevState, currentState, action) => {
+      onNavigationStateChange={(prevState, currentState) => {
         const currentScreen = getActiveRouteName(currentState);
         const prevScreen = getActiveRouteName(prevState);
         

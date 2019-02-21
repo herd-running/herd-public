@@ -13,13 +13,14 @@ import CommentCard from '../components/CommentCard'
 import RunCard from '../components/RunCard'
 import RunnersCard from '../components/RunnersCard'
 
-import colors from '../constants/Colors'
+import colors from '../utils/Colors'
 
 class ViewGroupScreen extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
+      userId: null,
       isMember: null,
       isLeader: null,
       showRuns: false,
@@ -43,9 +44,12 @@ class ViewGroupScreen extends Component {
   }
   ///// replace 2 with user ID
   componentWillReceiveProps = (props) => {
+    const userId = props.authentication.user
+
     this.setState({
-      isLeader: props.groupLeader.user_id === 2,
-      isMember: props.groupMembers.find(member => member.user_id === 2)
+      userId,
+      isLeader: props.groupLeader.user_id === userId,
+      isMember: props.groupMembers.find(member => member.user_id === userId)
     })
   }
 
@@ -78,9 +82,9 @@ class ViewGroupScreen extends Component {
       showAddComment: false
     })
   }
-///////replace 2 with userId
+
   handleJoinGroup = (groupId) => {
-    this.props.joinGroup(groupId, 2)
+    this.props.joinGroup(groupId, this.state.userId)
     this.setState({
       overlayMessage: 'You Joined a Group!',
       overlayIsVisible: true
@@ -94,9 +98,9 @@ class ViewGroupScreen extends Component {
       this.props.navigation.goBack()
     }, 1000)
   }
-///////replace 2 with userId
+
   handleLeaveGroup = (groupId) => {
-    this.props.leaveGroup(groupId, 2)
+    this.props.leaveGroup(groupId, this.state.userId)
     this.setState({
       overlayMessage: 'You Left this Group',
       overlayIsVisible: true
@@ -114,9 +118,9 @@ class ViewGroupScreen extends Component {
   handleAddGroupRun = () => {
     this.props.navigation.navigate('CreateRun')
   }
-///////replace 2 with userId
+
   handleDeleteGroup = (groupId) => {
-    this.props.deleteGroup(groupId, 2)
+    this.props.deleteGroup(groupId, this.state.userId)
     this.setState({
       overlayMessage: 'Group Deleted',
       overlayIsVisible: true
@@ -311,6 +315,7 @@ class ViewGroupScreen extends Component {
 
 const mapStateToProps = (state) => {
   return {
+    authentication: state.authentication,
     group: state.group,
     groupLeader: state.groupLeader,
     groupMembers: state.groupMembers,

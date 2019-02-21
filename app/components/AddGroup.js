@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { TouchableOpacity } from 'react-native'
 import { Icon } from 'react-native-elements'
 
-import colors from '../constants/Colors'
+import colors from '../utils/Colors'
 
 export default class AddGroup extends Component {
   constructor(props) {

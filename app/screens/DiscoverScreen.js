@@ -7,13 +7,13 @@ import { bindActionCreators } from 'redux'
 import { getNewGroups } from '../actions/groups'
 import { getNewRuns } from '../actions/runs'
 
-import styles from '../styles/Dashboard'
-import colors from '../constants/Colors'
-
 import HeaderComponent from '../components/Header'
 import RunCard from '../components/RunCard'
 import GroupCard from '../components/GroupCard'
 import RunFilters from '../components/RunFilters'
+
+import styles from '../styles/Dashboard'
+import colors from '../utils/Colors'
 
 class DiscoverScreen extends Component {
   constructor(props) {
@@ -27,10 +27,10 @@ class DiscoverScreen extends Component {
     }
   }
 
-  ///////////Change 2 to user ID
   componentDidMount() {
-    this.props.getNewRuns(2)
-    this.props.getNewGroups(2)
+    const userId = this.props.authentication.user
+    this.props.getNewRuns(userId)
+    this.props.getNewGroups(userId)
   }
 
   onTogglePressRuns = () => {
@@ -95,12 +95,11 @@ class DiscoverScreen extends Component {
         />
         {this.state.viewing === 'Runs' ?
           <ScrollView>
-            <RunFilters />
+            {/* <RunFilters /> */}
             {this.props.newRuns.map((run) => {
               return <TouchableOpacity key={run.id} onPress={() => this.props.navigation.navigate('ViewRun', { runId: run.id })}>
                 <RunCard {...run} />
               </TouchableOpacity>
-
             })}
           </ScrollView>
           :
@@ -119,6 +118,7 @@ class DiscoverScreen extends Component {
 
 const mapStateToProps = (state) => {
   return {
+    authentication: state.authentication,
     newGroups: state.newGroups,
     newRuns: state.newRuns
   }

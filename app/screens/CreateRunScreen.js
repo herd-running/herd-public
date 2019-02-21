@@ -11,8 +11,8 @@ import { setFormValue, clearForm } from '../actions/createRunForm'
 
 import HeaderComponent from '../components/Header'
 
-import { runType, day, pace, terrain } from '../constants/CreateRunOptions'
-import colors from '../constants/Colors'
+import { runType, day, pace, terrain } from '../utils/CreateRunOptions'
+import colors from '../utils/Colors'
 
 class CreateRunScreen extends Component {
   constructor(props) {
@@ -25,7 +25,6 @@ class CreateRunScreen extends Component {
     }
   }
 
-  ////////replace 2 with user ID
   handleCreateRun = () => {
     if (this.props.formValues.run_type === ' ' ||
       !this.props.formValues.time ||
@@ -41,14 +40,15 @@ class CreateRunScreen extends Component {
     }
 
     const groupId = this.props.navigation.getParam('groupId', null)
+    const userId = this.props.authentication.user
 
     const newRun = {
       ...this.props.formValues,
-      creator_id: 2,
+      creator_id: userId,
       group_id: groupId
     }
 
-    this.props.createNewRun(2, newRun, groupId)
+    this.props.createNewRun(userId, newRun, groupId)
 
     this.setState({
       showError: false
@@ -264,6 +264,7 @@ class CreateRunScreen extends Component {
 
 const mapStateToProps = (state) => {
   return {
+    authentication: state.authentication,
     formValues: state.formValues
   }
 }

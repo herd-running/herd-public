@@ -8,15 +8,15 @@ export default styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: colors.backgroundColor,
   },
-  buttonStyle : {
-    borderColor: colors.otherColor,
-    width: 200,
-    marginTop: 10
-  },
-  titleStyle: {
-    color: colors.otherColor
-  },
-  terms : {
-    justifyContent: 'flex-end'
+  textInput : { 
+    height: 40, 
+    width: 250, 
+    borderColor: colors.otherColor, 
+    borderWidth: 0.5, 
+    fontSize: 18, 
+    paddingLeft: 5, 
+    marginBottom: 10, 
+    color: colors.otherColor, 
+    borderRadius: 4 
   }
 })

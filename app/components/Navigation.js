@@ -3,7 +3,9 @@ import React, { Component } from 'react'
 import { createStackNavigator, createAppContainer, createBottomTabNavigator } from 'react-navigation'
 import { Icon } from 'react-native-elements'
 
-import JoinScreen from '../screens/JoinScreen'
+import LandingScreen from '../screens/LandingScreen'
+import LoginScreen from '../screens/LoginScreen'
+import SignupScreen from '../screens/SignupScreen'
 import DashboardRuns from '../screens/DashboardRuns'
 import DashboardGroups from '../screens/DashboardGroups'
 import DiscoverScreen from '../screens/DiscoverScreen'
@@ -19,30 +21,40 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { clearForm } from '../actions/createRunForm'
 
-import colors from '../constants/Colors'
+import colors from '../utils/Colors'
 
-const DashboardRunStack = createStackNavigator({
-  Join: JoinScreen,
-  // LogIn: LogIn,
-  // SignUp: SignUp,
+const AuthenticationStack = createStackNavigator({
+  Landing: LandingScreen,
+  Login: LoginScreen,
+  Signup: SignupScreen,
   DashboardRuns: DashboardRuns,
-  ViewRun: ViewRunScreen,
 },
-  {
-    initialRouteName: 'Join',
-    headerMode: 'none'
-  }
+{
+  initialRouteName: 'Landing',
+  headerMode: 'none'
+}
 )
 
-DashboardRunStack.navigationOptions = ({ navigation }) => {
-  let tabBarVisible = true
-  if (navigation.state.index === 0) {
-    tabBarVisible = false
+AuthenticationStack.navigationOptions = ({ navigation }) => {
+  let tabBarVisible = false
+  const routes = navigation.state.routes
+  if (routes[routes.length - 1].routeName === 'DashboardRuns') {
+    tabBarVisible = true
   }
   return {
     tabBarVisible
   }
 }
+
+const DashboardRunStack = createStackNavigator({
+  DashboardRuns: DashboardRuns,
+  ViewRun: ViewRunScreen,
+},
+  {
+    initialRouteName: 'DashboardRuns',
+    headerMode: 'none'
+  }
+)
 
 const DashboardGroupStack = createStackNavigator({
   DashboardGroups: DashboardGroups,
@@ -89,6 +101,7 @@ const MapStack = createStackNavigator({
   })
 
 const TabNavigator = createBottomTabNavigator({
+  'Auth' : AuthenticationStack,
   'Runs': DashboardRunStack,
   'Groups': DashboardGroupStack,
   'Create': CreateNewStack,
@@ -118,7 +131,7 @@ const TabNavigator = createBottomTabNavigator({
         } else if (routeName === 'Map') {
           iconName = 'map'
           size = 35
-        }
+        } 
         return (<Icon
           name={iconName}
           type='material-community'

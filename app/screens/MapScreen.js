@@ -13,7 +13,7 @@ import moment from 'moment'
 import HeaderComponent from '../components/Header'
 
 import styles from '../styles/MapScreen'
-import colors from '../constants/Colors'
+import colors from '../utils/Colors'
 
 class MapScreen extends Component {
   constructor(props) {
@@ -31,9 +31,10 @@ class MapScreen extends Component {
   }
   ///////replace 2 with user ID
   componentWillMount() {
+    const userId = this.props.authentication.user
     this.getLocationAsync();
-    this.props.getUsersRuns(2)
-    this.props.getNewRuns(2)
+    this.props.getUsersRuns(userId)
+    this.props.getNewRuns(userId)
   }
 
   getLocationAsync = async () => {
@@ -128,6 +129,7 @@ class MapScreen extends Component {
 
 const mapStateToProps = (state) => {
   return {
+    authentication: state.authentication,
     usersRuns: state.usersRuns,
     newRuns: state.newRuns
   }

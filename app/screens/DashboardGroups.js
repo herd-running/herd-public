@@ -30,6 +30,11 @@ class DashboardGroups extends Component {
   };
 
   render() {
+    const filteredGroups = this.props.usersGroups.filter(group => {
+      return group.name.toLowerCase().includes(this.state.search) || 
+        group.description.toLowerCase().includes(this.state.search)
+    })
+
     return (
       <View style={styles.container}>
         <HeaderComponent header='My Groups' />
@@ -38,7 +43,7 @@ class DashboardGroups extends Component {
           <SearchBar
             lightTheme={true}
             placeholder="Search"
-            onChangeText={(search) => this.setState({ search })}
+            onChangeText={(search) => this.setState({ search: search.toLowerCase() })}
             value={this.state.search}
             containerStyle={{ marginLeft: 10, marginRight: 10 }}
           />
@@ -53,9 +58,9 @@ class DashboardGroups extends Component {
           </View>
 
         </View>
-        {this.props.usersGroups.length ?
+        {filteredGroups.length ?
           <ScrollView>
-            {this.props.usersGroups.map((group) => {
+            {filteredGroups.map((group) => {
               return <TouchableOpacity key={group.group_id} onPress={() => this.props.navigation.navigate('ViewGroup', { groupId: group.group_id })}>
                 <GroupCard {...group} />
               </TouchableOpacity>

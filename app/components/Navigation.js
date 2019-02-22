@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-
 import { createStackNavigator, createAppContainer, createBottomTabNavigator } from 'react-navigation'
 import { Icon } from 'react-native-elements'
 
@@ -14,7 +13,7 @@ import ViewRunMapScreen from '../screens/ViewRunMapScreen'
 import ViewGroupScreen from '../screens/ViewGroupScreen'
 import CreateRunScreen from '../screens/CreateRunScreen'
 import AddressSearchMapScreen from '../screens/AddressSearchMapScreen'
-import AddGroup from './AddGroup'
+import HeaderComponent from './Header'
 import CreateGroupScreen from '../screens/CreateGroupScreen'
 import MapScreen from '../screens/MapScreen'
 
@@ -23,29 +22,6 @@ import { bindActionCreators } from 'redux'
 import { clearForm } from '../actions/createRunForm'
 
 import colors from '../utils/Colors'
-
-const AuthenticationStack = createStackNavigator({
-  Landing: LandingScreen,
-  Login: LoginScreen,
-  Signup: SignupScreen,
-  DashboardRuns: DashboardRuns,
-},
-{
-  initialRouteName: 'Landing',
-  headerMode: 'none'
-}
-)
-
-AuthenticationStack.navigationOptions = ({ navigation }) => {
-  let tabBarVisible = false
-  const routes = navigation.state.routes
-  if (routes[routes.length - 1].routeName === 'DashboardRuns') {
-    tabBarVisible = true
-  }
-  return {
-    tabBarVisible
-  }
-}
 
 const DashboardRunStack = createStackNavigator({
   DashboardRuns: DashboardRuns,
@@ -60,7 +36,6 @@ const DashboardRunStack = createStackNavigator({
 
 const DashboardGroupStack = createStackNavigator({
   DashboardGroups: DashboardGroups,
-  AddGroupButton: AddGroup,
   ViewGroup: ViewGroupScreen,
   CreateGroup: CreateGroupScreen,
   CreateGroupRun: CreateRunScreen,
@@ -105,7 +80,6 @@ const MapStack = createStackNavigator({
   })
 
 const TabNavigator = createBottomTabNavigator({
-  'Auth' : AuthenticationStack,
   'Runs': DashboardRunStack,
   'Groups': DashboardGroupStack,
   'Create': CreateNewStack,
@@ -135,14 +109,15 @@ const TabNavigator = createBottomTabNavigator({
         } else if (routeName === 'Map') {
           iconName = 'map'
           size = 35
-        } 
-        return (<Icon
-          name={iconName}
-          type='material-community'
-          size={size}
-          color={colors.otherColor}
-          iconStyle={style}
-        />
+        }
+        return (
+          <Icon
+            name={iconName}
+            type='material-community'
+            size={size}
+            color={colors.otherColor}
+            iconStyle={style}
+          />
         )
       },
     }),
@@ -152,9 +127,23 @@ const TabNavigator = createBottomTabNavigator({
       labelStyle: { fontSize: 14 },
       style: { height: 55, backgroundColor: colors.backgroundColor, paddingTop: 5 }
     }
+
   })
 
-const AppNavigator = createAppContainer(TabNavigator)
+const AuthenticationStack = createStackNavigator({
+  Landing: LandingScreen,
+  Login: LoginScreen,
+  Signup: SignupScreen,
+  Header: HeaderComponent,
+  Authenticated: TabNavigator
+},
+  {
+    initialRouteName: 'Landing',
+    headerMode: 'none'
+  }
+)
+
+const AppNavigator = createAppContainer(AuthenticationStack)
 
 function getActiveRouteName(navigationState) {
   if (!navigationState) {
@@ -171,9 +160,9 @@ class App extends Component {
   render() {
     return <AppNavigator
       onNavigationStateChange={(prevState, currentState) => {
-        const currentScreen = getActiveRouteName(currentState);
-        const prevScreen = getActiveRouteName(prevState);
-        
+        const currentScreen = getActiveRouteName(currentState)
+        const prevScreen = getActiveRouteName(prevState)
+
         if (prevScreen === 'CreateRun' && (currentScreen !== 'AddressSearch' && currentScreen !== 'CreateRun')) {
           this.props.clearForm()
         }

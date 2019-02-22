@@ -1,23 +1,64 @@
-import React from 'react'
+import React, { Component } from 'react'
+import { TouchableOpacity } from 'react-native'
 import { Header } from 'react-native-elements'
+
+import { SecureStore } from 'expo'
+
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { setAuthentication } from '../actions/authentication'
+
+import LeftHeaderComponent from './LeftHeaderComponent'
 
 import styles from '../styles/Header'
 import colors from '../utils/Colors'
 
-export default function HeaderComponent({header, component = null}) {
+class HeaderComponent extends Component {
+  constructor(props) {
+    super(props)
+  }
 
-  return (
-    <Header
-      outerContainerStyles={{ borderBottomWidth: 0 }}
-      containerStyle={styles.header}
-      placement="left"
-      centerComponent={{ text: header, style: { color: colors.otherColor, fontSize: 25 } }}
-      rightComponent={component}
-      barStyle="light-content"
-    />
-  )
+  componentDidMount = () => {
+    console.warn(this.props)
+
+  }
+
+  handleLogout = () => {
+    // SecureStore.deleteItemAsync('token')
+      // .then ( () => {
+        // this.props.setAuthentication(null)
+        const { navigate } = this.props.navigation 
+        navigate('Landing')
+
+      // })
+  }
+
+  render = () => {
+    return (
+      <Header
+        outerContainerStyles={{ borderBottomWidth: 0 }}
+        containerStyle={styles.header}
+        placement="left"
+        centerComponent={{ text: this.props.header, style: { color: colors.otherColor, fontSize: 25 } }}
+        rightComponent={
+          <TouchableOpacity onPress={() => this.handleLogout()}>
+            <LeftHeaderComponent />
+          </TouchableOpacity>}
+
+        barStyle="light-content"
+      />
+    )
+  }
 }
 
-// { icon: 'settings', color: colors.otherColor }
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators({
+    setAuthentication
+  }, dispatch)
+}
+
+export default connect(null, mapDispatchToProps)(HeaderComponent)
+
+
 
 

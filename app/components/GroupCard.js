@@ -6,7 +6,7 @@ export default function GroupCard({ name, description }) {
   
   return (
     <Card title={name}>
-      <Text> {description} </Text>
+      <Text>{description}</Text>
     </Card>
   )
 }

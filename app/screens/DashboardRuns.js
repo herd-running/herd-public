@@ -54,6 +54,16 @@ class DashboardRuns extends Component {
       days[b.day] - days[a.day]
     })
     // console.warn(sorted)
+
+    const filteredRuns = this.props.usersRuns.filter(run => {
+      return run.run_type.toLowerCase().includes(this.state.search) || 
+        run.location.toLowerCase().includes(this.state.search) || 
+        run.day && run.day.toLowerCase().includes(this.state.search) ||
+        run.terrain.toLowerCase().includes(this.state.search) ||
+        run.creator.toLowerCase().includes(this.state.search) ||
+        run.description && run.description.toLowerCase().includes(this.state.search)
+    })
+
     return (
       <View style={styles.container}>
         <HeaderComponent header='My Runs' />
@@ -62,14 +72,14 @@ class DashboardRuns extends Component {
           <SearchBar
             lightTheme={true}
             placeholder="Search"
-            onChangeText={(search) => this.setState({ search })}
+            onChangeText={(search) => this.setState({ search: search.toLowerCase() })}
             value={this.state.search}
             containerStyle={{ marginLeft: 10, marginRight: 10 }}
           />
         </View>
-        {this.props.usersRuns.length ?
+        {filteredRuns.length ?
           <ScrollView>
-            {sorted.map((run) => {
+            {filteredRuns.map((run) => {
               return <TouchableOpacity key={run.run_id} onPress={() => this.props.navigation.navigate('ViewRun', { runId: run.run_id })}>
                 <RunCard {...run} />
               </TouchableOpacity>

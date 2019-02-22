@@ -249,6 +249,11 @@ class ViewRunScreen extends Component {
                   <Text style={{ fontSize: 20, marginTop: 10, marginLeft: 5 }}>{this.props.run.terrain}</Text>
                 </View>
 
+                <View style={{ flexDirection: 'row' }}>
+                  <Text style={{ fontSize: 20, marginTop: 10, fontWeight: 'bold' }}>Organizer:</Text>
+                  <Text style={{ fontSize: 20, marginTop: 10, marginLeft: 5 }}>{this.props.run.creator}</Text>
+                </View>
+
                 {this.props.run.description ?
                   <View>
                     <Text style={{ fontSize: 20, marginTop: 10, fontWeight: 'bold' }}>Description:</Text>

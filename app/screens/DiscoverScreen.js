@@ -49,7 +49,22 @@ class DiscoverScreen extends Component {
     })
   }
 
+  
   render() {
+    const filteredNewRuns = this.props.newRuns.filter(run => {
+      return run.run_type.toLowerCase().includes(this.state.search) || 
+        run.location.toLowerCase().includes(this.state.search) || 
+        run.day && run.day.toLowerCase().includes(this.state.search) ||
+        run.terrain.toLowerCase().includes(this.state.search) ||
+        run.creator.toLowerCase().includes(this.state.search) ||
+        run.description && run.description.toLowerCase().includes(this.state.search)
+    })
+
+    const filteredNewGroups = this.props.newGroups.filter(group => {
+      return group.name.toLowerCase().includes(this.state.search) || 
+        group.description.toLowerCase().includes(this.state.search)
+    })
+
     return (
       <View style={styles.container}>
         <HeaderComponent header='Discover' />
@@ -89,14 +104,14 @@ class DiscoverScreen extends Component {
         <SearchBar
           lightTheme={true}
           placeholder="Search"
-          onChangeText={search => this.setState({ search })}
+          onChangeText={search => this.setState({ search: search.toLowerCase() })}
           value={this.state.search}
           containerStyle={{ marginLeft: 10, marginRight: 10 }}
         />
         {this.state.viewing === 'Runs' ?
           <ScrollView>
             {/* <RunFilters /> */}
-            {this.props.newRuns.map((run) => {
+            {filteredNewRuns.map((run) => {
               return <TouchableOpacity key={run.id} onPress={() => this.props.navigation.navigate('ViewRun', { runId: run.id })}>
                 <RunCard {...run} />
               </TouchableOpacity>
@@ -104,7 +119,7 @@ class DiscoverScreen extends Component {
           </ScrollView>
           :
           <ScrollView>
-            {this.props.newGroups.map((group) => {
+            {filteredNewGroups.map((group) => {
               return <TouchableOpacity key={group.id} onPress={() => this.props.navigation.navigate('ViewGroup', { groupId: group.id })}>
                 <GroupCard {...group} />
               </TouchableOpacity>

@@ -24,12 +24,12 @@ class MapScreen extends Component {
       region: {
         latitude: 47.6062,
         longitude: -122.3321,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421,
+        latitudeDelta: 0.24,
+        longitudeDelta: 0.13
       }
     }
   }
-  ///////replace 2 with user ID
+
   componentWillMount() {
     const userId = this.props.authentication.user
     this.getLocationAsync();
@@ -50,8 +50,8 @@ class MapScreen extends Component {
       region: {
         latitude: location.coords.latitude,
         longitude: location.coords.longitude,
-        latitudeDelta: 0.18,
-        longitudeDelta: 0.1
+        latitudeDelta: 0.24,
+        longitudeDelta: 0.13
       }
     })
   }
@@ -65,6 +65,23 @@ class MapScreen extends Component {
   }
 
   render() {
+    const filteredNewRuns = this.props.newRuns.filter(run => {
+      return run.run_type.toLowerCase().includes(this.state.search) || 
+        run.location.toLowerCase().includes(this.state.search) || 
+        run.day && run.day.toLowerCase().includes(this.state.search) ||
+        run.terrain.toLowerCase().includes(this.state.search) ||
+        run.creator.toLowerCase().includes(this.state.search) ||
+        run.description && run.description.toLowerCase().includes(this.state.search)
+    })
+
+    const filteredUsersRuns = this.props.usersRuns.filter(run => {
+      return run.run_type.toLowerCase().includes(this.state.search) || 
+        run.location.toLowerCase().includes(this.state.search) || 
+        run.day && run.day.toLowerCase().includes(this.state.search) ||
+        run.terrain.toLowerCase().includes(this.state.search) ||
+        run.creator.toLowerCase().includes(this.state.search) ||
+        run.description && run.description.toLowerCase().includes(this.state.search)
+    })
     return (
       <View>
         <HeaderComponent header='Map' />
@@ -73,7 +90,7 @@ class MapScreen extends Component {
           <SearchBar
             lightTheme={true}
             placeholder="Search"
-            onChangeText={(search) => { this.setState({ search }) }}
+            onChangeText={(search) => { this.setState({ search: search.toLowerCase() }) }}
             value={this.state.search}
           />
         </View>
@@ -84,7 +101,7 @@ class MapScreen extends Component {
             region={this.state.region}
             onRegionChangeCompleted={this.onRegionChange}
           >
-            {this.props.newRuns.map((run) => (
+            {filteredNewRuns.map((run) => (
               <Marker
                 key={run.id}
                 coordinate={{
@@ -102,7 +119,7 @@ class MapScreen extends Component {
                 onCalloutPress={() => this.props.navigation.navigate('ViewRun', { runId: run.id })}
               />
             ))}
-            {this.props.usersRuns.map((run) => (
+            {filteredUsersRuns.map((run) => (
               <Marker
                 key={run.run_id}
                 coordinate={{

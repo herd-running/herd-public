@@ -37,7 +37,7 @@ class LoginScreen extends Component {
       .then(response => {
         this.setState({ showErrorMessage: false })
         this.props.setAuthentication(response.data.id)
-        this.props.navigation.navigate('DashboardRuns')
+        this.props.navigation.navigate('Authenticated')
       })
       .catch(() => {
         this.setState({ showError: true })

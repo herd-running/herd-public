@@ -48,7 +48,6 @@ class DiscoverScreen extends Component {
       groupButtonColor: colors.otherColor
     })
   }
-
   
   render() {
     const filteredNewRuns = this.props.newRuns.filter(run => {

@@ -24,7 +24,6 @@ class DashboardRuns extends Component {
   componentDidMount = () => {
     const userId = this.props.authentication.user
     this.props.getUsersRuns(userId)
-
   }
 
   componentWillReceiveProps = (props) => {
@@ -66,7 +65,7 @@ class DashboardRuns extends Component {
 
     return (
       <View style={styles.container}>
-        <HeaderComponent header='My Runs' />
+        <HeaderComponent header='My Runs' navigation={this.props.navigation} />
 
         <View style={{ justifyContent: 'center' }}>
           <SearchBar

@@ -134,7 +134,6 @@ const AuthenticationStack = createStackNavigator({
   Landing: LandingScreen,
   Login: LoginScreen,
   Signup: SignupScreen,
-  Header: HeaderComponent,
   Authenticated: TabNavigator
 },
   {

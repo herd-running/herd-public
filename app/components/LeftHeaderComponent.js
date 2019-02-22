@@ -13,7 +13,6 @@ export default function LeftHeaderComponent() {
         size={25}
         iconStyle={{ color: colors.otherColor }}
       />
-
       <Text style={{ color: colors.otherColor, marginTop: 4 }}>Log Out</Text>
     </View>
   )

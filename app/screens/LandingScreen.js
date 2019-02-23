@@ -41,15 +41,7 @@ export default class LandingScreen extends Component {
           type='outline'
         />
 
-        <Button
-          buttonStyle={styles.buttonStyle}
-          titleStyle={styles.titleStyle}
-          style={styles.terms}
-          title='Terms and Privacy'
-          type='clear'
-        />
       </View>
-
     )
   }
 }

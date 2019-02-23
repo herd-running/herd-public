@@ -42,7 +42,7 @@ class ViewGroupScreen extends Component {
     this.props.getGroupMembers(groupId)
     this.props.getGroupRuns(groupId)
   }
-  ///// replace 2 with user ID
+
   componentWillReceiveProps = (props) => {
     const userId = props.authentication.user
 
@@ -153,7 +153,7 @@ class ViewGroupScreen extends Component {
 
     return (
       <View style={{ paddingBottom: 120 }}>
-        <HeaderComponent header='Herd' />
+        <HeaderComponent header='Herd' navigation={this.props.navigation} logout={false}/>
         <TouchableOpacity
           style={{ backgroundColor: colors.backgroundColor, alignItems: 'flex-start', paddingLeft: 10, paddingBottom: 5 }}
           onPress={() => this.props.navigation.goBack()}

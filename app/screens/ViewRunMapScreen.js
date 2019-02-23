@@ -34,7 +34,7 @@ export default class ViewRunMapScreen extends Component {
 
     return (
       <View>
-        <HeaderComponent header='Map' />
+        <HeaderComponent header='Map' navigation={this.props.navigation} logout={false}/>
         <TouchableOpacity
           style={{ backgroundColor: colors.backgroundColor, alignItems: 'flex-start', paddingLeft: 7, paddingBottom: 5 }}
           onPress={() => this.props.navigation.goBack()}

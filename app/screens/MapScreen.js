@@ -84,7 +84,7 @@ class MapScreen extends Component {
     })
     return (
       <View>
-        <HeaderComponent header='Map' />
+        <HeaderComponent header='Map' navigation={this.props.navigation} logout={true}/>
 
         <View style={{ justifyContent: 'center' }}>
           <SearchBar

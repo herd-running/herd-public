@@ -34,6 +34,7 @@ class HeaderComponent extends Component {
         placement="left"
         centerComponent={{ text: this.props.header, style: { color: colors.otherColor, fontSize: 25 } }}
         rightComponent={
+          this.props.logout &&
           <TouchableOpacity onPress={this.handleLogout}>
             <LeftHeaderComponent />
           </TouchableOpacity>}

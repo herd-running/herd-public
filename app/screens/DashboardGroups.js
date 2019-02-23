@@ -37,7 +37,7 @@ class DashboardGroups extends Component {
 
     return (
       <View style={styles.container}>
-        <HeaderComponent header='My Groups' />
+        <HeaderComponent header='My Groups' navigation={this.props.navigation} logout={true}/>
 
         <View style={{ justifyContent: 'center' }}>
           <SearchBar

@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native'
 import { SearchBar } from 'react-native-elements'
 
+import moment from 'moment'
+
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { getUsersRuns } from '../actions/runs'
@@ -38,23 +40,37 @@ class DashboardRuns extends Component {
     const date = new Date
     const today = date.getDay()
 
-    const days = {
-      'Sunday': 0,
-      'Monday': 1,
-      'Tuesday': 2,
-      'Wednesday': 3,
-      'Thursday': 4,
-      'Friday': 5,
-      'Saturday': 6
-    }
-
-    const sorted = this.props.usersRuns.sort((a, b) => {
-      // console.warn('a', typeof days[a.day], 'b', days[b.day])
-      days[b.day] - days[a.day]
+    const sundayRuns = this.props.usersRuns.filter(run => {
+      return run.day === 'Sunday' || moment(run.date).format('dddd') === 'Sunday'
     })
-    // console.warn(sorted)
 
-    const filteredRuns = this.props.usersRuns.filter(run => {
+    const mondayRuns = this.props.usersRuns.filter(run => {
+      return run.day === 'Monday' || moment(run.date).format('dddd') === 'Monday'
+    })
+
+    const tuesdayRuns = this.props.usersRuns.filter(run => {
+      return run.day === 'Tuesday' || moment(run.date).format('dddd') === 'Tuesday'
+    })
+
+    const wednesdayRuns = this.props.usersRuns.filter(run => {
+      return run.day === 'Wednesday' || moment(run.date).format('dddd') === 'Wednesday'
+    })
+
+    const thursdayRuns = this.props.usersRuns.filter(run => {
+      return run.day === 'Thursday' || moment(run.date).format('dddd') === 'Thursday'
+    })
+
+    const fridayRuns = this.props.usersRuns.filter(run => {
+      return run.day === 'Friday' || moment(run.date).format('dddd') === 'Friday'
+    })
+
+    const saturdayRuns = this.props.usersRuns.filter(run => {
+      return run.day === 'Saturday' || moment(run.date).format('dddd') === 'Saturday'
+    })
+
+    const sortedRuns = [...sundayRuns, ...mondayRuns, ...tuesdayRuns, ...wednesdayRuns, ...thursdayRuns, ...fridayRuns, ...saturdayRuns]
+
+    const filteredRuns = sortedRuns.filter(run => {
       return run.run_type.toLowerCase().includes(this.state.search) || 
         run.location.toLowerCase().includes(this.state.search) || 
         run.day && run.day.toLowerCase().includes(this.state.search) ||
@@ -65,7 +81,7 @@ class DashboardRuns extends Component {
 
     return (
       <View style={styles.container}>
-        <HeaderComponent header='My Runs' navigation={this.props.navigation} />
+        <HeaderComponent header='My Runs' navigation={this.props.navigation} logout={true}/>
 
         <View style={{ justifyContent: 'center' }}>
           <SearchBar

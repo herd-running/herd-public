@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, ScrollView, Text, TextInput, TouchableOpacity } from 'react-native'
+import { View, ScrollView, Text, TextInput, TouchableOpacity, Alert } from 'react-native'
 import { Button, Icon, Overlay } from 'react-native-elements'
 import dismissKeyboard from 'react-native-dismiss-keyboard'
 
@@ -19,11 +19,16 @@ class CreateGroupScreen extends Component {
       name: '',
       description: '',
       overlayIsVisible: false,
-      overlayMessage: ''
+      overlayMessage: '',
+      avoidView: 0
     }
   }
-  
+
   handleCreateGroup = () => {
+    if (!this.state.name || !this.state.description) {
+      Alert.alert('Please enter all fields', null, [{ text: 'OK' }], { cancelable: false })
+      return
+    }
     const userId = this.props.authentication.user
 
     const newGroup = {
@@ -52,10 +57,12 @@ class CreateGroupScreen extends Component {
     }
   }
 
+  addMargin = (num) => this.setState({ avoidView: num })
+
   render() {
     return (
       <View>
-        <HeaderComponent header='Create' />
+        <HeaderComponent header='Create' navigation={this.props.navigation} logout={false} />
         <TouchableOpacity
           style={{ backgroundColor: colors.backgroundColor, alignItems: 'flex-start', paddingLeft: 10, paddingBottom: 5 }}
           onPress={() => this.props.navigation.goBack()}
@@ -67,7 +74,7 @@ class CreateGroupScreen extends Component {
             size={20}
           />
         </TouchableOpacity>
-        <ScrollView style={{ marginLeft: 15, marginRight: 15 }}>
+        <ScrollView style={{ marginLeft: 15, marginRight: 15, marginTop: parseInt(this.state.avoidView), zIndex: -1 }}>
           <Text style={{ fontSize: 25, color: colors.backgroundColor, marginTop: 5, marginBottom: 10, fontWeight: 'bold' }}>New Group</Text>
 
           <Text style={{ fontSize: 20, marginTop: 10 }}>Name</Text>
@@ -92,6 +99,8 @@ class CreateGroupScreen extends Component {
             returnKeyType='done'
             blurOnSubmit={true}
             onKeyPress={this.onEnterPress}
+            onFocus={() => this.addMargin(-120)}
+            onBlur={() => this.addMargin(0)}
           />
 
           <Button
@@ -100,20 +109,19 @@ class CreateGroupScreen extends Component {
             buttonStyle={{ backgroundColor: colors.backgroundColor, marginBottom: 10 }}
             titleStyle={{ color: colors.otherColor }}
           />
-
         </ScrollView>
 
-          <Overlay
-            isVisible={this.state.overlayIsVisible}
-            windowBackgroundColor={colors.backgroundColor}
-            overlayBackgroundColor={colors.otherColor}
-            width="auto"
-            height="auto"
-          >
-            <View style={{ minWidth: '80%', minHeight: '25%', alignItems: 'center', justifyContent: 'center' }}>
-              <Text style={{ color: colors.backgroundColor, fontSize: 24 }}>{this.state.overlayMessage}</Text>
-            </View>
-          </Overlay>
+        <Overlay
+          isVisible={this.state.overlayIsVisible}
+          windowBackgroundColor={colors.backgroundColor}
+          overlayBackgroundColor={colors.otherColor}
+          width="auto"
+          height="auto"
+        >
+          <View style={{ minWidth: '80%', minHeight: '25%', alignItems: 'center', justifyContent: 'center' }}>
+            <Text style={{ color: colors.backgroundColor, fontSize: 24 }}>{this.state.overlayMessage}</Text>
+          </View>
+        </Overlay>
 
       </View>
     )

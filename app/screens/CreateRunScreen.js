@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, ScrollView, Text, TextInput, TouchableOpacity } from 'react-native'
+import { View, ScrollView, Text, TextInput, TouchableOpacity, Alert } from 'react-native'
 import { Button, Icon, Overlay } from 'react-native-elements'
 import { Dropdown } from 'react-native-material-dropdown'
 import DatePicker from 'react-native-datepicker'
@@ -21,7 +21,7 @@ class CreateRunScreen extends Component {
     this.state = {
       overlayIsVisible: false,
       overlayMessage: '',
-      showError: false
+      avoidView: 0
     }
   }
 
@@ -33,10 +33,9 @@ class CreateRunScreen extends Component {
       !this.props.formValues.latitude ||
       !this.props.formValues.longitude ||
       !this.props.formValues.location) {
-      this.setState({
-        showError: true
-      })
-      return;
+
+        Alert.alert('Please enter all required fields', null, [{ text: 'OK' }], { cancelable: false })
+        return;
     }
 
     const groupId = this.props.navigation.getParam('groupId', null)
@@ -49,10 +48,6 @@ class CreateRunScreen extends Component {
     }
 
     this.props.createNewRun(userId, newRun, groupId)
-
-    this.setState({
-      showError: false
-    })
 
     this.setState({
       overlayMessage: 'Run Created!',
@@ -78,13 +73,14 @@ class CreateRunScreen extends Component {
     }
   }
 
+  addMargin = (num) => this.setState({ avoidView: num })
 
   render() {
     const groupId = this.props.navigation.getParam('groupId', null)
 
     return (
       <View style={{ paddingBottom: 120 }}>
-        <HeaderComponent header='Create' />
+        <HeaderComponent header='Create' navigation={this.props.navigation} logout={true}/>
         {groupId ?
           <TouchableOpacity
             style={{ backgroundColor: colors.backgroundColor, alignItems: 'flex-start', paddingLeft: 10, paddingBottom: 5 }}
@@ -100,12 +96,11 @@ class CreateRunScreen extends Component {
           :
           null
         }
-        <ScrollView style={{ marginLeft: 30, marginRight: 30 }}>
+        <ScrollView style={{ marginLeft: 30, marginRight: 30, marginTop: parseInt(this.state.avoidView), zIndex: -1 }}>
           <Text style={{ fontSize: 25, color: colors.backgroundColor, marginTop: 10, marginBottom: 10, fontWeight: 'bold' }}>
             {groupId ? 'New Group Run' : 'New Quick Run'}
           </Text>
 
-          {/* How do I reduce the animation on the dropdown? */}
           <Dropdown
             label='Run Type'
             data={runType}
@@ -196,7 +191,6 @@ class CreateRunScreen extends Component {
             titleStyle={{ color: colors.otherColor }}
           />
 
-          {/* How can I get the keyboard to not cover the input? */}
           {this.props.formValues.latitude ?
             <View>
               <Text style={{ fontSize: 20, marginTop: 10, color: colors.formGray }}>Location</Text>
@@ -206,6 +200,8 @@ class CreateRunScreen extends Component {
                 placeholder='Location name (i.e. Green Lake)'
                 style={{ height: 40, borderColor: 'gray', borderWidth: 1, fontSize: 18, paddingLeft: 5 }}
                 returnKeyType='done'
+                onFocus={() => this.addMargin(-490)}
+                onBlur={() => this.addMargin(0)}
               />
             </View>
             :
@@ -218,6 +214,8 @@ class CreateRunScreen extends Component {
             style={{ height: 40, borderColor: 'gray', borderWidth: 1, fontSize: 18, paddingLeft: 5 }}
             returnKeyType='done'
             blurOnSubmit={true}
+            onFocus={() => this.addMargin(-490)}
+            onBlur={() => this.addMargin(0)}
           />
 
           <Text style={{ fontSize: 20, marginTop: 10, color: colors.formGray }}>Description (optional)</Text>
@@ -230,11 +228,9 @@ class CreateRunScreen extends Component {
             numberOfLines={10}
             blurOnSubmit={true}
             onKeyPress={this.onEnterPress}
+            onFocus={() => this.addMargin(-490)}
+            onBlur={() => this.addMargin(0)}
           />
-
-          {this.state.showError &&
-            <Text style={{ color: 'red', fontSize: 18, marginBottom: 3 }}>Please enter all required fields</Text>
-          }
 
           <Button
             title='Create Run!'

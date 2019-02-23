@@ -1,7 +1,6 @@
 import axios from 'axios'
 // import {attachHeader} from './utils'
-
-const BASE_URL = 'http://10.5.82.231:3000'
+import { BASE_URL } from '../../hidden'
 
 export const GET_USERS_GROUPS = 'GET_GROUPS'
 

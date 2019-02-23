@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { createStackNavigator, createAppContainer, createBottomTabNavigator } from 'react-navigation'
 import { Icon } from 'react-native-elements'
 
-import LandingScreen from '../screens/LandingScreen'
+// import LandingScreen from '../screens/LandingScreen'
 import LoginScreen from '../screens/LoginScreen'
 import SignupScreen from '../screens/SignupScreen'
 import DashboardRuns from '../screens/DashboardRuns'
@@ -13,7 +13,6 @@ import ViewRunMapScreen from '../screens/ViewRunMapScreen'
 import ViewGroupScreen from '../screens/ViewGroupScreen'
 import CreateRunScreen from '../screens/CreateRunScreen'
 import AddressSearchMapScreen from '../screens/AddressSearchMapScreen'
-import HeaderComponent from './Header'
 import CreateGroupScreen from '../screens/CreateGroupScreen'
 import MapScreen from '../screens/MapScreen'
 
@@ -131,14 +130,13 @@ const TabNavigator = createBottomTabNavigator({
   })
 
 const AuthenticationStack = createStackNavigator({
-  Landing: LandingScreen,
+  // Landing: LandingScreen,
   Login: LoginScreen,
   Signup: SignupScreen,
-  Header: HeaderComponent,
   Authenticated: TabNavigator
 },
   {
-    initialRouteName: 'Landing',
+    initialRouteName: 'Login',
     headerMode: 'none'
   }
 )

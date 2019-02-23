@@ -5,7 +5,7 @@ export default styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     top: 113,
     bottom: 0,
-    height: 700,
+    height: 620,
     width: '100%',
     justifyContent: 'flex-end',
     alignItems: 'center',

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Image, TextInput, Text, TouchableOpacity } from 'react-native';
+import { View, Image, TextInput, Text, TouchableOpacity, Alert } from 'react-native';
 import { Button } from 'react-native-elements'
 
 import axios from 'axios'
@@ -26,23 +26,20 @@ class SignupScreen extends Component {
       reEnterPassword: '',
       picture_url: '',
       showError: false,
-      errorMessage: ''
+      errorMessage: '',
+      avoidView: 0
     }
   }
 
   handleSignUp = () => {
     if (!this.state.first_name || !this.state.last_name || !this.state.email || !this.state.username || !this.state.password || !this.state.reEnterPassword) {
-      this.setState({
-        errorMessage: 'Please enter all fields',
-        showError: true,
-      })
+      Alert.alert('Please enter all fields', null, [{ text: 'OK' }], { cancelable: false })
       return
     }
 
     else if (this.state.password !== this.state.reEnterPassword) {
+      Alert.alert('Passwords do not match', null, [{ text: 'OK' }], { cancelable: false })
       this.setState({
-        errorMessage: 'Passwords do not match',
-        showError: true,
         password: '',
         reEnterPassword: ''
       })
@@ -52,7 +49,7 @@ class SignupScreen extends Component {
     const newUser = { ...this.state }
 
     axios.post(`${BASE_URL}/users`, newUser)
-      .then((response) => {
+      .then(() => {
         this.setState({
           showError: false
         })
@@ -60,18 +57,18 @@ class SignupScreen extends Component {
       })
       .catch(error => {
         if (error.response.data.message === 'Username already exists') {
+          Alert.alert('Username already exists', null, [{ text: 'OK' }], { cancelable: false })
+
           this.setState({
-            errorMessage: 'Username already exists',
-            showError: true,
             username: '',
             password: '',
             reEnterPassword: ''
           })
         }
         else {
+          Alert.alert('Signup failed', null, [{ text: 'OK' }], { cancelable: false })
+
           this.setState({
-            errorMessage: 'Signup Failed',
-            showError: true,
             username: '',
             password: '',
             reEnterPassword: ''
@@ -80,9 +77,11 @@ class SignupScreen extends Component {
       })
   }
 
+  addMargin = (num) => this.setState({ avoidView: num })
+
   render = () => {
     return (
-      <View style={styles.container}>
+      <View style={{...styles.container, marginTop: parseInt(this.state.avoidView)}}>
         <Image style={{ height: 100, width: 100, marginBottom: 20 }} source={require('../../assets/images/logo.png')} />
 
         <View style={{ alignItems: 'flex-start' }}>
@@ -93,8 +92,7 @@ class SignupScreen extends Component {
             style={styles.textInput}
             returnKeyType='done'
             onSubmitEditing={() => { this.secondTextInput.focus(); }}
-            blurOnSubmit={false}
-            autoCapitalize='none'
+            blurOnSubmit={true}
           />
 
           <Text style={{ fontSize: 20, marginTop: 10, color: colors.otherColor }}>Last Name</Text>
@@ -104,8 +102,9 @@ class SignupScreen extends Component {
             style={styles.textInput}
             returnKeyType='done'
             onSubmitEditing={() => { this.secondTextInput.focus(); }}
-            blurOnSubmit={false}
-            autoCapitalize='none'
+            blurOnSubmit={true}
+            onFocus={() => this.addMargin(-190)}
+            onBlur={() => this.addMargin(0)}
           />
 
           <Text style={{ fontSize: 20, marginTop: 10, color: colors.otherColor }}>Email</Text>
@@ -115,9 +114,11 @@ class SignupScreen extends Component {
             style={styles.textInput}
             returnKeyType='done'
             onSubmitEditing={() => { this.secondTextInput.focus(); }}
-            blurOnSubmit={false}
+            blurOnSubmit={true}
             autoCapitalize='none'
             textContentType='emailAddress'
+            onFocus={() => this.addMargin(-380)}
+            onBlur={() => this.addMargin(0)}
           />
 
           <Text style={{ fontSize: 20, marginTop: 10, color: colors.otherColor }}>Username</Text>
@@ -127,9 +128,11 @@ class SignupScreen extends Component {
             style={styles.textInput}
             returnKeyType='done'
             onSubmitEditing={() => { this.secondTextInput.focus(); }}
-            blurOnSubmit={false}
+            blurOnSubmit={true}
             autoCapitalize='none'
             textContentType='username'
+            onFocus={() => this.addMargin(-570)}
+            onBlur={() => this.addMargin(0)}
           />
 
           <Text style={{ fontSize: 20, marginTop: 10, color: colors.otherColor }}>Password</Text>
@@ -143,6 +146,8 @@ class SignupScreen extends Component {
             autoCapitalize='none'
             textContentType='password'
             secureTextEntry={true}
+            onFocus={() => this.addMargin(-570)}
+            onBlur={() => this.addMargin(0)}
           />
 
           <Text style={{ fontSize: 20, marginTop: 10, color: colors.otherColor }}>Re-enter Password</Text>
@@ -156,6 +161,8 @@ class SignupScreen extends Component {
             autoCapitalize='none'
             textContentType='password'
             secureTextEntry={true}
+            onFocus={() => this.addMargin(-570)}
+            onBlur={() => this.addMargin(0)}
           />
         </View>
 
@@ -165,8 +172,6 @@ class SignupScreen extends Component {
           onPress={this.handleSignUp}
           title='Sign Up'
         />
-
-        {this.state.showError && <Text style={{ color: colors.otherColor, marginTop: 5, fontSize: 16 }}>{this.state.errorMessage}</Text>}
 
         <TouchableOpacity
           onPress={() => this.props.navigation.navigate('Login')}

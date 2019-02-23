@@ -7,7 +7,7 @@ import moment from 'moment'
 import Rating from './Rating'
 
 export default function RunCard({date, run_type, location, day, time, rating}) {
-  const formattedDate = moment(date).format("dddd MMM Do")
+  const formattedDate = moment(date).format('dddd MMM Do')
   return (
     <Card title={`${run_type} at ${location}`}>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>

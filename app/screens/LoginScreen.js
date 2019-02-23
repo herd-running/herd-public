@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Image, TextInput, Text, TouchableOpacity } from 'react-native';
+import { View, Image, TextInput, Text, TouchableOpacity, Alert } from 'react-native';
 import { Button } from 'react-native-elements'
 import { SecureStore } from 'expo'
 
@@ -19,7 +19,7 @@ class LoginScreen extends Component {
     this.state = {
       username: 'cmarshall',
       password: 'test',
-      showError: false
+      avoidView: 0
     }
   }
 
@@ -39,14 +39,19 @@ class LoginScreen extends Component {
         this.props.setAuthentication(response.data.id)
         this.props.navigation.navigate('Authenticated')
       })
-      .catch(() => {
-        this.setState({ showError: true })
+      .catch((error) => {
+        Alert.alert('Login failed', null, [{ text: 'OK' }], { cancelable: false })
+        this.setState({
+          password: ''
+        })
       })
   }
 
+  addMargin = (num) => this.setState({ avoidView: num })
+
   render = () => {
     return (
-      <View style={styles.container}>
+      <View style={{...styles.container, marginTop: parseInt(this.state.avoidView)}}>
         <Image style={{ height: 300, width: 300, marginBottom: 70 }} source={require('../../assets/images/logo.png')} />
 
         <View style={{ alignItems: 'flex-start' }}>
@@ -60,6 +65,8 @@ class LoginScreen extends Component {
             blurOnSubmit={false}
             autoCapitalize='none'
             textContentType='username'
+            onFocus={() => this.addMargin(-430)}
+            onBlur={() => this.addMargin(0)}
           />
 
           <Text style={{ fontSize: 20, marginTop: 10, color: colors.otherColor }}>Password</Text>
@@ -73,6 +80,8 @@ class LoginScreen extends Component {
             autoCapitalize='none'
             textContentType='password'
             secureTextEntry={true}
+            onFocus={() => this.addMargin(-430)}
+            onBlur={() => this.addMargin(0)}
           />
         </View>
 
@@ -82,8 +91,6 @@ class LoginScreen extends Component {
           onPress={this.handleLogIn}
           title='Log in'
         />
-
-        {this.state.showError && <Text style={{ color: colors.otherColor, marginTop: 5, fontSize: 16 }}>Login Failed</Text>}
 
         <TouchableOpacity
           onPress={() => this.props.navigation.navigate('Signup')}

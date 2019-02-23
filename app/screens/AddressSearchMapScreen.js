@@ -91,7 +91,7 @@ class AddressSearchMapScreen extends Component {
   render() {
     return (
       <View>
-        <HeaderComponent header='Choose starting location' />
+        <HeaderComponent header='Choose starting location' navigation={this.props.navigation} logout={false}/>
         <TouchableOpacity
           style={{ backgroundColor: colors.backgroundColor, alignItems: 'flex-start', paddingLeft: 7, paddingBottom: 5 }}
           onPress={() => this.props.navigation.goBack()}

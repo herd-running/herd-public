@@ -48,7 +48,6 @@ class DiscoverScreen extends Component {
       groupButtonColor: colors.otherColor
     })
   }
-
   
   render() {
     const filteredNewRuns = this.props.newRuns.filter(run => {
@@ -67,7 +66,7 @@ class DiscoverScreen extends Component {
 
     return (
       <View style={styles.container}>
-        <HeaderComponent header='Discover' />
+        <HeaderComponent header='Discover' navigation={this.props.navigation} logout={true}/>
 
         <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 10, marginBottom: 10 }}>
           <Button
@@ -111,7 +110,7 @@ class DiscoverScreen extends Component {
         {this.state.viewing === 'Runs' ?
           <ScrollView>
             {/* <RunFilters /> */}
-            {filteredNewRuns.map((run) => {
+            {filteredNewRuns.reverse().map((run) => {
               return <TouchableOpacity key={run.id} onPress={() => this.props.navigation.navigate('ViewRun', { runId: run.id })}>
                 <RunCard {...run} />
               </TouchableOpacity>

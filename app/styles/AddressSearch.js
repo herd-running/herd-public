@@ -5,7 +5,7 @@ export default styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     top: 158,
     bottom: 0,
-    height: 654,
+    height: 574,
     width: '100%',
     justifyContent: 'flex-end',
     alignItems: 'center',
@@ -15,4 +15,4 @@ export default styles = StyleSheet.create({
   map: {
     ...StyleSheet.absoluteFillObject
   }
- });
+ })

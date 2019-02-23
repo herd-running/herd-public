@@ -1,7 +1,6 @@
 import axios from 'axios'
 // import {attachHeader} from './utils'
-
-const BASE_URL = 'http://localhost:3000'
+import { BASE_URL } from '../../hidden'
 
 export const GET_GROUP_LEADER = 'GET_GROUP_LEADER'
 

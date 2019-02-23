@@ -152,7 +152,7 @@ class ViewRunScreen extends Component {
     ]
     return (
       <View style={{ paddingBottom: 150 }}>
-        <HeaderComponent header='Herd' />
+        <HeaderComponent header='Herd' navigation={this.props.navigation} logout={false}/>
         <TouchableOpacity
           style={{ backgroundColor: colors.backgroundColor, alignItems: 'flex-start', paddingLeft: 10, paddingBottom: 5 }}
           onPress={() => this.props.navigation.goBack()}

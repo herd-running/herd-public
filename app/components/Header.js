@@ -18,19 +18,12 @@ class HeaderComponent extends Component {
     super(props)
   }
 
-  componentDidMount = () => {
-    console.warn(this.props)
-
-  }
-
   handleLogout = () => {
-    // SecureStore.deleteItemAsync('token')
-      // .then ( () => {
-        // this.props.setAuthentication(null)
-        const { navigate } = this.props.navigation 
-        navigate('Landing')
-
-      // })
+    SecureStore.deleteItemAsync('token')
+      .then ( () => {
+        this.props.setAuthentication(null)
+        this.props.navigation.navigate('Landing')
+      })
   }
 
   render = () => {
@@ -41,10 +34,10 @@ class HeaderComponent extends Component {
         placement="left"
         centerComponent={{ text: this.props.header, style: { color: colors.otherColor, fontSize: 25 } }}
         rightComponent={
-          <TouchableOpacity onPress={() => this.handleLogout()}>
+          this.props.logout &&
+          <TouchableOpacity onPress={this.handleLogout}>
             <LeftHeaderComponent />
           </TouchableOpacity>}
-
         barStyle="light-content"
       />
     )
@@ -58,7 +51,5 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 export default connect(null, mapDispatchToProps)(HeaderComponent)
-
-
 
 

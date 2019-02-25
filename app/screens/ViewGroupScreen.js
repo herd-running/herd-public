@@ -21,9 +21,6 @@ class ViewGroupScreen extends Component {
     super(props)
 
     this.state = {
-      userId: null,
-      isMember: null,
-      isLeader: null,
       showRuns: false,
       showRunners: false,
       showComments: false,
@@ -45,14 +42,12 @@ class ViewGroupScreen extends Component {
     this.props.getGroupComments(groupId)
   }
 
-  componentWillReceiveProps = (props) => {
-    const userId = props.authentication.user
+  isMember = () => {
+    return this.props.members.find(member => member.user_id === this.props.authentication.user)
+  }
 
-    this.setState({
-      userId,
-      isLeader: props.groupLeader.user_id === userId,
-      isMember: props.members.find(member => member.user_id === userId)
-    })
+  isLeader = () => {
+    return this.props.groupLeader.user_id === this.props.authentication.user
   }
 
   toggleRuns = () => {
@@ -83,7 +78,7 @@ class ViewGroupScreen extends Component {
   }
 
   handleJoinGroup = (groupId) => {
-    this.props.joinGroup(groupId, this.state.userId)
+    this.props.joinGroup(groupId, this.props.authentication.user)
     this.setState({
       overlayMessage: 'You Joined a Group!',
       overlayIsVisible: true
@@ -99,7 +94,7 @@ class ViewGroupScreen extends Component {
   }
 
   handleLeaveGroup = (groupId) => {
-    this.props.leaveGroup(groupId, this.state.userId)
+    this.props.leaveGroup(groupId, this.props.authentication.user)
     this.setState({
       overlayMessage: 'You Left this Group',
       overlayIsVisible: true
@@ -119,7 +114,7 @@ class ViewGroupScreen extends Component {
   }
 
   handleDeleteGroup = (groupId) => {
-    this.props.deleteGroup(groupId, this.state.userId)
+    this.props.deleteGroup(groupId, this.props.authentication.user)
     this.setState({
       overlayMessage: 'Group Deleted',
       overlayIsVisible: true
@@ -174,7 +169,7 @@ class ViewGroupScreen extends Component {
             size={20}
           />
         </TouchableOpacity>
-        <ScrollView style={{ marginTop: parseInt(this.state.avoidView), zIndex: -1}}>
+        <ScrollView style={{ marginTop: parseInt(this.state.avoidView), zIndex: -1 }}>
           <View style={{ marginLeft: 25, marginRight: 25 }}>
 
             <Text style={{ fontSize: 25, marginTop: 10, fontWeight: 'bold' }}>{this.props.group.name}</Text>
@@ -264,7 +259,7 @@ class ViewGroupScreen extends Component {
                     onPress={this.handleShowAddCommentForm}
                     title='Add Comment'
                     buttonStyle={{ marginTop: 20, backgroundColor: colors.otherColor, width: 200 }}
-                    titleStyle={{color: colors.backgroundColor}}
+                    titleStyle={{ color: colors.backgroundColor }}
                   />
                   {this.props.comments.map(comment => {
                     return <CommentCard key={comment.id} user={this.props.authentication.user} groupId={groupId} {...comment} />
@@ -274,7 +269,7 @@ class ViewGroupScreen extends Component {
               null
             }
             <View style={{ flex: 1, marginTop: 15, alignItems: 'center' }}>
-              {this.state.isLeader ?
+              {this.isLeader() ?
                 <View style={{ alignItems: 'center' }}>
                   <Button
                     title='Add a Run!'
@@ -292,8 +287,7 @@ class ViewGroupScreen extends Component {
                 </View>
                 :
                 <View>
-                  {
-                    this.state.isMember ?
+                  { this.isMember() ?
                       <Button
                         title='Leave Group'
                         type='outline'

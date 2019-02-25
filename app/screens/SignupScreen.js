@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { View, Image, TextInput, Text, TouchableOpacity, Alert } from 'react-native';
 import { Button } from 'react-native-elements'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 import axios from 'axios'
 
@@ -77,14 +78,12 @@ class SignupScreen extends Component {
       })
   }
 
-  addMargin = (num) => this.setState({ avoidView: num })
-
   render = () => {
     return (
-      <View style={{...styles.container, marginTop: parseInt(this.state.avoidView)}}>
-        <Image style={{ height: 100, width: 100, marginBottom: 20 }} source={require('../../assets/images/logo.png')} />
+      <View style={{ ...styles.container, marginTop: parseInt(this.state.avoidView) }}>
+        <Image style={{ height: 100, width: 100, marginBottom: 10, marginTop: 40 }} source={require('../../assets/images/logo.png')} />
 
-        <View style={{ alignItems: 'flex-start' }}>
+        <KeyboardAwareScrollView extraScrollHeight={5}>
           <Text style={{ fontSize: 20, marginTop: 10, color: colors.otherColor }}>First Name</Text>
           <TextInput
             onChangeText={(first_name) => this.setState({ first_name })}
@@ -103,8 +102,6 @@ class SignupScreen extends Component {
             returnKeyType='done'
             onSubmitEditing={() => { this.secondTextInput.focus(); }}
             blurOnSubmit={true}
-            onFocus={() => this.addMargin(-190)}
-            onBlur={() => this.addMargin(0)}
           />
 
           <Text style={{ fontSize: 20, marginTop: 10, color: colors.otherColor }}>Email</Text>
@@ -117,8 +114,6 @@ class SignupScreen extends Component {
             blurOnSubmit={true}
             autoCapitalize='none'
             textContentType='emailAddress'
-            onFocus={() => this.addMargin(-380)}
-            onBlur={() => this.addMargin(0)}
           />
 
           <Text style={{ fontSize: 20, marginTop: 10, color: colors.otherColor }}>Username</Text>
@@ -131,8 +126,6 @@ class SignupScreen extends Component {
             blurOnSubmit={true}
             autoCapitalize='none'
             textContentType='username'
-            onFocus={() => this.addMargin(-570)}
-            onBlur={() => this.addMargin(0)}
           />
 
           <Text style={{ fontSize: 20, marginTop: 10, color: colors.otherColor }}>Password</Text>
@@ -146,8 +139,6 @@ class SignupScreen extends Component {
             autoCapitalize='none'
             textContentType='password'
             secureTextEntry={true}
-            onFocus={() => this.addMargin(-570)}
-            onBlur={() => this.addMargin(0)}
           />
 
           <Text style={{ fontSize: 20, marginTop: 10, color: colors.otherColor }}>Re-enter Password</Text>
@@ -161,27 +152,25 @@ class SignupScreen extends Component {
             autoCapitalize='none'
             textContentType='password'
             secureTextEntry={true}
-            onFocus={() => this.addMargin(-570)}
-            onBlur={() => this.addMargin(0)}
           />
-        </View>
 
-        <Button
-          buttonStyle={{ backgroundColor: colors.otherColor, width: 200, marginTop: 10 }}
-          titleStyle={{ color: colors.backgroundColor }}
-          onPress={this.handleSignUp}
-          title='Sign Up'
-        />
+          <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+            <Button
+              buttonStyle={{ backgroundColor: colors.otherColor, width: 200, marginTop: 10 }}
+              titleStyle={{ color: colors.backgroundColor }}
+              onPress={this.handleSignUp}
+              title='Sign Up'
+            />
 
-        <TouchableOpacity
-          onPress={() => this.props.navigation.navigate('Login')}
-          style={{ marginTop: 15 }}
-        >
-          <Text style={{ color: colors.otherColor, fontSize: 16 }}>Already a member? Log in.</Text>
-        </TouchableOpacity>
-
-      </View>
-
+            <TouchableOpacity
+              onPress={() => this.props.navigation.navigate('Login')}
+              style={{ marginTop: 15 }}
+            >
+              <Text style={{ color: colors.otherColor, fontSize: 16 }}>Already a member? Log in.</Text>
+            </TouchableOpacity>
+          </View>
+        </KeyboardAwareScrollView>
+      </View >
     )
   }
 }

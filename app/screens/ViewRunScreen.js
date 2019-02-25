@@ -55,8 +55,16 @@ class ViewRunScreen extends Component {
     })
   }
 
+  isOwner = () => {
+    return this.props.run.creator_id === this.props.authentication.user
+  }
+
+  isAttending = () => {
+    return this.props.members.find(member => member.user_id === this.props.authentication.user)
+  }
+
   handleLeaveRun = (runId) => {
-    this.props.leaveRun(runId, this.state.userId)
+    this.props.leaveRun(runId, this.props.authentication.user)
     this.setState({
       overlayMessage: 'You Left this Run',
       overlayIsVisible: true
@@ -72,7 +80,7 @@ class ViewRunScreen extends Component {
   }
 
   handleJoinRun = (runId) => {
-    this.props.joinRun(runId, this.state.userId)
+    this.props.joinRun(runId, this.props.authentication.user)
     this.setState({
       overlayMessage: 'You Joined a Run!',
       overlayIsVisible: true
@@ -88,7 +96,7 @@ class ViewRunScreen extends Component {
   }
 
   handleDeleteRun = (runId) => {
-    this.props.deleteRun(runId, this.state.userId, this.props.run.group_id)
+    this.props.deleteRun(runId, this.props.authentication.user, this.props.run.group_id)
 
     this.setState({
       overlayMessage: 'Run Deleted',
@@ -177,10 +185,7 @@ class ViewRunScreen extends Component {
 
             <Text style={{ fontSize: 25, marginTop: 10, fontWeight: 'bold' }}>
               {`${this.props.run.run_type}`}
-              {this.props.run.name ?
-                ` with ${this.props.run.name}`
-                :
-                null}
+              {this.props.run.name && ` with ${this.props.run.name}`}
             </Text>
 
             <View style={{ marginTop: 5, marginBottom: 5 }}>
@@ -357,7 +362,7 @@ class ViewRunScreen extends Component {
             }
 
             <View style={{ flex: 1, marginTop: 15, alignItems: 'center' }}>
-              {this.state.owner ?
+              {this.isOwner() ?
                 <Button
                   title='Delete Run'
                   type='outline'
@@ -366,7 +371,7 @@ class ViewRunScreen extends Component {
                   titleStyle={{ color: 'red' }}
                 />
                 :
-                this.state.attending ?
+                this.isAttending() ?
                   <Button
                     title='Leave Run'
                     type='outline'

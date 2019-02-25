@@ -51,7 +51,7 @@ class ViewGroupScreen extends Component {
     this.setState({
       userId,
       isLeader: props.groupLeader.user_id === userId,
-      isMember: props.groupMembers.find(member => member.user_id === userId)
+      isMember: props.members.find(member => member.user_id === userId)
     })
   }
 
@@ -209,7 +209,7 @@ class ViewGroupScreen extends Component {
             />
 
             {this.state.showRunners ?
-              <RunnersCard runners={this.props.groupMembers} />
+              <RunnersCard runners={this.props.members} />
               :
               null
             }
@@ -335,7 +335,7 @@ const mapStateToProps = (state) => {
     authentication: state.authentication,
     group: state.group,
     groupLeader: state.groupLeader,
-    groupMembers: state.groupMembers,
+    members: state.members,
     groupRuns: state.groupRuns,
     comments: state.comments
   }

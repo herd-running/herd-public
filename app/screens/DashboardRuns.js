@@ -28,9 +28,9 @@ class DashboardRuns extends Component {
     this.props.getUsersRuns(userId)
   }
 
-  componentWillReceiveProps = (props) => {
-    if (!props.usersRuns.length) props.navigation.navigate('Discover')
-  }
+  // componentWillReceiveProps = (props) => {
+  //   if (!props.usersRuns.length) props.navigation.navigate('Discover')
+  // }
 
   updateSearch = search => {
     this.setState({ search });

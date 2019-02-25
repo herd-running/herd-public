@@ -51,7 +51,7 @@ class ViewRunScreen extends Component {
     this.setState({
       userId,
       owner: props.run.creator_id === userId,
-      attending: props.runMembers.find(member => member.user_id === userId)
+      attending: props.members.find(member => member.user_id === userId)
     })
   }
 
@@ -155,7 +155,6 @@ class ViewRunScreen extends Component {
   }
 
   render() {
-
     const runId = this.props.navigation.getParam('runId', 1)
     const formattedDate = moment(this.props.run.date).format("dddd MMM Do")
 
@@ -281,7 +280,7 @@ class ViewRunScreen extends Component {
             />
 
             {this.state.showRunners ?
-              <RunnersCard runners={this.props.runMembers} />
+              <RunnersCard runners={this.props.members} />
               :
               null
             }
@@ -406,7 +405,7 @@ const mapStateToProps = (state) => {
   return {
     authentication: state.authentication,
     run: state.run,
-    runMembers: state.runMembers,
+    members: state.members,
     comments: state.comments
   }
 }

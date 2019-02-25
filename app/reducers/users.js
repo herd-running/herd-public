@@ -10,18 +10,11 @@ export function groupLeader(state = {}, action) {
   }
 }
 
-export function groupMembers(state = [], action) {
+export function members(state = [], action) {
   switch (action.type) {
 
     case GET_GROUP_MEMBERS:
       return action.payload
-
-    default: return state
-  }
-}
-
-export function runMembers(state = [], action) {
-  switch (action.type) {
 
     case GET_RUN_MEMBERS:
       return action.payload

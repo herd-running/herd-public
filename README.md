@@ -1,7 +1,7 @@
 # Herd
 Have you ever wanted to join a running group, but you weren't sure who else would be there? If your skill level would be a good match? Herd answers those questions, and more. Every run that you will find on Herd has detailed information about who will be in attendance, what is the target pace of the run, what kind of terrain will you be running on, and a detailed map with the exact starting location. Herd also allows you to message groups and post messages on individual runs to get all your questions answered. Can't find a running group that meets your needs? You can also make your own! Invite your friends to run with you as you train for that marathon.
 
-![View Run](/ViewRunScreenshot.png =100x250)
+![View Run](/ViewRunScreenshot.png)
 
 ## Features
 * View detailed information about a run

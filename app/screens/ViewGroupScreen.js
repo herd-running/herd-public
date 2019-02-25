@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
-import { View, ScrollView, Text, TouchableOpacity, TextInput } from 'react-native'
+import { View, ScrollView, Text, TouchableOpacity, TextInput, Alert } from 'react-native'
 import { Button, Icon, Overlay } from 'react-native-elements'
 
-import { connect} from 'react-redux'
+import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { getOneGroup, joinGroup, leaveGroup, deleteGroup } from '../actions/groups'
 import { getGroupLeader, getGroupMembers } from '../actions/users'
 import { getGroupRuns } from '../actions/runs'
+import { getGroupComments, postGroupComment } from '../actions/comments'
 
 import HeaderComponent from '../components/Header'
 import CommentCard from '../components/CommentCard'
@@ -31,7 +32,7 @@ class ViewGroupScreen extends Component {
       showAddComment: false,
       commentTitle: null,
       comment: null,
-      commentRating: null
+      avoidView: 0,
     }
   }
 
@@ -41,6 +42,7 @@ class ViewGroupScreen extends Component {
     this.props.getGroupLeader(groupId)
     this.props.getGroupMembers(groupId)
     this.props.getGroupRuns(groupId)
+    this.props.getGroupComments(groupId)
   }
 
   componentWillReceiveProps = (props) => {
@@ -73,13 +75,10 @@ class ViewGroupScreen extends Component {
 
   handleShowAddCommentForm = () => {
     this.setState({
-      showAddComment: true
-    })
-  }
-
-  handleAddComment = () => {
-    this.setState({
-      showAddComment: false
+      showAddComment: true,
+      showRuns: false,
+      showRunners: false,
+      avoidView: -360
     })
   }
 
@@ -136,24 +135,34 @@ class ViewGroupScreen extends Component {
 
   }
 
+  handleAddComment = () => {
+    if (!this.state.commentTitle || !this.state.comment) {
+      Alert.alert('Please enter all fields', null, [{ text: 'OK' }], { cancelable: false })
+      return
+    }
+
+    const groupId = this.props.navigation.getParam('groupId', 0)
+
+    const newComment = {
+      user_id: this.props.authentication.user,
+      title: this.state.commentTitle,
+      comment: this.state.comment
+    }
+
+    this.props.postGroupComment(groupId, newComment)
+
+    this.setState({
+      showAddComment: false,
+      avoidView: 0
+    })
+  }
+
   render = () => {
-    const groupId = this.props.navigation.getParam('groupId', 0) 
-    const comments = [
-      {
-        id: 1,
-        title: 'Great group!',
-        body: 'I really enjoyed this group of people. We had a great time on Saturday and I felt very welcome! I will be back!'
-      },
-      {
-        id: 2,
-        title: 'Fun group',
-        body: 'Had a great run, all skill levels are welcome.'
-      }
-    ]
+    const groupId = this.props.navigation.getParam('groupId', 0)
 
     return (
       <View style={{ paddingBottom: 120 }}>
-        <HeaderComponent header='Herd' navigation={this.props.navigation} logout={false}/>
+        <HeaderComponent header='Herd' navigation={this.props.navigation} logout={false} />
         <TouchableOpacity
           style={{ backgroundColor: colors.backgroundColor, alignItems: 'flex-start', paddingLeft: 10, paddingBottom: 5 }}
           onPress={() => this.props.navigation.goBack()}
@@ -165,7 +174,7 @@ class ViewGroupScreen extends Component {
             size={20}
           />
         </TouchableOpacity>
-        <ScrollView>
+        <ScrollView style={{ marginTop: parseInt(this.state.avoidView), zIndex: -1}}>
           <View style={{ marginLeft: 25, marginRight: 25 }}>
 
             <Text style={{ fontSize: 25, marginTop: 10, fontWeight: 'bold' }}>{this.props.group.name}</Text>
@@ -200,7 +209,7 @@ class ViewGroupScreen extends Component {
             />
 
             {this.state.showRunners ?
-               <RunnersCard runners={this.props.groupMembers}/>
+              <RunnersCard runners={this.props.groupMembers} />
               :
               null
             }
@@ -212,56 +221,64 @@ class ViewGroupScreen extends Component {
             />
 
             {this.state.showComments ?
-              <View style={{ alignItems: 'center' }}>
-                {comments.map(comment => {
-                  return <CommentCard key={comment.id} {...comment} />
-                })}
-                {this.state.showAddComment ?
-                  <View>
-                    <Text style={{ fontSize: 20, marginTop: 10, color: colors.formGray }}>Title</Text>
-                    <TextInput
-                      onChangeText={(commentTitle) => this.setState({ commentTitle })}
-                      value={this.state.distance}
-                      style={{ height: 40, borderColor: 'gray', borderWidth: 1, fontSize: 18, paddingLeft: 5, minWidth: '100%' }}
-                      returnKeyType='done'
-                    />
 
-                    <Text style={{ fontSize: 20, marginTop: 10, color: colors.formGray }}>Comment</Text>
-                    <TextInput
-                      onChangeText={(comment) => this.setState({ comment })}
-                      value={this.state.description}
-                      style={{ height: 80, borderColor: 'gray', borderWidth: 1, fontSize: 18, paddingLeft: 5, marginBottom: 10, minWidth: '100%' }}
-                      returnKeyType='done'
-                      multiline={true}
-                      numberOfLines={5}
-                      blurOnSubmit={true}
-                    />
+              this.state.showAddComment ?
+                <View>
+                  <Text style={{ fontSize: 20, marginTop: 10, color: colors.formGray }}>Title</Text>
+                  <TextInput
+                    onChangeText={(commentTitle) => this.setState({ commentTitle })}
+                    value={this.state.distance}
+                    style={{ height: 40, borderColor: 'gray', borderWidth: 1, fontSize: 18, paddingLeft: 5, minWidth: '100%' }}
+                    returnKeyType='done'
+                  />
 
-                    <View style={{ alignItems: 'center' }}>
-                      <Button
-                        onPress={this.handleAddComment}
-                        title='Submit Comment'
-                        buttonStyle={{ marginTop: 20, backgroundColor: colors.otherColor, width: 200 }}
-                      />
-                    </View>
+                  <Text style={{ fontSize: 20, marginTop: 10, color: colors.formGray }}>Comment</Text>
+                  <TextInput
+                    onChangeText={(comment) => this.setState({ comment })}
+                    value={this.state.description}
+                    style={{ height: 80, borderColor: 'gray', borderWidth: 1, fontSize: 18, paddingLeft: 5, marginBottom: 10, minWidth: '100%' }}
+                    returnKeyType='done'
+                    multiline={true}
+                    numberOfLines={5}
+                    blurOnSubmit={true}
+                  />
+
+                  <View style={{ alignItems: 'center' }}>
+                    <Button
+                      onPress={this.handleAddComment}
+                      title='Submit Comment'
+                      buttonStyle={{ marginTop: 20, backgroundColor: colors.otherColor, width: 200 }}
+                    />
+                    <Button
+                      title='Cancel'
+                      type='outline'
+                      onPress={() => this.setState({ showAddComment: false, avoidView: 0 })}
+                      buttonStyle={{ borderColor: 'white', width: 200, marginTop: 10 }}
+                      titleStyle={{ fontSize: 16, color: colors.otherColor }}
+                    />
                   </View>
-                  :
+                </View>
+                :
+                <View style={{ alignItems: 'center' }}>
                   <Button
                     onPress={this.handleShowAddCommentForm}
                     title='Add Comment'
                     buttonStyle={{ marginTop: 20, backgroundColor: colors.otherColor, width: 200 }}
+                    titleStyle={{color: colors.backgroundColor}}
                   />
-                }
-              </View>
+                  {this.props.comments.map(comment => {
+                    return <CommentCard key={comment.id} user={this.props.authentication.user} groupId={groupId} {...comment} />
+                  })}
+                </View>
               :
               null
             }
             <View style={{ flex: 1, marginTop: 15, alignItems: 'center' }}>
               {this.state.isLeader ?
-                <View style={{alignItems: 'center'}}>
+                <View style={{ alignItems: 'center' }}>
                   <Button
                     title='Add a Run!'
-                    onPress={() => this.props.navigation.navigate('CreateGroupRun', {groupId})}
+                    onPress={() => this.props.navigation.navigate('CreateGroupRun', { groupId })}
                     buttonStyle={{ backgroundColor: colors.otherColor, width: 200 }}
                     titleStyle={{ color: colors.backgroundColor }}
                   />
@@ -319,7 +336,8 @@ const mapStateToProps = (state) => {
     group: state.group,
     groupLeader: state.groupLeader,
     groupMembers: state.groupMembers,
-    groupRuns: state.groupRuns
+    groupRuns: state.groupRuns,
+    comments: state.comments
   }
 }
 
@@ -331,7 +349,9 @@ const mapDispatchToProps = (dispatch) => {
     getGroupRuns,
     joinGroup,
     leaveGroup,
-    deleteGroup
+    deleteGroup,
+    getGroupComments,
+    postGroupComment
   }, dispatch)
 }
 

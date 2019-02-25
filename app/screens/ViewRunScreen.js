@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, ScrollView, Text, TouchableOpacity, TextInput } from 'react-native'
+import { View, ScrollView, Text, TouchableOpacity, TextInput, Alert } from 'react-native'
 import { Button, Icon, Overlay } from 'react-native-elements'
 import { Dropdown } from 'react-native-material-dropdown'
 
@@ -9,6 +9,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { getOneRun, joinRun, leaveRun, deleteRun } from '../actions/runs'
 import { getRunMembers } from '../actions/users'
+import { getRunComments, postRunComment } from '../actions/comments'
 
 import colors from '../utils/Colors'
 
@@ -33,7 +34,8 @@ class ViewRunScreen extends Component {
       overlayMessage: null,
       commentTitle: null,
       comment: null,
-      commentRating: null
+      commentRating: null,
+      avoidView: 0
     }
   }
 
@@ -41,6 +43,7 @@ class ViewRunScreen extends Component {
     const runId = this.props.navigation.getParam('runId', 1)
     this.props.getOneRun(runId)
     this.props.getRunMembers(runId)
+    this.props.getRunComments(runId)
   }
 
   componentWillReceiveProps = (props) => {
@@ -103,13 +106,33 @@ class ViewRunScreen extends Component {
 
   handleShowAddCommentForm = () => {
     this.setState({
-      showAddComment: true
+      showAddComment: true,
+      showMoreInfo: false,
+      showRunners: false,
+      avoidView: -250
     })
   }
 
   handleAddComment = () => {
+    if (!this.state.commentTitle || !this.state.comment || !this.state.commentRating) {
+      Alert.alert('Please enter all fields', null, [{ text: 'OK' }], { cancelable: false })
+      return
+    }
+
+    const runId = this.props.navigation.getParam('runId', 1)
+
+    const newComment = {
+      user_id: this.props.authentication.user,
+      title: this.state.commentTitle,
+      comment: this.state.comment,
+      rating: this.state.commentRating
+    }
+
+    this.props.postRunComment(runId, newComment)
+
     this.setState({
-      showAddComment: false
+      showAddComment: false,
+      avoidView: 0
     })
   }
 
@@ -136,23 +159,9 @@ class ViewRunScreen extends Component {
     const runId = this.props.navigation.getParam('runId', 1)
     const formattedDate = moment(this.props.run.date).format("dddd MMM Do")
 
-    const comments = [
-      {
-        id: 1,
-        title: 'Great run!',
-        rating: 5,
-        body: 'I really enjoyed this group of people. We had a great time on Saturday and I felt very welcome! I will be back!'
-      },
-      {
-        id: 2,
-        title: 'Fun run, a little early for me',
-        rating: 3,
-        body: 'This was a great run, but the time is just too early for me to make it.'
-      }
-    ]
     return (
       <View style={{ paddingBottom: 150 }}>
-        <HeaderComponent header='Herd' navigation={this.props.navigation} logout={false}/>
+        <HeaderComponent header='Herd' navigation={this.props.navigation} logout={false} />
         <TouchableOpacity
           style={{ backgroundColor: colors.backgroundColor, alignItems: 'flex-start', paddingLeft: 10, paddingBottom: 5 }}
           onPress={() => this.props.navigation.goBack()}
@@ -164,7 +173,7 @@ class ViewRunScreen extends Component {
             size={20}
           />
         </TouchableOpacity>
-        <ScrollView>
+        <ScrollView style={{ marginTop: parseInt(this.state.avoidView), zIndex: -1 }}>
           <View style={{ marginLeft: 25, marginRight: 25 }}>
 
             <Text style={{ fontSize: 25, marginTop: 10, fontWeight: 'bold' }}>
@@ -188,7 +197,7 @@ class ViewRunScreen extends Component {
               />
               <Text style={{ fontSize: 20, marginTop: 10, fontWeight: 'bold' }}>{this.props.run.location}</Text>
               <TouchableOpacity
-                onPress={() => this.props.navigation.navigate('ViewRunMap', {latitude: this.props.run.latitude, longitude: this.props.run.longitude, runId: this.props.run.id})}
+                onPress={() => this.props.navigation.navigate('ViewRunMap', { latitude: this.props.run.latitude, longitude: this.props.run.longitude, runId: this.props.run.id })}
               >
                 <Text style={{ textDecorationLine: 'underline', paddingLeft: 6, paddingBottom: 3 }}>(Map)</Text>
               </TouchableOpacity>
@@ -284,63 +293,66 @@ class ViewRunScreen extends Component {
             />
 
             {this.state.showComments ?
-              <View style={{ alignItems: 'center' }}>
-                {comments.map(comment => {
-                  return <CommentCard key={comment.id} {...comment} />
-                })}
 
-                {this.state.showAddComment ?
+              this.state.showAddComment ?
+                <View>
+                  <Text style={{ fontSize: 20, marginTop: 10, color: colors.formGray }}>Title</Text>
+                  <TextInput
+                    onChangeText={(commentTitle) => this.setState({ commentTitle })}
+                    value={this.state.distance}
+                    style={{ height: 40, borderColor: 'gray', borderWidth: 1, fontSize: 18, paddingLeft: 5, minWidth: '100%' }}
+                    returnKeyType='done'
+                  />
 
-                  <View>
+                  <Text style={{ fontSize: 20, marginTop: 10, color: colors.formGray }}>Comment</Text>
+                  <TextInput
+                    onChangeText={(comment) => this.setState({ comment })}
+                    value={this.state.description}
+                    style={{ height: 80, borderColor: 'gray', borderWidth: 1, fontSize: 18, paddingLeft: 5, marginBottom: 10, minWidth: '100%' }}
+                    returnKeyType='done'
+                    multiline={true}
+                    numberOfLines={5}
+                    blurOnSubmit={true}
+                  />
 
-                    <Text style={{ fontSize: 20, marginTop: 10, color: colors.formGray }}>Title</Text>
-                    <TextInput
-                      onChangeText={(commentTitle) => this.setState({ commentTitle })}
-                      value={this.state.distance}
-                      style={{ height: 40, borderColor: 'gray', borderWidth: 1, fontSize: 18, paddingLeft: 5, minWidth: '100%' }}
-                      returnKeyType='done'
+                  <View style={{ width: 100 }}>
+                    <Dropdown
+                      label='Rating'
+                      data={[{ value: 1 }, { value: 2 }, { value: 3 }, { value: 4 }, { value: 5 }]}
+                      fontSize={20}
+                      labelFontSize={18}
+                      itemCount={5}
+                      onChangeText={(commentRating) => this.setState({ commentRating })}
                     />
-
-                    <Text style={{ fontSize: 20, marginTop: 10, color: colors.formGray }}>Comment</Text>
-                    <TextInput
-                      onChangeText={(comment) => this.setState({ comment })}
-                      value={this.state.description}
-                      style={{ height: 80, borderColor: 'gray', borderWidth: 1, fontSize: 18, paddingLeft: 5, marginBottom: 10, minWidth: '100%' }}
-                      returnKeyType='done'
-                      multiline={true}
-                      numberOfLines={5}
-                      blurOnSubmit={true}
-                    />
-
-                    <View style={{ width: 100 }}>
-                      <Dropdown
-                        label='Rating'
-                        data={[{ value: 1 }, { value: 2 }, { value: 3 }, { value: 4 }, { value: 5 }]}
-                        fontSize={20}
-                        labelFontSize={18}
-                        itemCount={5}
-                        onChangeText={(commentRating) => this.setState({ commentRating })}
-                      />
-                    </View>
-
-                    <View style={{ alignItems: 'center' }}>
-                      <Button
-                        onPress={this.handleAddComment}
-                        title='Submit Comment'
-                        buttonStyle={{ marginTop: 20, backgroundColor: colors.otherColor, width: 200 }}
-                      />
-                    </View>
                   </View>
 
-                  :
+                  <View style={{ alignItems: 'center' }}>
+                    <Button
+                      onPress={this.handleAddComment}
+                      title='Submit Comment'
+                      buttonStyle={{ marginTop: 20, backgroundColor: colors.otherColor, width: 200 }}
+                    />
+                    <Button
+                      title='Cancel'
+                      type='outline'
+                      onPress={() => this.setState({ showAddComment: false, avoidView: 0 })}
+                      buttonStyle={{ borderColor: 'white', width: 200, marginTop: 10 }}
+                      titleStyle={{ fontSize: 16, color: colors.otherColor }}
+                    />
+                  </View>
+                </View>
+                :
+                <View style={{ alignItems: 'center' }}>
                   <Button
                     onPress={this.handleShowAddCommentForm}
                     title='Add Comment'
-                    buttonStyle={{ marginTop: 20, backgroundColor: colors.otherColor, width: 200 }}
+                    buttonStyle={{ marginTop: 10, backgroundColor: colors.otherColor, width: 150 }}
+                    titleStyle={{color: colors.backgroundColor}}
                   />
-                }
-
-              </View>
+                  {this.props.comments.map(comment => {
+                    return <CommentCard key={comment.id} user={this.props.authentication.user} runId={runId} {...comment} />
+                  })}
+                </View>
               :
               null
             }
@@ -385,7 +397,7 @@ class ViewRunScreen extends Component {
             <Text style={{ color: colors.backgroundColor, fontSize: 24 }}>{this.state.overlayMessage}</Text>
           </View>
         </Overlay>
-      </View>
+      </View >
     )
   }
 }
@@ -394,7 +406,8 @@ const mapStateToProps = (state) => {
   return {
     authentication: state.authentication,
     run: state.run,
-    runMembers: state.runMembers
+    runMembers: state.runMembers,
+    comments: state.comments
   }
 }
 
@@ -404,7 +417,9 @@ const mapDispatchToProps = (dispatch) => {
     getRunMembers,
     joinRun,
     leaveRun,
-    deleteRun
+    deleteRun,
+    getRunComments,
+    postRunComment
   }, dispatch)
 }
 

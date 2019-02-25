@@ -146,7 +146,7 @@ class DiscoverScreen extends Component {
             <View style={{ alignItems: 'center', marginTop: 10 }}>
               <Button
                 title='Filter'
-                onPress={() => this.setState({ showFilters: true })}
+                onPress={() => this.setState({ showFilters: !this.state.showFilters })}
                 buttonStyle={{ backgroundColor: colors.otherColor, width: 300 }}
                 titleStyle={{ color: colors.backgroundColor }}
                 icon={

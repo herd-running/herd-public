@@ -22,7 +22,7 @@ class HeaderComponent extends Component {
     SecureStore.deleteItemAsync('token')
       .then ( () => {
         this.props.setAuthentication(null)
-        this.props.navigation.navigate('Landing')
+        this.props.navigation.navigate('Login')
       })
   }
 

@@ -28,8 +28,8 @@ class CommentCard extends Component {
         <Rating rating={this.props.rating} size={15} />
         <Text style={{ marginTop: 5 }}>{this.props.comment}</Text>
         <Text style={{ marginTop: 10 }}>{`- ${this.props.first_name} ${this.props.last_name[0]}.`}</Text>
-        {this.props.user === this.props.user_id &&
-          <View style={{ alignItems: 'flex-end' }}>
+        <View style={{ alignItems: 'flex-end' }}>
+          {this.props.user === this.props.user_id &&
             <Button
               title='Delete'
               type='outline'
@@ -37,8 +37,8 @@ class CommentCard extends Component {
               buttonStyle={{ borderColor: 'white', width: 100 }}
               titleStyle={{ fontSize: 16, color: 'red' }}
             />
-          </View>
-        }
+          }
+        </View>
       </Card>
     )
   }

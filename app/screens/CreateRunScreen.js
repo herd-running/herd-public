@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
-import { View, ScrollView, Text, TextInput, TouchableOpacity, Alert } from 'react-native'
+import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native'
 import { Button, Icon, Overlay } from 'react-native-elements'
 import { Dropdown } from 'react-native-material-dropdown'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import DatePicker from 'react-native-datepicker'
 
 import { connect } from 'react-redux'
@@ -20,8 +21,7 @@ class CreateRunScreen extends Component {
 
     this.state = {
       overlayIsVisible: false,
-      overlayMessage: '',
-      avoidView: 0
+      overlayMessage: ''
     }
   }
 
@@ -73,8 +73,6 @@ class CreateRunScreen extends Component {
     }
   }
 
-  addMargin = (num) => this.setState({ avoidView: num })
-
   render() {
     const groupId = this.props.navigation.getParam('groupId', null)
 
@@ -96,7 +94,7 @@ class CreateRunScreen extends Component {
           :
           null
         }
-        <ScrollView style={{ marginLeft: 30, marginRight: 30, marginTop: parseInt(this.state.avoidView), zIndex: -1 }}>
+        <KeyboardAwareScrollView style={{ marginLeft: 30, marginRight: 30}}>
           <Text style={{ fontSize: 25, color: colors.backgroundColor, marginTop: 10, marginBottom: 10, fontWeight: 'bold' }}>
             {groupId ? 'New Group Run' : 'New One-Time Run'}
           </Text>
@@ -200,8 +198,6 @@ class CreateRunScreen extends Component {
                 placeholder='Location name (i.e. Green Lake)'
                 style={{ height: 40, borderColor: 'gray', borderWidth: 1, fontSize: 18, paddingLeft: 5 }}
                 returnKeyType='done'
-                onFocus={() => this.addMargin(-490)}
-                onBlur={() => this.addMargin(0)}
               />
             </View>
             :
@@ -214,8 +210,6 @@ class CreateRunScreen extends Component {
             style={{ height: 40, borderColor: 'gray', borderWidth: 1, fontSize: 18, paddingLeft: 5 }}
             returnKeyType='done'
             blurOnSubmit={true}
-            onFocus={() => this.addMargin(-490)}
-            onBlur={() => this.addMargin(0)}
           />
 
           <Text style={{ fontSize: 20, marginTop: 10, color: colors.formGray }}>Description (optional)</Text>
@@ -228,8 +222,6 @@ class CreateRunScreen extends Component {
             numberOfLines={10}
             blurOnSubmit={true}
             onKeyPress={this.onEnterPress}
-            onFocus={() => this.addMargin(-490)}
-            onBlur={() => this.addMargin(0)}
           />
 
           <Button
@@ -239,7 +231,7 @@ class CreateRunScreen extends Component {
             titleStyle={{ color: colors.otherColor }}
           />
 
-        </ScrollView>
+        </KeyboardAwareScrollView>
 
         <Overlay
           isVisible={this.state.overlayIsVisible}

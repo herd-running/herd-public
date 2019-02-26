@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
-import { View, ScrollView, Text, TextInput, TouchableOpacity, Alert } from 'react-native'
+import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native'
 import { Button, Icon, Overlay } from 'react-native-elements'
 import dismissKeyboard from 'react-native-dismiss-keyboard'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+
 
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -19,8 +21,7 @@ class CreateGroupScreen extends Component {
       name: '',
       description: '',
       overlayIsVisible: false,
-      overlayMessage: '',
-      avoidView: 0
+      overlayMessage: ''
     }
   }
 
@@ -74,7 +75,7 @@ class CreateGroupScreen extends Component {
             size={20}
           />
         </TouchableOpacity>
-        <ScrollView style={{ marginLeft: 15, marginRight: 15, marginTop: parseInt(this.state.avoidView), zIndex: -1 }}>
+        <KeyboardAwareScrollView style={{ marginLeft: 15, marginRight: 15, marginTop: parseInt(this.state.avoidView), zIndex: -1 }}>
           <Text style={{ fontSize: 25, color: colors.backgroundColor, marginTop: 5, marginBottom: 10, fontWeight: 'bold' }}>New Group</Text>
 
           <Text style={{ fontSize: 20, marginTop: 10 }}>Name</Text>
@@ -99,8 +100,6 @@ class CreateGroupScreen extends Component {
             returnKeyType='done'
             blurOnSubmit={true}
             onKeyPress={this.onEnterPress}
-            onFocus={() => this.addMargin(-120)}
-            onBlur={() => this.addMargin(0)}
           />
 
           <Button
@@ -109,7 +108,7 @@ class CreateGroupScreen extends Component {
             buttonStyle={{ backgroundColor: colors.backgroundColor, marginBottom: 10 }}
             titleStyle={{ color: colors.otherColor }}
           />
-        </ScrollView>
+        </KeyboardAwareScrollView>
 
         <Overlay
           isVisible={this.state.overlayIsVisible}

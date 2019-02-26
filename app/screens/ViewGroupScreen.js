@@ -90,6 +90,17 @@ class ViewGroupScreen extends Component {
     }, 1000)
   }
 
+  leaveAlert = (groupId) => {
+    Alert.alert(
+      'Confirm',
+      'Leave Group',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Yes', onPress: () => this.handleLeaveGroup(groupId) }
+      ]
+    )
+  }
+
   handleLeaveGroup = (groupId) => {
     this.props.leaveGroup(groupId, this.props.authentication.user)
     this.setState({
@@ -108,6 +119,17 @@ class ViewGroupScreen extends Component {
 
   handleAddGroupRun = () => {
     this.props.navigation.navigate('CreateRun')
+  }
+
+  deleteAlert = (groupId) => {
+    Alert.alert(
+      'Confirm',
+      'Delete Group',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Yes', onPress: () => this.handleDeleteGroup(groupId) }
+      ]
+    )
   }
 
   handleDeleteGroup = (groupId) => {
@@ -197,7 +219,7 @@ class ViewGroupScreen extends Component {
               buttonStyle={{ marginTop: 20, backgroundColor: colors.otherColor }}
             />
 
-            {this.state.showRunners && <RunnersCard runners={this.props.members} /> }
+            {this.state.showRunners && <RunnersCard runners={this.props.members} />}
 
             <Button
               onPress={this.toggleComments}
@@ -270,7 +292,7 @@ class ViewGroupScreen extends Component {
                   <Button
                     title='Delete Group'
                     type='outline'
-                    onPress={() => this.handleDeleteGroup(groupId)}
+                    onPress={() => this.deleteAlert(groupId)}
                     buttonStyle={{ borderColor: 'red', width: 200, marginTop: 70 }}
                     titleStyle={{ color: 'red' }}
                   />
@@ -281,7 +303,7 @@ class ViewGroupScreen extends Component {
                     <Button
                       title='Leave Group'
                       type='outline'
-                      onPress={() => this.handleLeaveGroup(groupId)}
+                      onPress={() => this.leaveAlert(groupId)}
                       buttonStyle={{ borderColor: 'red', width: 200, marginTop: 70 }}
                       titleStyle={{ color: 'red' }}
                     />

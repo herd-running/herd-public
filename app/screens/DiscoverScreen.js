@@ -31,7 +31,8 @@ class DiscoverScreen extends Component {
       run_type: 'Any Type',
       day: 'Any Day',
       pace: 'Any Pace',
-      terrain: 'Any Terrain'
+      terrain: 'Any Terrain',
+      recurring: 'Any'
 
     }
   }
@@ -86,6 +87,14 @@ class DiscoverScreen extends Component {
 
     if (this.state.terrain !== 'Any Terrain') {
       filteredRuns = filteredRuns.filter(run => run.terrain === this.state.terrain)
+    }
+
+    if (this.state.recurring === 'Recurring') {
+      filteredRuns = filteredRuns.filter(run => run.day)
+    }
+
+    if (this.state.recurring === 'One time') {
+      filteredRuns = filteredRuns.filter(run => run.date)
     }
 
     const searchedNewRuns = filteredRuns.filter(run => {
@@ -208,6 +217,17 @@ class DiscoverScreen extends Component {
                     itemCount={7}
                     onChangeText={(terrain) => this.setState({ terrain })}
                   />
+
+                  <Dropdown
+                    label='Recurring'
+                    data={[{value: 'Recurring'}, {value: 'One time'}, { value: 'Any'}]}
+                    value={this.state.recurring}
+                    fontSize={20}
+                    labelFontSize={18}
+                    itemCount={7}
+                    onChangeText={(recurring) => this.setState({ recurring })}
+                  />
+
                   <View style={{ alignItems: 'center' }}>
                     <Button
                       title='Search'

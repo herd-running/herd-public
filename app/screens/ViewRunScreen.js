@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { View, ScrollView, Text, TouchableOpacity, TextInput, Alert } from 'react-native'
+import { View, Text, TouchableOpacity, TextInput, Alert } from 'react-native'
 import { Button, Icon, Overlay } from 'react-native-elements'
 import { Dropdown } from 'react-native-material-dropdown'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 import moment from 'moment'
 
@@ -34,8 +35,7 @@ class ViewRunScreen extends Component {
       overlayMessage: null,
       commentTitle: null,
       comment: null,
-      commentRating: null,
-      avoidView: 0
+      commentRating: null
     }
   }
 
@@ -51,12 +51,20 @@ class ViewRunScreen extends Component {
     this.setState({
       userId,
       owner: props.run.creator_id === userId,
-      attending: props.runMembers.find(member => member.user_id === userId)
+      attending: props.members.find(member => member.user_id === userId)
     })
   }
 
+  isOwner = () => {
+    return this.props.run.creator_id === this.props.authentication.user
+  }
+
+  isAttending = () => {
+    return this.props.members.find(member => member.user_id === this.props.authentication.user)
+  }
+
   handleLeaveRun = (runId) => {
-    this.props.leaveRun(runId, this.state.userId)
+    this.props.leaveRun(runId, this.props.authentication.user)
     this.setState({
       overlayMessage: 'You Left this Run',
       overlayIsVisible: true
@@ -72,7 +80,7 @@ class ViewRunScreen extends Component {
   }
 
   handleJoinRun = (runId) => {
-    this.props.joinRun(runId, this.state.userId)
+    this.props.joinRun(runId, this.props.authentication.user)
     this.setState({
       overlayMessage: 'You Joined a Run!',
       overlayIsVisible: true
@@ -88,7 +96,7 @@ class ViewRunScreen extends Component {
   }
 
   handleDeleteRun = (runId) => {
-    this.props.deleteRun(runId, this.state.userId, this.props.run.group_id)
+    this.props.deleteRun(runId, this.props.authentication.user, this.props.run.group_id)
 
     this.setState({
       overlayMessage: 'Run Deleted',
@@ -106,10 +114,7 @@ class ViewRunScreen extends Component {
 
   handleShowAddCommentForm = () => {
     this.setState({
-      showAddComment: true,
-      showMoreInfo: false,
-      showRunners: false,
-      avoidView: -250
+      showAddComment: true
     })
   }
 
@@ -132,7 +137,6 @@ class ViewRunScreen extends Component {
 
     this.setState({
       showAddComment: false,
-      avoidView: 0
     })
   }
 
@@ -155,7 +159,6 @@ class ViewRunScreen extends Component {
   }
 
   render() {
-
     const runId = this.props.navigation.getParam('runId', 1)
     const formattedDate = moment(this.props.run.date).format("dddd MMM Do")
 
@@ -173,15 +176,12 @@ class ViewRunScreen extends Component {
             size={20}
           />
         </TouchableOpacity>
-        <ScrollView style={{ marginTop: parseInt(this.state.avoidView), zIndex: -1 }}>
+        <KeyboardAwareScrollView>
           <View style={{ marginLeft: 25, marginRight: 25 }}>
 
             <Text style={{ fontSize: 25, marginTop: 10, fontWeight: 'bold' }}>
               {`${this.props.run.run_type}`}
-              {this.props.run.name ?
-                ` with ${this.props.run.name}`
-                :
-                null}
+              {this.props.run.name && ` with ${this.props.run.name}`}
             </Text>
 
             <View style={{ marginTop: 5, marginBottom: 5 }}>
@@ -239,13 +239,11 @@ class ViewRunScreen extends Component {
 
             {this.state.showMoreInfo &&
               <View>
-                {this.props.run.distance ?
+                {this.props.run.distance &&
                   <View style={{ flexDirection: 'row' }}>
                     <Text style={{ fontSize: 20, marginTop: 10, fontWeight: 'bold' }}>Distance:</Text>
                     <Text style={{ fontSize: 20, marginTop: 10, marginLeft: 5 }}>{this.props.run.distance}</Text>
                   </View>
-                  :
-                  null
                 }
 
                 <View style={{ flexDirection: 'row' }}>
@@ -263,13 +261,11 @@ class ViewRunScreen extends Component {
                   <Text style={{ fontSize: 20, marginTop: 10, marginLeft: 5 }}>{this.props.run.creator}</Text>
                 </View>
 
-                {this.props.run.description ?
+                {this.props.run.description &&
                   <View>
                     <Text style={{ fontSize: 20, marginTop: 10, fontWeight: 'bold' }}>Description:</Text>
                     <Text style={{ fontSize: 20, marginTop: 5 }}>{this.props.run.description}</Text>
                   </View>
-                  :
-                  null
                 }
               </View>
             }
@@ -281,7 +277,7 @@ class ViewRunScreen extends Component {
             />
 
             {this.state.showRunners ?
-              <RunnersCard runners={this.props.runMembers} />
+              <RunnersCard runners={this.props.members} />
               :
               null
             }
@@ -347,7 +343,7 @@ class ViewRunScreen extends Component {
                     onPress={this.handleShowAddCommentForm}
                     title='Add Comment'
                     buttonStyle={{ marginTop: 10, backgroundColor: colors.otherColor, width: 150 }}
-                    titleStyle={{color: colors.backgroundColor}}
+                    titleStyle={{ color: colors.backgroundColor }}
                   />
                   {this.props.comments.map(comment => {
                     return <CommentCard key={comment.id} user={this.props.authentication.user} runId={runId} {...comment} />
@@ -358,7 +354,7 @@ class ViewRunScreen extends Component {
             }
 
             <View style={{ flex: 1, marginTop: 15, alignItems: 'center' }}>
-              {this.state.owner ?
+              {this.isOwner() ?
                 <Button
                   title='Delete Run'
                   type='outline'
@@ -367,7 +363,7 @@ class ViewRunScreen extends Component {
                   titleStyle={{ color: 'red' }}
                 />
                 :
-                this.state.attending ?
+                this.isAttending() ?
                   <Button
                     title='Leave Run'
                     type='outline'
@@ -385,7 +381,7 @@ class ViewRunScreen extends Component {
               }
             </View>
           </View>
-        </ScrollView>
+        </KeyboardAwareScrollView>
         <Overlay
           isVisible={this.state.overlayIsVisible}
           windowBackgroundColor={colors.backgroundColor}
@@ -406,7 +402,7 @@ const mapStateToProps = (state) => {
   return {
     authentication: state.authentication,
     run: state.run,
-    runMembers: state.runMembers,
+    members: state.members,
     comments: state.comments
   }
 }

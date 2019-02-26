@@ -60,7 +60,7 @@ class AddressSearchMapScreen extends Component {
   }
 
   handlePickLocation = (data, details) => {
-    this.props.setFormValue('location', data.description)
+    this.props.setFormValue('location', data.structured_formatting.main_text)
     this.props.setFormValue('latitude', details.geometry.location.lat)
     this.props.setFormValue('longitude', details.geometry.location.lng)
 
@@ -148,7 +148,7 @@ class AddressSearchMapScreen extends Component {
 
           nearbyPlacesAPI='GooglePlacesSearch'
 
-          debounce={200} // debounce the requests in ms. Set to 0 to remove debounce. By default 0ms.
+          debounce={200}
         />
 
         <View style={styles.container}>

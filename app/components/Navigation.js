@@ -25,7 +25,7 @@ import colors from '../utils/Colors'
 const DashboardRunStack = createStackNavigator({
   DashboardRuns: DashboardRuns,
   ViewRun: ViewRunScreen,
-  ViewRunMap: ViewRunMapScreen,
+  ViewRunMap: ViewRunMapScreen
 },
   {
     initialRouteName: 'DashboardRuns',
@@ -71,7 +71,8 @@ const DiscoverStack = createStackNavigator({
 const MapStack = createStackNavigator({
   Map: MapScreen,
   ViewRun: ViewRunScreen,
-  ViewGroup: ViewGroupScreen
+  ViewGroup: ViewGroupScreen,
+  ViewRunMap: ViewRunMapScreen
 },
   {
     initialRouteName: 'Map',

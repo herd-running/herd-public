@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native'
-import { SearchBar } from 'react-native-elements'
+import { SearchBar, Button } from 'react-native-elements'
 
 import moment from 'moment'
 
@@ -28,18 +28,11 @@ class DashboardRuns extends Component {
     this.props.getUsersRuns(userId)
   }
 
-  componentWillReceiveProps = (props) => {
-    if (!props.usersRuns.length) props.navigation.navigate('Discover')
-  }
-
   updateSearch = search => {
     this.setState({ search });
   };
 
   render() {
-    const date = new Date
-    const today = date.getDay()
-
     const sundayRuns = this.props.usersRuns.filter(run => {
       return run.day === 'Sunday' || moment(run.date).format('dddd') === 'Sunday'
     })
@@ -71,9 +64,10 @@ class DashboardRuns extends Component {
     const sortedRuns = [...sundayRuns, ...mondayRuns, ...tuesdayRuns, ...wednesdayRuns, ...thursdayRuns, ...fridayRuns, ...saturdayRuns]
 
     const filteredRuns = sortedRuns.filter(run => {
-      return run.run_type.toLowerCase().includes(this.state.search) || 
-        run.location.toLowerCase().includes(this.state.search) || 
+      return run.run_type.toLowerCase().includes(this.state.search) ||
+        run.location.toLowerCase().includes(this.state.search) ||
         run.day && run.day.toLowerCase().includes(this.state.search) ||
+        run.date && moment(run.date).format('dddd').toLowerCase().includes(this.state.search) ||
         run.terrain.toLowerCase().includes(this.state.search) ||
         run.creator.toLowerCase().includes(this.state.search) ||
         run.description && run.description.toLowerCase().includes(this.state.search)
@@ -81,7 +75,7 @@ class DashboardRuns extends Component {
 
     return (
       <View style={styles.container}>
-        <HeaderComponent header='My Runs' navigation={this.props.navigation} logout={true}/>
+        <HeaderComponent header='My Runs' navigation={this.props.navigation} logout={true} />
 
         <View style={{ justifyContent: 'center' }}>
           <SearchBar
@@ -102,8 +96,14 @@ class DashboardRuns extends Component {
             }
           </ScrollView>
           :
-          <View style={{alignItems: 'center', marginTop: 20}}>
-            <Text style={{color: colors.otherColor, fontSize: 25 }}>No runs yet!</Text>
+          <View style={{ alignItems: 'center', marginTop: 20 }}>
+            <Text style={{ color: colors.otherColor, fontSize: 25 }}>No runs yet!</Text>
+            <Button
+              title='Discover Runs'
+              onPress={() => this.props.navigation.navigate('Discover')}
+              buttonStyle={{ backgroundColor: colors.otherColor, marginTop: 10, width: 200 }}
+              titleStyle={{ color: colors.backgroundColor }}
+            />
           </View>
         }
       </View>

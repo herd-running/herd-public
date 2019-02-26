@@ -2,7 +2,7 @@ import {createStore, combineReducers, applyMiddleware} from 'redux'
 import thunk from 'redux-thunk'
 import logger from 'redux-logger'
 import { usersGroups, newGroups, group } from './reducers/groups'
-import { groupLeader, groupMembers, runMembers } from './reducers/users'
+import { groupLeader, members } from './reducers/users'
 import { usersRuns, newRuns, groupRuns, run } from './reducers/runs'
 import { comments } from './reducers/comments'
 import { formValues } from './reducers/createRunForm'
@@ -13,8 +13,7 @@ const reducers = combineReducers({
   newGroups, 
   group, 
   groupLeader, 
-  groupMembers, 
-  runMembers, 
+  members, 
   usersRuns, 
   newRuns, 
   groupRuns, 

@@ -31,8 +31,7 @@ class AddressSearchMapScreen extends Component {
       marker: {
         latitude: 47.6062,
         longitude: -122.3321
-      },
-      showList: 'block'
+      }
     }
   }
 
@@ -68,14 +67,13 @@ class AddressSearchMapScreen extends Component {
       region: {
         latitude: details.geometry.location.lat,
         longitude: details.geometry.location.lng,
-        latitudeDelta: 0.18,
-        longitudeDelta: 0.1
+        latitudeDelta: 0.0522,
+        longitudeDelta: 0.0221
       },
       marker: {
         latitude: details.geometry.location.lat,
         longitude: details.geometry.location.lng
-      },
-      showList: 'none'
+      }
     })
   }
 
@@ -108,10 +106,8 @@ class AddressSearchMapScreen extends Component {
           minLength={2}
           autoFocus={false}
           returnKeyType={'search'}
-          listViewDisplayed={true}
+          listViewDisplayed={false}
           fetchDetails={true}
-          // not working
-          onFocus={() => this.setState({ showList: 'block' })}
           onPress={(data, details) => this.handlePickLocation(data, details)}
 
           getDefaultValue={() => ''}
@@ -141,14 +137,13 @@ class AddressSearchMapScreen extends Component {
               marginTop: 45,
               color: 'black',
               backgroundColor: 'white',
-              position: 'absolute',
-              display: this.state.showList
+              position: 'absolute'
             }
           }}
 
           nearbyPlacesAPI='GooglePlacesSearch'
 
-          debounce={200}
+          // debounce={200}
         />
 
         <View style={styles.container}>

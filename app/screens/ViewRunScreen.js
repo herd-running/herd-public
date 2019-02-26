@@ -63,6 +63,17 @@ class ViewRunScreen extends Component {
     return this.props.members.find(member => member.user_id === this.props.authentication.user)
   }
 
+  leaveAlert = (runId) => {
+    Alert.alert(
+      'Confirm',
+      'Leave Run',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Yes', onPress: () => this.handleLeaveRun(runId) }
+      ]
+    )
+  }
+
   handleLeaveRun = (runId) => {
     this.props.leaveRun(runId, this.props.authentication.user)
     this.setState({
@@ -93,6 +104,17 @@ class ViewRunScreen extends Component {
       })
       this.props.navigation.goBack()
     }, 1000)
+  }
+
+  deleteAlert = (runId) => {
+    Alert.alert(
+      'Confirm',
+      'Delete Run',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Yes', onPress: () => this.handleDeleteRun(runId) }
+      ]
+    )
   }
 
   handleDeleteRun = (runId) => {
@@ -358,7 +380,7 @@ class ViewRunScreen extends Component {
                 <Button
                   title='Delete Run'
                   type='outline'
-                  onPress={() => this.handleDeleteRun(runId)}
+                  onPress={() => this.deleteAlert(runId)}
                   buttonStyle={{ borderColor: 'red', width: 200, marginTop: 100 }}
                   titleStyle={{ color: 'red' }}
                 />
@@ -367,7 +389,7 @@ class ViewRunScreen extends Component {
                   <Button
                     title='Leave Run'
                     type='outline'
-                    onPress={() => this.handleLeaveRun(runId)}
+                    onPress={() => this.leaveAlert(runId)}
                     buttonStyle={{ borderColor: 'red', width: 200, marginTop: 100 }}
                     titleStyle={{ color: 'red' }}
                   />

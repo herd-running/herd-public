@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View } from 'react-native'
+import { Text, View, Alert } from 'react-native'
 import { Card, Button } from 'react-native-elements'
 import Rating from './Rating'
 
@@ -10,6 +10,17 @@ import { deleteGroupComment, deleteRunComment } from '../actions/comments'
 class CommentCard extends Component {
   constructor(props) {
     super(props)
+  }
+
+  deleteAlert = (commentId) => {
+    Alert.alert(
+      'Confirm',
+      'Delete Comment',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Yes', onPress: () => this.handleDeleteComment(commentId) }
+      ]
+    )
   }
 
   handleDeleteComment = (commentId) => {
@@ -33,7 +44,7 @@ class CommentCard extends Component {
             <Button
               title='Delete'
               type='outline'
-              onPress={() => this.handleDeleteComment(this.props.id)}
+              onPress={() => this.deleteAlert(this.props.id)}
               buttonStyle={{ borderColor: 'white', width: 100 }}
               titleStyle={{ fontSize: 16, color: 'red' }}
             />

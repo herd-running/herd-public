@@ -32,9 +32,19 @@ class SignupScreen extends Component {
     }
   }
 
+  emailValidate = (email) => {
+    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    return reg.test(email)
+  }
+
   handleSignUp = () => {
     if (!this.state.first_name || !this.state.last_name || !this.state.email || !this.state.username || !this.state.password || !this.state.reEnterPassword) {
       Alert.alert('Please enter all fields', null, [{ text: 'OK' }], { cancelable: false })
+      return
+    }
+
+    if(!this.emailValidate(this.state.email)) {
+      Alert.alert('Please enter valid email address', null, [{ text: 'OK' }], { cancelable: false })
       return
     }
 

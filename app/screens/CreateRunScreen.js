@@ -98,7 +98,7 @@ class CreateRunScreen extends Component {
         }
         <ScrollView style={{ marginLeft: 30, marginRight: 30, marginTop: parseInt(this.state.avoidView), zIndex: -1 }}>
           <Text style={{ fontSize: 25, color: colors.backgroundColor, marginTop: 10, marginBottom: 10, fontWeight: 'bold' }}>
-            {groupId ? 'New Group Run' : 'New Quick Run'}
+            {groupId ? 'New Group Run' : 'New One-Time Run'}
           </Text>
 
           <Dropdown

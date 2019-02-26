@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { View, ScrollView, Text, TouchableOpacity, TextInput, Alert } from 'react-native'
+import { View, Text, TouchableOpacity, TextInput, Alert } from 'react-native'
 import { Button, Icon, Overlay } from 'react-native-elements'
 import { Dropdown } from 'react-native-material-dropdown'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 import moment from 'moment'
 
@@ -34,8 +35,7 @@ class ViewRunScreen extends Component {
       overlayMessage: null,
       commentTitle: null,
       comment: null,
-      commentRating: null,
-      avoidView: 0
+      commentRating: null
     }
   }
 
@@ -114,10 +114,7 @@ class ViewRunScreen extends Component {
 
   handleShowAddCommentForm = () => {
     this.setState({
-      showAddComment: true,
-      showMoreInfo: false,
-      showRunners: false,
-      avoidView: -250
+      showAddComment: true
     })
   }
 
@@ -140,7 +137,6 @@ class ViewRunScreen extends Component {
 
     this.setState({
       showAddComment: false,
-      avoidView: 0
     })
   }
 
@@ -180,7 +176,7 @@ class ViewRunScreen extends Component {
             size={20}
           />
         </TouchableOpacity>
-        <ScrollView style={{ marginTop: parseInt(this.state.avoidView), zIndex: -1 }}>
+        <KeyboardAwareScrollView>
           <View style={{ marginLeft: 25, marginRight: 25 }}>
 
             <Text style={{ fontSize: 25, marginTop: 10, fontWeight: 'bold' }}>
@@ -243,13 +239,11 @@ class ViewRunScreen extends Component {
 
             {this.state.showMoreInfo &&
               <View>
-                {this.props.run.distance ?
+                {this.props.run.distance &&
                   <View style={{ flexDirection: 'row' }}>
                     <Text style={{ fontSize: 20, marginTop: 10, fontWeight: 'bold' }}>Distance:</Text>
                     <Text style={{ fontSize: 20, marginTop: 10, marginLeft: 5 }}>{this.props.run.distance}</Text>
                   </View>
-                  :
-                  null
                 }
 
                 <View style={{ flexDirection: 'row' }}>
@@ -267,13 +261,11 @@ class ViewRunScreen extends Component {
                   <Text style={{ fontSize: 20, marginTop: 10, marginLeft: 5 }}>{this.props.run.creator}</Text>
                 </View>
 
-                {this.props.run.description ?
+                {this.props.run.description &&
                   <View>
                     <Text style={{ fontSize: 20, marginTop: 10, fontWeight: 'bold' }}>Description:</Text>
                     <Text style={{ fontSize: 20, marginTop: 5 }}>{this.props.run.description}</Text>
                   </View>
-                  :
-                  null
                 }
               </View>
             }
@@ -351,7 +343,7 @@ class ViewRunScreen extends Component {
                     onPress={this.handleShowAddCommentForm}
                     title='Add Comment'
                     buttonStyle={{ marginTop: 10, backgroundColor: colors.otherColor, width: 150 }}
-                    titleStyle={{color: colors.backgroundColor}}
+                    titleStyle={{ color: colors.backgroundColor }}
                   />
                   {this.props.comments.map(comment => {
                     return <CommentCard key={comment.id} user={this.props.authentication.user} runId={runId} {...comment} />
@@ -389,7 +381,7 @@ class ViewRunScreen extends Component {
               }
             </View>
           </View>
-        </ScrollView>
+        </KeyboardAwareScrollView>
         <Overlay
           isVisible={this.state.overlayIsVisible}
           windowBackgroundColor={colors.backgroundColor}

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { View, ScrollView, Text, TouchableOpacity, TextInput, Alert } from 'react-native'
+import { View, Text, TouchableOpacity, TextInput, Alert } from 'react-native'
 import { Button, Icon, Overlay } from 'react-native-elements'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -28,8 +29,7 @@ class ViewGroupScreen extends Component {
       overlayMessage: null,
       showAddComment: false,
       commentTitle: null,
-      comment: null,
-      avoidView: 0,
+      comment: null
     }
   }
 
@@ -70,10 +70,7 @@ class ViewGroupScreen extends Component {
 
   handleShowAddCommentForm = () => {
     this.setState({
-      showAddComment: true,
-      showRuns: false,
-      showRunners: false,
-      avoidView: -360
+      showAddComment: true
     })
   }
 
@@ -147,8 +144,7 @@ class ViewGroupScreen extends Component {
     this.props.postGroupComment(groupId, newComment)
 
     this.setState({
-      showAddComment: false,
-      avoidView: 0
+      showAddComment: false
     })
   }
 
@@ -169,7 +165,7 @@ class ViewGroupScreen extends Component {
             size={20}
           />
         </TouchableOpacity>
-        <ScrollView style={{ marginTop: parseInt(this.state.avoidView), zIndex: -1 }}>
+        <KeyboardAwareScrollView extraScrollHeight={30}>
           <View style={{ marginLeft: 25, marginRight: 25 }}>
 
             <Text style={{ fontSize: 25, marginTop: 10, fontWeight: 'bold' }}>{this.props.group.name}</Text>
@@ -185,7 +181,7 @@ class ViewGroupScreen extends Component {
               buttonStyle={{ marginTop: 20, backgroundColor: colors.otherColor }}
             />
 
-            {this.state.showRuns ?
+            {this.state.showRuns &&
               <View>
                 {this.props.groupRuns.map((run) => {
                   return <TouchableOpacity key={run.id} onPress={() => this.props.navigation.navigate('ViewRun', { runId: run.id })}>
@@ -193,8 +189,6 @@ class ViewGroupScreen extends Component {
                   </TouchableOpacity>
                 })}
               </View>
-              :
-              null
             }
 
             <Button
@@ -203,11 +197,7 @@ class ViewGroupScreen extends Component {
               buttonStyle={{ marginTop: 20, backgroundColor: colors.otherColor }}
             />
 
-            {this.state.showRunners ?
-              <RunnersCard runners={this.props.members} />
-              :
-              null
-            }
+            {this.state.showRunners && <RunnersCard runners={this.props.members} /> }
 
             <Button
               onPress={this.toggleComments}
@@ -287,27 +277,27 @@ class ViewGroupScreen extends Component {
                 </View>
                 :
                 <View>
-                  { this.isMember() ?
-                      <Button
-                        title='Leave Group'
-                        type='outline'
-                        onPress={() => this.handleLeaveGroup(groupId)}
-                        buttonStyle={{ borderColor: 'red', width: 200, marginTop: 70 }}
-                        titleStyle={{ color: 'red' }}
-                      />
-                      :
-                      <Button
-                        title='Join this Group!'
-                        onPress={() => this.handleJoinGroup(groupId)}
-                        buttonStyle={{ backgroundColor: colors.otherColor, width: 200 }}
-                        titleStyle={{ color: colors.backgroundColor }}
-                      />
+                  {this.isMember() ?
+                    <Button
+                      title='Leave Group'
+                      type='outline'
+                      onPress={() => this.handleLeaveGroup(groupId)}
+                      buttonStyle={{ borderColor: 'red', width: 200, marginTop: 70 }}
+                      titleStyle={{ color: 'red' }}
+                    />
+                    :
+                    <Button
+                      title='Join this Group!'
+                      onPress={() => this.handleJoinGroup(groupId)}
+                      buttonStyle={{ backgroundColor: colors.otherColor, width: 200 }}
+                      titleStyle={{ color: colors.backgroundColor }}
+                    />
                   }
                 </View>
               }
             </View>
           </View>
-        </ScrollView>
+        </KeyboardAwareScrollView>
         <Overlay
           isVisible={this.state.overlayIsVisible}
           windowBackgroundColor={colors.backgroundColor}

@@ -68,7 +68,12 @@ class DashboardGroups extends Component {
           </ScrollView>
           :
           <View style={{ alignItems: 'center', marginTop: 20 }}>
-            <Text style={{ color: colors.otherColor, fontSize: 25 }}>No groups yet!</Text>
+            <Button
+              title='Discover Groups'
+              onPress={() => this.props.navigation.navigate('Discover', {viewing: 'Groups'})}
+              buttonStyle={{ backgroundColor: colors.otherColor, marginBottom: 10, width: 200 }}
+              titleStyle={{ color: colors.backgroundColor }}
+            />
           </View>
         }
       </View>

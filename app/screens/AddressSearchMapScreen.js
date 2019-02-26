@@ -148,7 +148,7 @@ class AddressSearchMapScreen extends Component {
 
           nearbyPlacesAPI='GooglePlacesSearch'
 
-          debounce={200} // debounce the requests in ms. Set to 0 to remove debounce. By default 0ms.
+          debounce={200}
         />
 
         <View style={styles.container}>

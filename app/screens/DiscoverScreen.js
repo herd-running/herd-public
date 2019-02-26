@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { View, ScrollView, TouchableOpacity } from 'react-native'
 import { SearchBar, Button, Icon } from 'react-native-elements'
 import { Dropdown } from 'react-native-material-dropdown'
+
 import moment from 'moment'
 
 import { connect } from 'react-redux'
@@ -27,25 +28,30 @@ class DiscoverScreen extends Component {
       runButtonColor: colors.otherColor,
       groupButtonColor: colors.disabledColor,
       showFilters: false,
-      run_type: 'Any',
-      day: 'Any',
+      run_type: 'Any Type',
+      day: 'Any Day',
       pace: 'Any Pace',
-      terrain: 'Any'
+      terrain: 'Any Terrain'
 
     }
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     const userId = this.props.authentication.user
     this.props.getNewRuns(userId)
     this.props.getNewGroups(userId)
+  }
+
+  componentWillReceiveProps = (props) => {
+    const viewing = props.navigation.getParam('viewing', null)
+
+    if (viewing === 'Groups') this.onTogglePressGroups()
   }
 
   searchWithFilters = () => {
     this.setState({
       showFilters: false
     })
-
   }
 
   onTogglePressRuns = () => {
@@ -66,11 +72,11 @@ class DiscoverScreen extends Component {
 
   render() {
     let filteredRuns = this.props.newRuns
-    if (this.state.run_type !== 'Any') {
+    if (this.state.run_type !== 'Any Type') {
       filteredRuns = filteredRuns.filter(run => run.run_type === this.state.run_type)
     }
 
-    if (this.state.day !== 'Any') {
+    if (this.state.day !== 'Any Day') {
       filteredRuns = filteredRuns.filter(run => (run.day && run.day === this.state.day) || (run.date && moment(run.date).format('dddd') === this.state.day))
     }
 
@@ -78,7 +84,7 @@ class DiscoverScreen extends Component {
       filteredRuns = filteredRuns.filter(run => run.pace === this.state.pace)
     }
 
-    if (this.state.terrain !== 'Any') {
+    if (this.state.terrain !== 'Any Terrain') {
       filteredRuns = filteredRuns.filter(run => run.terrain === this.state.terrain)
     }
 
@@ -87,6 +93,7 @@ class DiscoverScreen extends Component {
         run.run_type.toLowerCase().includes(this.state.search) ||
         run.location.toLowerCase().includes(this.state.search) ||
         run.day && run.day.toLowerCase().includes(this.state.search) ||
+        run.date && moment(run.date).format('dddd').toLowerCase().includes(this.state.search) ||
         run.terrain.toLowerCase().includes(this.state.search) ||
         run.creator.toLowerCase().includes(this.state.search) ||
         run.description && run.description.toLowerCase().includes(this.state.search)
@@ -163,7 +170,7 @@ class DiscoverScreen extends Component {
                 <View style={{ width: '92%', padding: 20, backgroundColor: 'white', marginTop: 10 }}>
                   <Dropdown
                     label='Run Type'
-                    data={[...runType, { value: 'Any' }]}
+                    data={[...runType, { value: 'Any Type' }]}
                     value={this.state.run_type}
                     fontSize={20}
                     labelFontSize={18}
@@ -175,7 +182,7 @@ class DiscoverScreen extends Component {
                   />
                   <Dropdown
                     label='Day of the Week'
-                    data={[...day, , { value: 'Any' }]}
+                    data={[...day, , { value: 'Any Day' }]}
                     value={this.state.day}
                     fontSize={20}
                     labelFontSize={18}
@@ -194,7 +201,7 @@ class DiscoverScreen extends Component {
 
                   <Dropdown
                     label='Terrain'
-                    data={[...terrain, { value: 'Any' }]}
+                    data={[...terrain, { value: 'Any Terrain' }]}
                     value={this.state.terrain}
                     fontSize={20}
                     labelFontSize={18}
